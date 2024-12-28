@@ -1,0 +1,62 @@
+@import "../../styles//utils.scss";
+
+.edit-profile {
+  position: relative;
+  display: inline-block;
+  .edit-icon {
+    position: absolute;
+    top: 49%;
+    left: 49%;
+    transform: translate(-49%, -49%);
+    font-size: 24px;
+    z-index: 10;
+    color: rgb(116, 114, 114) !important;
+    cursor: pointer;
+  }
+}
+
+
+.edit-profile:hover .profile-img {
+  transition: 0.3s ease-in-out;
+  filter: blur(2px);
+  opacity: 0.5;
+  background-color: rgba(122, 122, 122, 0.744);
+}
+
+
+.avatar-uploader {
+  .ant-upload {
+    border-radius: 50% !important;
+    margin: 0 !important;
+    border: none !important;
+    width: 90px !important;
+    height: 90px !important;
+
+    img {
+      width:90px;
+      height: 90px;
+      object-fit: cover;
+      border: 1px solid $dark-orange;
+      border-style: dashed;
+      border-radius: 8px;
+    }
+ 
+    .ant-avatar {
+      width: 90px !important;
+      height: 90px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .ant-avatar:hover {
+      opacity: 0.5;
+      transition: 0.3s ease-in-out;
+    }
+  }
+}
+
+.avatar-uploader:hover {
+  .ant-upload {
+    background-color: rgb(255, 255, 255);
+    transition: 0.3s ease-in-out;
+  }
+}

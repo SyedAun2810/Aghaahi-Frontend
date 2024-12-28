@@ -1,0 +1,83 @@
+@import "../../styles/utils.scss";
+.custom-sidebar {
+  .logo {
+    padding: 30px 10px 10px;
+    width: 252px;
+    text-align: center;
+  }
+
+  .ant-menu-inline {
+    width: 253px;
+  }
+
+  .ant-menu {
+    .ant-menu-item:not(.ant-menu-item-selected):active,
+    .ant-menu-item:not(.ant-menu-item-selected):hover {
+      background-color: transparent !important;
+    }
+
+    .ant-menu-submenu-title,
+    .ant-menu-item {
+      color: $light-text !important;
+      height: 54px;
+      margin: 0px;
+      border-radius: 0px 100px 100px 0px !important;
+      a {
+        font-size: 14px;
+        color: $light-text;
+        font-weight: 400;
+      }
+    }
+
+    .ant-menu-submenu .ant-menu-submenu-title .ant-menu-title-content a {
+      color: white;
+    }
+
+    .ant-menu-item-selected {
+      border-radius: 0px 100px 100px 0px !important;
+      background-color: $dark-orange;
+      color: white !important;
+      a {
+        font-size: 14px;
+        color: white;
+        font-weight: 400;
+      }
+      svg {
+        path {
+          stroke: white;
+        }
+      }
+      // transition: background-color 0.1s, border-radius 0.1s;
+    }
+
+    .custom-sidebar .ant-menu {
+      background-color: $dark-orange;
+      color: white !important;
+      a {
+        font-size: 14px;
+        color: white;
+        font-weight: 400;
+      }
+      svg {
+        path {
+          stroke: white;
+        }
+      }
+    }
+  }
+
+  .cus-main-content {
+    padding: 20px !important;
+  }
+}
+
+.change-svg {
+  .ant-menu-item-selected {
+    svg {
+      path {
+        fill: white !important;
+        stroke: none !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+import PromptChat from "@Pages/AppScreens/PromptChat";
+
+export const NavigationRoutes = {
+  AUTH_ROUTES: {
+    INDEX:'/',
+    LOGIN: "/login",
+    VERIFY_EMAIL: "/otp",
+    REGISTER: "/register",
+    RESET_PASSWORD: "/reset-password",
+    FORGOT_PASSWORD: "/forgot-password",
+  },
+  DASHBOARD_ROUTES: {
+    DASHBOARD: "/dashboard",
+    CHAT: "/chat",
+    CHAT_DETAILS: "/chat/:id",
+    MY_EARNINGGS:"/my-earnings",
+    ORDER_MANAGEMENT:"/order-management",
+    ORDER_DETAILS:"/order-management/:id",
+    GENERATE_LABELS_MAIN: "/order-management/generate-labels",
+    GENERATE_LABELS: "/order-management/generate-labels/:id",
+    PAYMENT_DETAILS:"/payment-details",
+    PRODUCT_MANAGEMENT:"/product-management",
+    PRODUCT_DETAILS: "/product-management/product-details",
+    ADD_PRODUCT: "/product-management/add-product",
+    PRODUCT_EDIT: "/product-management/product-edit",
+    BANNER_MANAGEMENT:"/banner-ad-management",
+    BANNER_MANAGEMENT_DETAILS:"/banner-ad-management/banner-details",
+    REQUEST_BANNER:"/banner-ad-management/request-banner",
+    CHANGE_PASSWORD:"change-password",
+    EDIT_PROFILE:"edit-profile",
+    USER_MANAGEMENT:"/user-management",
+    REQUEST_MANAGEMENT:"/request-management",
+    PROMPT_CHAT:"/prompt-chat",
+  },
+};

@@ -1,0 +1,21 @@
+image: node:20
+pipelines:
+  branches:
+    develop:
+      - step:
+          name: Building
+          deployment: test
+          caches:
+            - node
+          script:
+            - npm install --legacy-peer-deps
+            - npm run build
+          artifacts:
+            - build/**
+      - step:
+          name: Deployment
+          script:
+            - apt-get update -y && apt-get install rsync -y
+            - ssh ubuntu@100.27.178.45 "sudo mkdir -p /var/www/development/lwo-seller"
+            - rsync -r ./build ubuntu@100.27.178.45:/var/www/development/lwo-seller
+

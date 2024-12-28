@@ -1,0 +1,49 @@
+@import "../../styles//utils.scss";
+.select-input-con {
+  .ant-select-selector{
+    border-radius: 8px;
+  }
+  .ant-select-selection-placeholder {
+        color: #717171;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.94px;
+        letter-spacing: 0.30000001192092896px;
+        text-align: left;
+      }
+
+}
+
+.select-input-con-theme {
+  .ant-select-selector .ant-select-selection-placeholder {
+    color: $dark-main !important;
+    font-size: 14px !important;
+    padding-left: 16px;
+  }
+  
+  .ant-select-selection-item > h5 {
+    font-size: 14px !important;
+    color: $dark-main;
+  }
+  .ant-select-selector {
+    width: 100%;
+    border: 1px solid #e2e2e2 !important;
+    border-radius: 12px !important;
+    }
+  
+    .ant-select-selection-item {
+      padding-left: 16px !important;
+    }
+    .ant-select-selector .ant-select-selection-placeholder {
+      color: $dark-main !important;
+      font-size: 14px !important;
+      padding-left: 16px;
+    }
+
+}
+.select-input-con-theme > * {
+  background-color: #f2f2f2 !important;
+  outline: none;
+  padding: 0px !important;
+}

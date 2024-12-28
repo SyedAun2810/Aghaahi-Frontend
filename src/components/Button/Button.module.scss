@@ -1,0 +1,110 @@
+@import "../../styles/utils.scss";
+.hr-btn {
+  width: 100%;
+  padding: em(13);
+  height: auto;
+  border-radius: em(8);
+  margin-top: em(12);
+  margin-bottom: em(16);
+  font-size: em(16);
+  font-weight: 500 ;
+  background-color: $primary-color;
+  border-radius: em(100);
+  &-primary {
+    background-color: $primary-color !important;
+    padding: em(8) em(24);
+    height:em(52);
+    border: 1px solid $primary-color;
+    span {
+      color: $secondary-body-color;
+      font-weight: 600;
+    }
+
+    &:hover {
+      background-color: transparent;
+      border: 1px solid $primary-color;
+    }
+  }
+
+  &-dashed {
+    background-color: transparent;
+    color: $primary-color;
+    border: 2px solid $primary-color;
+    border-style: dashed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &-purple {
+    display: flex;
+    align-items: center;
+    background-color: $violet !important;
+    padding: 0 em(15);
+    border: 0;
+  }
+
+  &-gray {
+    display: flex;
+    align-items: center;
+    background-color: $dark-gray !important;
+    padding: 0 em(15);
+    border: 0;
+  }
+
+  &-blue {
+    align-items: center;
+    background-color: $primary-color !important;
+    padding: 0 em(15);
+    border: 0;
+  }
+
+  &-green {
+    display: flex;
+    align-items: center;
+    background-color: $green !important;
+    padding: 0 em(15);
+    border: 0;
+  }
+  &-red {
+    display: flex;
+    align-items: center;
+    background-color: $text-red !important;
+    padding: 0 em(15);
+    border: 0;
+  }
+  &-white {
+    background-color: $white !important;
+    color: $black;
+    padding: 0 em(15);
+    border: 1px solid $placeholder-text-color;
+    &:hover {
+      color: $text-primary;
+      border: 1px solid $placeholder-text-color;
+    }
+    &:focus,
+    &:active {
+      color: $text-primary;
+      border: 1px solid $placeholder-text-color;
+    }
+  }
+  &-outlined {
+    background-color: $white !important;
+    color:  $primary-color;
+    padding: em(8) em(24);
+    height:em(52);
+    border: 1px solid  $primary-color;
+    &:hover {
+      color:$white;
+      background-color: $primary-color !important;
+      border: 1px solid $primary-color;
+    }
+    &:focus,
+    &:active {
+      background-color: $white !important;
+      color:  $primary-color !important;
+      border: 1px solid  $primary-color;
+    }
+  }
+}

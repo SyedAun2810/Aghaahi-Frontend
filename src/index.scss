@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "../src/styles/utils.scss";
+:root {
+    --font-family-sans: "Inter", sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 6px;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background-clip: padding-box;
+    background-color: transparent;
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px !important;
+    background-clip: padding-box !important;
+    background-color: $scroll-color !important;
+    display: none;
+}
+
+.rc-virtual-list-scrollbar-thumb {
+    background-color: $scroll-color !important;
+    display: none;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box !important;
+    font-family: var(--font-family-sans);
+    font-weight: 400;
+}
+
+.ant-form-item {
+    margin-bottom: em(20) !important;
+}
+.ant-checkbox-inner,
+.ant-checkbox-input {
+    transform: scale(1.2);
+}
+
+.otp-input {
+    width: em(60);
+    height: em(60);
+    border: 1px solid #e2e2e2 !important;
+    border-radius: em(12);
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.otp-input:focus {
+    outline: none !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid $stroke-light;
+}
+.border-left {
+    border-left: 1px solid $stroke-light;
+}
+.border {
+    border: 1px solid $stroke-light;
+}
+
+.ant-badge-status-dot {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.resend-btn {
+    background-color: transparent !important;
+}
+
+.ant-select-item-option-active {
+    background-color: $dark-orange !important;
+    color: white !important;
+}
+
+.ant-form-item-explain-error {
+    margin-bottom: em(8);
+}
+
+.ant-select-selection-placeholder {
+    color: $light-text !important;
+}
+
+.custom-send-message {
+    .ant-form-item {
+        margin-bottom: 0px !important;
+    }
+}
+
+html {
+    font-size: 16px;
+}
+@media (max-width: 1400px) {
+    html {
+        font-size: 14px;
+    }
+}

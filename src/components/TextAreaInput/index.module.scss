@@ -1,0 +1,33 @@
+@import "../../styles//utils.scss";
+.container {
+  background-color: #F2F2F2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 10px 16px;
+  border: 1px solid #E2E2E2;
+  opacity: 0px;
+  border-radius: 12px;
+}
+
+.custom-input {
+  background-color: transparent;
+  border: none;
+  color: $dark-main;
+  font-size: 14px;
+  resize: none;
+}
+.custom-input:focus {
+  outline: none;
+  border-color: transparent;
+}
+.custom-label {
+  font-size: em(12);
+  color: #717171;
+  font-weight: 400;
+}
+
+.active-input{
+    border-color: $dark-orange;
+}
