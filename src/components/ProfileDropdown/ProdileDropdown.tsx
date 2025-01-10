@@ -47,10 +47,10 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                 menu={{ items }}
                 placement="bottomRight"
                 arrow
-                overlayClassName="top-[55px]"
+                overlayClassName="top-[40px]"
             >
                 <Flex align="center" gap={8}>
-                    {image ? (
+                    {true ? (
                         <Avatar alt="User Image" src={image} />
                     ) : (
                         <CustomAvatar
@@ -61,7 +61,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                             size={32}
                         />
                     )}
-                    <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
+                    <h4 className="hr-mr-12 hr-mr-6">User</h4>
                     <DropdownIcon />
                 </Flex>
             </Dropdown>

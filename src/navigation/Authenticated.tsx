@@ -22,6 +22,7 @@ import {
 import { useEffect } from "react";
 import RequestManagement from "@Pages/AppScreens/RequestManagement";
 import PromptChat from "@Pages/AppScreens/PromptChat";
+import AghaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
 
 const DashboardRoutes = [
     // {
@@ -48,6 +49,11 @@ const DashboardRoutes = [
         title: "PromptChat",
         path: NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT,
         component: <PromptChat />
+    },
+    {
+        title: "Dashboard",
+        path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
+        component: <AghaahiDashboard />
     },
     // {
     //     title: "OrderManagement",

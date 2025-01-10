@@ -9,7 +9,7 @@ import FullPageLoader from "@Components/FullPageLoader/FullPageLoader";
 
 const config: ThemeConfig = {
     token: {
-        colorPrimary: "#F38001"
+        colorPrimary: "#5950CB"
     }
 };
 
