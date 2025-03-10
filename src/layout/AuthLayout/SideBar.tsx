@@ -10,6 +10,7 @@ import { useAuthLayoutContainer } from "./useAuthLayoutContainer";
 
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Input, Modal } from "antd";
+import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
 
 const SideBar = () => {
     const { route, selectedKey, navigate } = useAuthLayoutContainer();
@@ -23,7 +24,8 @@ const SideBar = () => {
         "Sales Details",
     ]);
 
-    // State to track the selected chat, defaulting to the first chat
+    let isDashboard = arrayOfDashboardItems.includes(route[1]);  
+
     const [selectedChat, setSelectedChat] = useState<string | null>(historyChats[0]);
 
     // State to track whether the sidebar is collapsed
@@ -77,68 +79,71 @@ const SideBar = () => {
 
     return (
         <div className="">
-            <Sider
-                width={220}
-                breakpoint="lg"
-                collapsedWidth="0"
-                collapsible
-                theme="light"
-                className={`bg-light-bg ${customSiderClass} h-[100vh]`}
-                onCollapse={(collapsed) => setIsCollapsed(collapsed)}
-            >
-                {!isCollapsed && (
-                    <>
-                        <Flex className="cursor-pointer" justify="center">
-                            <img
-                                src={Logo}
-                                className="text-main-orange h-32 w-32"
-                                onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT)}
-                            />
-                        </Flex>
+     {
+        !isDashboard &&        
+        <Sider
+            width={220}
+            breakpoint="lg"
+            collapsedWidth="0"
+            collapsible
+            theme="light"
+            className={`bg-light-bg ${customSiderClass} h-[100vh]`}
+            onCollapse={(collapsed) => setIsCollapsed(collapsed)}
+        >
+            {!isCollapsed && (
+                <>
+                    <Flex className="cursor-pointer" justify="center">
+                        <img
+                            src={Logo}
+                            className="text-main-orange h-32 w-32"
+                            onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT)}
+                        />
+                    </Flex>
 
-                        <div className="flex items-center justify-center">
-                            <button className="border-none flex items-center justify-center cursor-pointer">
-                                <Flex justify="center" align="center">
-                                    <PlusIcon height={28} width={28} />
-                                    <p className="ml-2">New Chat</p>
-                                </Flex>
-                            </button>
-                        </div>
+                    <div className="flex items-center justify-center">
+                        <button className="border-none flex items-center justify-center cursor-pointer">
+                            <Flex justify="center" align="center">
+                                <PlusIcon height={28} width={28} />
+                                <p className="ml-2">New Chat</p>
+                            </Flex>
+                        </button>
+                    </div>
 
-                        <p className="ml-4 mt-4">Recent</p>
-                        <div className="mt-6">
-                            {historyChats.map((chat, index) => (
-                                <Flex
-                                    key={index}
-                                    align="center"
-                                    className={`mx-4 my-4 cursor-pointer px-3 py-2 rounded-2xl ${
-                                        selectedChat === chat ? "bg-gray-200" : "bg-transparent"
-                                    }`}
-                                    onClick={() => handleChatSelect(chat)}
-                                    style={{ position: "relative" }}
-                                >
-                                    <ChatIcon height={22} width={22} />
-                                    <p className="ml-2">{chat}</p>
-                                    <div className="ml-auto">
-                                        <Dropdown
-                                            overlay={menu(chat)}
-                                            trigger={["click"]}
-                                            overlayStyle={{ minWidth: 120 }}
-                                        >
-                                            <EllipsisOutlined
-                                                style={{
-                                                    fontSize: "18px",
-                                                    cursor: "pointer",
-                                                }}
-                                            />
-                                        </Dropdown>
-                                    </div>
-                                </Flex>
-                            ))}
-                        </div>
-                    </>
-                )}
-            </Sider>
+                    <p className="ml-4 mt-4">Recent</p>
+                    <div className="mt-6">
+                        {historyChats.map((chat, index) => (
+                            <Flex
+                                key={index}
+                                align="center"
+                                className={`mx-4 my-4 cursor-pointer px-3 py-2 rounded-2xl ${
+                                    selectedChat === chat ? "bg-gray-200" : "bg-transparent"
+                                }`}
+                                onClick={() => handleChatSelect(chat)}
+                                style={{ position: "relative" }}
+                            >
+                                <ChatIcon height={22} width={22} />
+                                <p className="ml-2">{chat}</p>
+                                <div className="ml-auto">
+                                    <Dropdown
+                                        overlay={menu(chat)}
+                                        trigger={["click"]}
+                                        overlayStyle={{ minWidth: 120 }}
+                                    >
+                                        <EllipsisOutlined
+                                            style={{
+                                                fontSize: "18px",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                    </Dropdown>
+                                </div>
+                            </Flex>
+                        ))}
+                    </div>
+                </>
+            )}
+        </Sider>
+     }
 
             <Modal
                 visible={!!renamingChat}

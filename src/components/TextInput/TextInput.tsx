@@ -59,19 +59,33 @@ const Input: React.FC<TextInputProps> = ({
         >
             <div className="flex flex-col flex-grow mr-4 max-w-full">
                 <label className={`${styles["custom-label"]} `}>{label}</label>
-                <input
-                    disabled={disabled}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                    value={value}
-                    className={`${styles["custom-input"]}`}
-                    ref={inputRef}
-                    onBlur={onBlur}
-                    name={name}
-                    type={isPassword && !showPassword ? "password" : type}
-                    maxLength={maxLength}
-                    {...rest}
-                />
+                {type === "textarea" ? (
+    <textarea
+        disabled={disabled}
+        onChange={onChange}
+        placeholder={placeholder}
+        value={value}
+        className={`${styles["custom-input"]}`} // Add new styles for textarea
+        ref={inputRef}
+        name={name}
+        maxLength={maxLength}
+        {...rest}
+    />
+) : (
+    <input
+        disabled={disabled}
+        onChange={onChange}
+        placeholder={placeholder}
+        value={value}
+        className={`${styles["custom-input"]}`}
+        ref={inputRef}
+        name={name}
+        type={isPassword && !showPassword ? "password" : type}
+        maxLength={maxLength}
+        {...rest}
+    />
+)}
+
             </div>
             {isPassword && (
                 <div

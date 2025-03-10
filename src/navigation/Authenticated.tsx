@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import RequestManagement from "@Pages/AppScreens/RequestManagement";
 import PromptChat from "@Pages/AppScreens/PromptChat";
 import AghaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
+import AddNewGraph from "@Pages/AppScreens/AddNewGraph";
 
 const DashboardRoutes = [
     // {
@@ -55,6 +56,12 @@ const DashboardRoutes = [
         path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
         component: <AghaahiDashboard />
     },
+    {
+        title: "AddNewGraph",
+        path: NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_GRAPH,
+        component: <AddNewGraph />
+    },
+
     // {
     //     title: "OrderManagement",
     //     path: NavigationRoutes.DASHBOARD_ROUTES.ORDER_MANAGEMENT,

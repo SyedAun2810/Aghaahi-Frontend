@@ -1,0 +1,1 @@
+export const arrayOfDashboardItems = ["dashboard", "add-new-graph"]

@@ -32,7 +32,7 @@ const CustomSearch: React.FC<CustomSearchProps> = ({
             <Input
                 allowClear
                 placeholder={placeholder}
-                className={`w-full md:w-72 2xl:w-72 h-[44px] p-2 custom-search ${className}`}
+                className={`w-full h-[44px] p-2 custom-search ${className}`}
                 onChange={handleSearchChange}
                 prefix={<SearchIcon className="ml-2 mr-2" />}
                 value={searchText}

@@ -31,5 +31,6 @@ export const NavigationRoutes = {
     USER_MANAGEMENT:"/user-management",
     REQUEST_MANAGEMENT:"/request-management",
     PROMPT_CHAT:"/prompt-chat",
+    ADD_NEW_GRAPH:"/add-new-graph",
   },
 };
