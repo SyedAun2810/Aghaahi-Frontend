@@ -22,6 +22,7 @@ export const AuthApiService = {
   otpRegisterUser,
   otpResetPassword,
   refreshAccessToken,
+  valdiateDatabase
 };
 
 async function login(payload: loginPayload) {
@@ -108,3 +109,9 @@ async function refreshAccessToken(payload: refreshTokenPayload) {
   );
   return response;
 }
+
+async function valdiateDatabase(payload: any) {
+  const response = await ApiService.post(API_CONFIG_URLS.AUTH.VALIDATE_DATABASE, payload);
+  return response;
+}
+

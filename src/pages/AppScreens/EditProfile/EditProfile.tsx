@@ -6,7 +6,7 @@ import PictureUpload from "@Components/PictureUpload";
 import RoundedContainer from "@Components/RoundedContainer/RoundedContainer";
 import useEditProfileContainer from "./EditProfileContainer";
 import { VALIDATE } from "@Constants/validationConstants";
-import { GoogleAutocomplete } from "@Components/GoogleAutocomplete";
+// import { GoogleAutocomplete } from "@Components/GoogleAutocomplete";
 import { MAP_OPTIONS } from "@Pages/AuthScreens/SignUp/SignUp";
 import utilService from "@Utils/utils.service";
 
@@ -61,7 +61,7 @@ const EditProfile = () => {
                     </Col>
                 </Row>
                 <Row gutter={[12, 0]}>
-                    <Col span={12}>
+                    {/* <Col span={12}>
                         <Form.Item
                             name={["store", "address", "fullAddress"]}
                             rules={VALIDATE.STORE_ADDRESS as never}
@@ -75,7 +75,7 @@ const EditProfile = () => {
                                 componentRestrictions={MAP_OPTIONS}
                             />
                         </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col span={12}>
                         <Form.Item
                             name={["store", "address", "street"]}

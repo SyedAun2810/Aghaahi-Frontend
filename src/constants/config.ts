@@ -5,12 +5,14 @@ const personalController = "personal";
 const sellerAuthController = "sellers";
 const sellerTokenController = "tokens";
 const documentController = "/documents";
+const company = "company";
+const employee = "employee";
 
 export const API_CONFIG_URLS = {
   AUTH: {
     ME: `${personalController}/profile`,
-    LOGIN: `${sellerTokenController}/login`,
-    REGISTER: `${sellerAuthController}/register`,
+    LOGIN: `${employee}/login`,
+    REGISTER: `${company}/register-company`,
     LOGOUT: `${sellerTokenController}/logout`,
     RESEND_OTP: `${authController}/resend-otp`,
     UPDATE_PROFILE: `${personalController}/update-profile`,
@@ -21,6 +23,7 @@ export const API_CONFIG_URLS = {
     REFRESH_ACCESS_TOKEN: `${sellerTokenController}/refresh`,
     VERIFY_FORGOT_OTP: `${authController}/verify-forget-otp`,
     VERIFY_OTP: `${authController}/verify-otp`,
+    VALIDATE_DATABASE: `database-validator/verify`,
   },
   PROFILE: {
     CHANGE_PASSWORD: `${personalController}/change-password`,
@@ -90,6 +93,14 @@ export const API_CONFIG_URLS = {
     LISTING: `/notifications`,
     UPDATE_STATUS: `/notifications/toggle-status`,
     COUNT: `/notifications/count`
+  },
+  EMPLOYEE: {
+    ADD: `${employee}/add-employee`,
+    LISTING: `/employee`,
+    DETAIL: `/employee`,
+    DELETE: `/employees`,
+    ROLES:"role",
+    UPDATE: `${employee}`
   }
 };
 

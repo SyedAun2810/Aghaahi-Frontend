@@ -8,6 +8,7 @@ export const NavigationRoutes = {
     REGISTER: "/register",
     RESET_PASSWORD: "/reset-password",
     FORGOT_PASSWORD: "/forgot-password",
+    VALIDATE_DATABASE: "/validate-database",
   },
   DASHBOARD_ROUTES: {
     DASHBOARD: "/dashboard",
@@ -32,5 +33,9 @@ export const NavigationRoutes = {
     REQUEST_MANAGEMENT:"/request-management",
     PROMPT_CHAT:"/prompt-chat",
     ADD_NEW_GRAPH:"/add-new-graph",
+    ADD_NEW_EMPLOYEE:"/add-new-employee",
+    EMPLOYEE_LISTING:"/employee-listing",
+    EMPLOYEE_DETAIL:"/employee-detail",
+    UPDATE_EMPLOYEE:"/employee",
   },
 };

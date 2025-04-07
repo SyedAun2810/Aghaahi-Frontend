@@ -11,8 +11,8 @@ interface registerTypes {
 }
 
 export const useRegister = (onSuccess: (email?: string) => void) => {
-    return useMutation((payload: registerPayload) => AuthApiService.register(payload), {
-        onSuccess: ({ ok, response, data }: registerTypes, payload: registerPayload) => {
+    return useMutation((payload: any) => AuthApiService.register(payload), {
+        onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
                 onSuccess(payload?.email);
                 return data;

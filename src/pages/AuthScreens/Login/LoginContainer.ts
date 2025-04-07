@@ -33,8 +33,6 @@ export default function useLoginContainer(){
 
 
     const handleSubmit = (data:any) =>{
-        data.DeviceId = "any";
-        data.role = USER_ROLE;
         loginMutate(data);
     }
     const handleSignUp = () =>{

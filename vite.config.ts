@@ -17,14 +17,18 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       outDir: "build",
-      commonjsOptions: {
-        include: [/node_modules/],
-        extensions: [".js", ".cjs"],
-        strictRequires: true,
-        transformMixedEsModules: true,
+      chunkSizeWarningLimit: 2000, // Increase the chunk size limit to 1500 kB
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              return "vendor"; // Moves dependencies to a separate chunk
+            }
+          },
+        },
       },
-    },
-    resolve: {
+    }, // ✅ Correctly closed `build` section
+    resolve: { // ✅ Now properly placed outside `build`
       alias: {
         "./runtimeConfig": "./runtimeConfig.browser",
         "@Services": path.resolve(__dirname, "src/services"),
@@ -40,9 +44,9 @@ export default defineConfig(({ mode }) => {
         "@Components": path.resolve(__dirname, "src/components"),
         "@Assets": path.resolve(__dirname, "src/assets"),
         "@Navigation": path.resolve(__dirname, "src/navigation"),
-        "@Layout": path.resolve(__dirname,"src/layout"),
-        "@Styles": path.resolve(__dirname,"src/styles"),
-        "@Hooks": path.resolve(__dirname,"src/hooks"),
+        "@Layout": path.resolve(__dirname, "src/layout"),
+        "@Styles": path.resolve(__dirname, "src/styles"),
+        "@Hooks": path.resolve(__dirname, "src/hooks"),
       },
     },
   };

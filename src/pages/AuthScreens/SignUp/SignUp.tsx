@@ -1,5 +1,4 @@
 import { Flex, Form } from "antd";
-
 import utilService from "@Utils/utils.service";
 import { CustomButton } from "@Components/Button";
 import useSignUpContainer from "./SignUpContainer";
@@ -14,37 +13,46 @@ export const MAP_OPTIONS = {
     componentRestrictions: { country: "US" }
 };
 
+const GENDER_OPTIONS = [
+    {
+        label: "Male",
+        value: "male",
+    },
+    {
+        label: "Female",
+        value: "female",
+    },
+    {
+        label: "Other",
+        value: "other",
+    },
+];
 
-export const ROLEOPTIONS = [
+const LANGUAGE_OPTIONS = [
     {
-      label: "Employee",
-      value: "Employee",
+        label: "English",
+        value: "en",
     },
     {
-      label: "Super-Visor",
-      value: "Super-Visor",
+        label: "Spanish",
+        value: "es",
     },
-    {
-        label: "Manager",
-        value: "Manager",
-      },
-  ];
-  
+    // Add more languages as needed
+];
+
 const SignUp = () => {
     const {
         form,
         handleSubmit,
         handleLoginClick,
-        handlePlaceSelect,
-        validateIsAgree,
         isSigningUp
     } = useSignUpContainer();
 
     return (
         <Flex vertical justify="center" className="px-20 py-12 h-full">
             <AuthHeader
-                headerTitle="Create an Account"
-                subTitle="Create a your account to continue"
+                headerTitle="Create a Company"
+                subTitle="Create your account to continue"
             />
             <Form
                 form={form}
@@ -53,40 +61,44 @@ const SignUp = () => {
                 scrollToFirstError
                 initialValues={{
                     isRemember: false,
-                    store: {
-                        name: "",
-                        address: {
-                            city: "",
-                            fullAddress: "",
-                            country: "",
-                            state: "",
-                            zipCode: ""
-                        }
-                    }
                 }}
             >
-                <Form.Item name="firstName" rules={VALIDATE.SELLER_NAME as never}>
-                    <Input label="Name" placeholder="Enter name" />
+                <Form.Item name="first_name" rules={VALIDATE.SELLER_NAME as never}>
+                    <Input label="First Name" placeholder="Enter First Name" />
                 </Form.Item>
 
-                <Form.Item name={"storeName"} rules={VALIDATE.STORE_NAME as never}>
-                    <Input label="Store Name" placeholder="Enter store name" />
+                <Form.Item name="last_name" rules={VALIDATE.SELLER_NAME as never}>
+                    <Input label="Last Name" placeholder="Enter Last Name" />
                 </Form.Item>
 
-                <Form.Item name={"role"} rules={VALIDATE.STORE_NAME as never}>
-                    <CustomSelectInput label="Role" placeholder="Role" options={ROLEOPTIONS}/>
+                <Form.Item name="business_name" rules={VALIDATE.STORE_NAME as never}>
+                    <Input label="Business Name" placeholder="Enter business name" />
                 </Form.Item>
-             
-             
+
                 <Form.Item name="email" rules={VALIDATE.EMAIL as never}>
                     <Input label="Email" placeholder="Enter your email" />
                 </Form.Item>
-                <Form.Item name="phoneNumber" rules={VALIDATE.PHONE as never}>
+
+                <Form.Item name="country_code" >
+                    <Input label="Country Code" placeholder="Enter country code" />
+                </Form.Item>
+
+                <Form.Item name="phone_number" rules={VALIDATE.PHONE as never}>
                     <Input label="Phone Number" placeholder="Enter phone number" />
                 </Form.Item>
+
                 <Form.Item name="password" rules={VALIDATE.PASSWORD_PATTERN as never}>
                     <Input isPassword label="Password" placeholder="Enter your password" />
                 </Form.Item>
+
+                <Form.Item name="user_language" rules={VALIDATE.STORE_NAME as never}>
+                    <CustomSelectInput label="Language" placeholder="Select language" options={LANGUAGE_OPTIONS}/>
+                </Form.Item>
+
+                <Form.Item name="gender" rules={VALIDATE.STORE_NAME as never}>
+                    <CustomSelectInput label="Gender" placeholder="Select gender" options={GENDER_OPTIONS}/>
+                </Form.Item>
+
                 <Form.Item className="mt-8 text-center">
                     <CustomButton
                         title={"Sign Up"}

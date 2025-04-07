@@ -1,17 +1,15 @@
-import React, { useEffect } from "react";
 import { Layout } from "antd";
+import React from "react";
 import { Outlet } from "react-router-dom";
 
 import AppHeader from "@Layout/AuthLayout/AppHeader/AppHeader";
 import "./index.scss";
 
-import SideBar from "./SideBar";
 import useAuthStore from "@Store/authStore";
+import SideBar from "./SideBar";
 import { useUserDetail } from "./UpdateUserQuery";
 // import { makeSocketConnection } from "@Services/socket-service";
 import FullPageLoader from "@Components/FullPageLoader/FullPageLoader";
-import { useUpdateOnlineStatus } from "@Pages/AppScreens/Chat/Queries/useUpdateOnlineStatus";
-import { useGetUnreadMsgsCount } from "@Pages/AppScreens/Chat/Queries/useGetUnreadMsgsCount";
 
 const { Header, Content } = Layout;
 const AppLayout = () => {
@@ -22,22 +20,6 @@ const AppLayout = () => {
     };
 
     const { data: userData, isLoading: userDetailsLoading } = useUserDetail(onUserDetailsSuccess);
-
-    // update online status for socket
-    const { mutate: updateOnlineStatus } = useUpdateOnlineStatus();
-    const { data: unreadMsgsCount } = useGetUnreadMsgsCount();
-    const { chatToken, userData: user } = useAuthStore.getState();
-
-    useEffect(() => {
-        let statusInterval = null as NodeJS.Timeout | null;
-        if (chatToken && user !== null) {
-            statusInterval = setInterval(updateOnlineStatus, 8000);
-            // makeSocketConnection();
-        }
-        return () => {
-            statusInterval && clearInterval(statusInterval);
-        };
-    }, [user?.id]);
 
     return (
         <>

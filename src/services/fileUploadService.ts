@@ -2,7 +2,6 @@ import { UploadedFile } from "@Components/Inputs/FileUpload";
 import dayjs from "dayjs";
 import { UseFormReturn } from "react-hook-form";
 import NotificationService from "./NotificationService";
-import { ChatMediaType } from "@Pages/AppScreens/Chat/types";
 
 function uploadFileToAzure(file: File) {
   // to implement in beta

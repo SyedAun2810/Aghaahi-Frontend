@@ -31,33 +31,35 @@ export default function useSignUpContainer() {
     const { mutateAsync: uploadDocument, isLoading: isUploadingDocument } = useUploadDocuments();
 
     const handleSubmit = (data: any) => {
-        const { profileImage } = data;
-        if (!latitude || !longitude || !selectedAddress) {
-            NotificationService.error(CHANGED_AFTER_SELECTION_ERROR);
-            return;
-        }
-        if (data?.store?.address?.fullAddress !== selectedAddress) {
-            NotificationService.error(CHANGED_AFTER_SELECTION_ERROR);
-            return;
-        }
-        data.store.address.latitude = latitude;
-        data.store.address.longitude = longitude;
-        data.store.address.stateCode = streetStateCountryData?.state
-        data.store.address.countryCode = streetStateCountryData?.country
-        delete data.isAgree;
-        if (!profileImage) {
-            NotificationService.error("Kindly upload the image.");
-            return;
-        }
-        const formData = new FormData();
-        formData.append("Media", profileImage?.originFileObj);
-        uploadDocument(formData)
-            .then((res) => {
-                data.store.imageId = res?.data?.data[0].id;
-                delete data.profileImage;
-                registerMutate(data);
-            })
-            .catch((e) => console.error(e));
+
+        registerMutate(data);
+        // const { profileImage } = data;
+        // if (!latitude || !longitude || !selectedAddress) {
+        //     NotificationService.error(CHANGED_AFTER_SELECTION_ERROR);
+        //     return;
+        // }
+        // if (data?.store?.address?.fullAddress !== selectedAddress) {
+        //     NotificationService.error(CHANGED_AFTER_SELECTION_ERROR);
+        //     return;
+        // }
+        // data.store.address.latitude = latitude;
+        // data.store.address.longitude = longitude;
+        // data.store.address.stateCode = streetStateCountryData?.state
+        // data.store.address.countryCode = streetStateCountryData?.country
+        // delete data.isAgree;
+        // if (!profileImage) {
+        //     NotificationService.error("Kindly upload the image.");
+        //     return;
+        // }
+        // const formData = new FormData();
+        // formData.append("Media", profileImage?.originFileObj);
+        // uploadDocument(formData)
+        //     .then((res) => {
+        //         data.store.imageId = res?.data?.data[0].id;
+        //         delete data.profileImage;
+        //         registerMutate(data);
+        //     })
+        //     .catch((e) => console.error(e));
         
     };
 

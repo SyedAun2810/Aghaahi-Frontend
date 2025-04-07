@@ -5,10 +5,6 @@ const Dashboard = lazy(
   () => import("@Pages/AppScreens/Dashboard/Dashboard")
 );
 
-const Chat = lazy(
-  () => import("@Pages/AppScreens/Chat/Chat")
-);
-
 const MyEarnings = lazy(
   () => import("@Pages/AppScreens/MyEarnings/MyEarnings")
 );

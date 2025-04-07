@@ -1,0 +1,14 @@
+@import "@Styles/utils.scss";
+
+.wrapper-container {
+    height: calc(100vh - 7vh); // Adjust height to exclude app-header (assumed height: 60px)
+    .left-container {
+        background-image: url(../../../assets/images/AuthBackground.jpg);
+        background-repeat: no-repeat;
+        object-fit: cover;
+        background-size: 100% 100%;
+        height: calc(100vh - 7vh);
+        position: sticky;
+        top:0;
+    }
+}

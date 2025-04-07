@@ -7,6 +7,8 @@ import SignUp from "@Pages/AuthScreens/SignUp/SignUp";
 import AuthLayout from "@Layout/UnAuthLayout/UnAuthLayout";
 import ForgotPassword from "@Pages/AuthScreens/ForgotPassword/ForgotPassword";
 import ResetPassword from "@Pages/AuthScreens/ResetPassword/ResetPassword";
+import RegisterDatabase from "@Pages/AuthScreens/RegisterDatabase";
+
 const RouteList = [
     {
         path: NavigationRoutes.AUTH_ROUTES.LOGIN,
@@ -27,11 +29,14 @@ const RouteList = [
     {
         path: NavigationRoutes.AUTH_ROUTES.VERIFY_EMAIL,
         component: Otp
+    },
+    {
+        path: NavigationRoutes.AUTH_ROUTES.VALIDATE_DATABASE,
+        component: RegisterDatabase
     }
 ];
 
 const UnAuthenticated = () => {
-
     return (
         <Routes>
             <Route path={NavigationRoutes.AUTH_ROUTES.INDEX} element={<AuthLayout />}>

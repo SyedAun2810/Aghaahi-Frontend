@@ -1,1 +1,1 @@
-export const arrayOfDashboardItems = ["dashboard", "add-new-graph"]
+export const arrayOfDashboardItems = ["dashboard", "add-new-graph", "add-new-employee","employee-listing", "employee-detail", "employee"];

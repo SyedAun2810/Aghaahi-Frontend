@@ -13,11 +13,11 @@ type useLoginType = {
     onVerificationFail: (data: string) => void;
 };
 
-export const useLogin = ({ onSuccess, onVerificationFail }: useLoginType) => {
-    return useMutation((payload: loginPayload) => AuthApiService.login(payload), {
-        onSuccess: ({ ok, response, data }: loginTypes, payload: loginPayload) => {
+export const useLogin = ({ onSuccess, onVerificationFail }: any) => {
+    return useMutation((payload: any) => AuthApiService.login(payload), {
+        onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
-                data?.data?.isVerified ? onSuccess(data) : onVerificationFail(payload?.email);
+                onSuccess(data) 
                 return;
             }
             NotificationService.error(data?.data?.metadata?.message);

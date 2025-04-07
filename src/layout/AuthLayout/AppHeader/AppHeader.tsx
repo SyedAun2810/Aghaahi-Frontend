@@ -8,17 +8,23 @@ import ProfileDropdown from "@Components/ProfileDropdown/ProdileDropdown";
 import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
 
 const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: number }) => {
-    const { removeUserAuthentication } = useAuthStore();
+    let { removeUserAuthentication, isOwner } = useAuthStore();
     const { route } = useAuthLayoutContainer();
 
+    console.log(route)
+
     let isDashboard = arrayOfDashboardItems.includes(route[1]);
+    let isEmployeeSection = route[1] === "add-new-employee";
+
     let isAddNewGraph = route[1] === "add-new-graph";
     const navigate = useNavigate();
 
     const handleLogout = () => {
         queryClient.clear();
         removeUserAuthentication();
-    };
+    };  
+
+    isOwner = true;
 
     return (
         <Flex align="center" gap={12} className="mr-8 ">
@@ -40,9 +46,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                     {isAddNewGraph ? (
                         <p
                             className="mr-4 cursor-pointer "
-                            onClick={() =>
-                                navigate(NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD)
-                            }
+                            onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD)}
                         >
                             Go to Dashboard
                         </p>
@@ -58,6 +62,23 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                     )}
                 </>
             )}
+            {!isDashboard && isOwner && (
+                <p
+                    className="mr-4 cursor-pointer "
+                    onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_EMPLOYEE)}
+                >
+                    Add Employee
+                </p>
+            )}
+            {isEmployeeSection && isOwner && (
+                <p
+                    className="mr-4 cursor-pointer "
+                    onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_LISTING)}
+                >
+                    View Employees
+                </p>
+            )}
+
             <ProfileDropdown logout={handleLogout} />
         </Flex>
     );

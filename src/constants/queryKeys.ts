@@ -65,5 +65,13 @@ export const queryKeys = {
     notifications: {
         listing: "NOTIFICATION_LISTING",
          notificationCount: "NOTIFICATION_COUNT"
+    },
+    employee:{
+        roles: "employee_roles",
+        getEmployee: "get_employee",
+        getEmployeeDetail: "get_Employee_cDetail",
+    },
+    database:{
+        getTables: "get_tables"
     }
 }
