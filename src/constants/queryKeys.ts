@@ -50,13 +50,6 @@ export const queryKeys = {
         listing: "EARNING_MANAGEMENT",
         payoutListing: "PAYOUT_LISTING"
     },
-    chat: {
-        userListing: ["CHAT", "CHAT_USER_LISTING"],
-        chatListing: ["CHAT", "CHAT_MESSAGES_LISTING"],
-        chatParticipantsOnlineStatus: ["CHAT", "CHAT_PARTICIPANTS_ONLINE_STATUS"],
-        chatUnreadMessagesCount: ["CHAT", "UNREAD_MSGS_COUNT"],
-        deleteMessage: ["CHAT", "DELETE_MESSAGE"],
-    },
     dashboard: {
         analyticalBoxes: "ANALYTICAL_BOXES",
         recentOrders: "RECENT_ORDERS",
@@ -70,6 +63,10 @@ export const queryKeys = {
         roles: "employee_roles",
         getEmployee: "get_employee",
         getEmployeeDetail: "get_Employee_cDetail",
+    },
+    chat:{
+        history: "history",
+        conversation : "conversation",
     },
     database:{
         getTables: "get_tables"

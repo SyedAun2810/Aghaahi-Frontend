@@ -38,6 +38,11 @@ const DashboardRoutes = [
         component: <PromptChat />
     },
     {
+        title: "PromptChat",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/:id`,
+        component: <PromptChat />
+    },
+    {
         title: "Dashboard",
         path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
         component: <AghaahiDashboard />

@@ -1,8 +1,10 @@
 
 const MessageContent = ({ isExpanded, toggleExpand, content }: any) => {
     return (
-        <div className="ml-4">
-            <p className={`text-base ${isExpanded ? "" : "line-clamp-3"}`}>{content || ""}</p>
+
+
+        <div className="whitespace-pre-wrap ml-4">
+            {content}
         </div>
     );
 };

@@ -19,7 +19,7 @@ const AppLayout = () => {
         updateUserData(data?.data);
     };
 
-    const { data: userData, isLoading: userDetailsLoading } = useUserDetail(onUserDetailsSuccess);
+    // const { data: userData, isLoading: userDetailsLoading } = useUserDetail(onUserDetailsSuccess);
 
     return (
         <>

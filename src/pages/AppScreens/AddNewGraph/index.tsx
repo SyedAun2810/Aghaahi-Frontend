@@ -69,7 +69,7 @@ const Dashboard = () => {
         />
       </Flex>
 
-      <Row gutter={[16, 16]} className="border-bottom pb-6">
+      <Row gutter={[16, 16]} className="border-bottom pb-6 px-4">
         {filteredGraphs.length > 0 ? (
           filteredGraphs.map((graph) => (
             <Col key={graph.id} span={6}>

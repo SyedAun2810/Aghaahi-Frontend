@@ -7,6 +7,7 @@ const sellerTokenController = "tokens";
 const documentController = "/documents";
 const company = "company";
 const employee = "employee";
+const chat = "chat";
 
 export const API_CONFIG_URLS = {
   AUTH: {
@@ -101,7 +102,12 @@ export const API_CONFIG_URLS = {
     DELETE: `/employees`,
     ROLES:"role",
     UPDATE: `${employee}`
-  }
+  },
+  Chatbot: {
+    ASK: `${chat}/ask`,
+    HISTORY: `${chat}/history`,
+    CONVERSATION: `${chat}/conversation`,
+  },
 };
 
 export const multiFormDataHeader = {
