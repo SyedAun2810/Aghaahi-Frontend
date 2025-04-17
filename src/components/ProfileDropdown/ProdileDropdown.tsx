@@ -6,6 +6,9 @@ import useAuthStore from "@Store/authStore";
 import CustomAvatar from "@Components/CustomAvatar";
 import DropdownIcon from "@Assets/icons/dropdownIcon.svg";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
+import Logo from "@Assets/images/logo.png";
+
+
 
 interface propParams {
     logout: () => void;
@@ -51,7 +54,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
             >
                 <Flex align="center" gap={8}>
                     {true ? (
-                        <Avatar alt="User Image" src={image} />
+                        <Avatar alt="User Image" src={Logo} />
                     ) : (
                         <CustomAvatar
                             name={name}
