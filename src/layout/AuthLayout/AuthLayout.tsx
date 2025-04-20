@@ -32,7 +32,7 @@ const AppLayout = () => {
                             padding: 0
                         }}
                     >
-                        <AppHeader chatUnreadMessagesCount={0} />
+                        {/* <AppHeader chatUnreadMessagesCount={0} /> */}
                     </Header>
                     <Content
                         // style={{

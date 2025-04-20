@@ -23,7 +23,7 @@ const Navigator = () => {
     return (
         <ConfigProvider theme={config}>
             <Layout className="">
-                {isAuth ? (
+                {true ? (
                     <React.Suspense fallback={<FullPageLoader />}>
                         <Authenticated />
                     </React.Suspense>

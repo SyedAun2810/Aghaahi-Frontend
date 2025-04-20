@@ -17,21 +17,6 @@ import { NavigationRoutes } from "./NavigationRoutes";
 import ViewEmployeeDetails from "@Pages/AppScreens/AddEmployee/EmployeeDetails/ViewEmployeeDetails";
 
 const DashboardRoutes = [
-    // {
-    //     title: "Dashboard",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
-    //     component: <Dashboard />
-    // },
-    // {
-    //     title: "MyEarnings",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.MY_EARNINGGS,
-    //     component: <MyEarnings />
-    // },
-    // {
-    //     title: "ChatDetails",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.CHAT_DETAILS,
-    //     component: <Chat />
-    // },
     {
         title: "PromptChat",
         path: NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT,
@@ -78,46 +63,6 @@ const DashboardRoutes = [
         path: `${NavigationRoutes.DASHBOARD_ROUTES.UPDATE_EMPLOYEE}/:id`,
         component: <AddEmployee />
     },
-    // {
-    //     title: "OrderManagement",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.ORDER_MANAGEMENT,
-    //     component: <OrderManagement />
-    // },
-    // {
-    //     title: "OrderDetails",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.ORDER_DETAILS,
-    //     component: <OrderDetails />
-    // },
-    // {
-    //     title: "GenerateLabels",
-    //     path: `${NavigationRoutes.DASHBOARD_ROUTES.GENERATE_LABELS_MAIN}/:id`,
-    //     component: <GenerateLabels />
-    // },
-    // {
-    //     title: "PaymentDetails",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.PAYMENT_DETAILS,
-    //     component: <PaymentDetails />
-    // },
-    // {
-    //     title: "ProductManagement",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.PRODUCT_MANAGEMENT,
-    //     component: <ProductManagement />
-    // },
-    // {
-    //     title: "ProductDetails",
-    //     path: `${NavigationRoutes.DASHBOARD_ROUTES.PRODUCT_DETAILS}/:id`,
-    //     component: <ProductDetails />
-    // },
-    // {
-    //     title: "AddProduct",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.ADD_PRODUCT,
-    //     component: <AddProduct />
-    // },
-    // {
-    //     title: "ProductEdit",
-    //     path: `${NavigationRoutes.DASHBOARD_ROUTES.PRODUCT_EDIT}/:id`,
-    //     component: <AddProduct />
-    // },
     {
         title: "UserManagement",
         path: NavigationRoutes.DASHBOARD_ROUTES.USER_MANAGEMENT,
@@ -128,16 +73,6 @@ const DashboardRoutes = [
         path: NavigationRoutes.DASHBOARD_ROUTES.REQUEST_MANAGEMENT,
         component: <RequestManagement/>
     },
-    // {
-    //     title: "BannerDetails",
-    //     path: `${NavigationRoutes.DASHBOARD_ROUTES.BANNER_MANAGEMENT_DETAILS}/:id`,
-    //     component: <BannerManagementDetails />
-    // },
-    // {
-    //     title: "RequestBanner",
-    //     path: NavigationRoutes.DASHBOARD_ROUTES.REQUEST_BANNER,
-    //     component: <RequestBanner />
-    // },
     {
         title: "ChangePassword",
         path: NavigationRoutes.DASHBOARD_ROUTES.CHANGE_PASSWORD,
@@ -151,8 +86,8 @@ const DashboardRoutes = [
 ];
 
 const Authenticated = () => {
-    const { isAuth } = useAuthStore();
-    const NAVIGATE_TO = isAuth
+    const { isAuth } = useAuthStore();  
+    const NAVIGATE_TO = true
         ? NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT
         : NavigationRoutes.AUTH_ROUTES.LOGIN;
 

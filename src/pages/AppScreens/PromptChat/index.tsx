@@ -33,6 +33,19 @@ const PromptChat = () => {
         return () => clearTimeout(timeout);
     }, [localMessage, listingData]);
 
+    useEffect(() => {
+        // Load listingData from local storage on component mount
+        const storedData = localStorage.getItem("listingData");
+        if (storedData) {
+            setListingData(JSON.parse(storedData));
+        }
+    }, []);
+
+    useEffect(() => {
+        // Save listingData to local storage whenever it changes
+        localStorage.setItem("listingData", JSON.stringify(listingData));
+    }, [listingData]);
+
     const { mutate: sendPromptMutate, isLoading: isGettingAskResponse } = useSendPrompt({
         onSuccess: (data: any) => {
             // If id is null, update it with the conversation ID from the response
@@ -143,7 +156,7 @@ const PromptChat = () => {
                 </div>
             ) : (
                 // Chat Listing
-                listingData?.length > 0 && (
+                listingData?.length > 0  ?  (
                     <div className="h-[85%] bg-white overflow-y-auto" ref={containerRef}>
                         {listingData.map((item: any, index: number) => (
                             <ChatContent
@@ -153,6 +166,10 @@ const PromptChat = () => {
                             />
                         ))}
                     </div>
+                ):(
+                     <div className="h-[85%] bg-white">
+                        
+                        </div>
                 )
             )}
 
@@ -161,7 +178,7 @@ const PromptChat = () => {
                 setLocalMessage={setLocalMessage}
                 localMessage={localMessage}
                 handleFormSubmit={handleFormSubmit}
-                isEmptyChat={isEmptyChat}
+                isEmptyChat={false}
             />
         </div>
     );
@@ -180,7 +197,9 @@ function ChatContent({
         setIsExpanded((prev) => !prev);
     };
 
-    chatData.response = convertClassNameToClass(chatData.response);
+    if(chatData.response != null){
+        chatData.response = convertClassNameToClass(chatData.response);
+    }
 
     console.log(chatData.base64_image);
     return (
@@ -294,6 +313,7 @@ const useConversationListing = (id: any) => {
         }
     );
 };
+
 async function GetConversationListing(id: any) {
     if (!id) {
         console.log("GetConversationListing: ID is undefined, returning default response.");

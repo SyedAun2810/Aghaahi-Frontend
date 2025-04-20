@@ -95,9 +95,11 @@ const SideBar = () => {
         setChatToDelete(null);
     };
 
-    const { data: chatHistory, isFetching } = useChatHistoryListing();
-    const chatHistoryData = chatHistory?.data.result || [];
+    // const { data: chatHistory, isFetching } = useChatHistoryListing();
 
+
+    const chatHistoryData =  [];
+    const isFetching = false;
 
     const menu = (chat: string) => (
         <Menu>
@@ -237,20 +239,20 @@ const SideBar = () => {
     );
 };
 
-const useChatHistoryListing = () => {
-    return useQuery([queryKeys.chat.history], async () => {
-        const { ok, data } = await GetChatHistoryListing();
-        if (ok) {
-            return data;
-        }
-        throw new Error("Failed to fetch employee roles");
-    });
-};
+// const useChatHistoryListing = () => {
+//     return useQuery([queryKeys.chat.history], async () => {
+//         const { ok, data } = await GetChatHistoryListing();
+//         if (ok) {
+//             return data;
+//         }
+//         throw new Error("Failed to fetch employee roles");
+//     });
+// };
 
-async function GetChatHistoryListing() {
-    const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
-    return response;
-}
+// async function GetChatHistoryListing() {
+//     const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
+//     return response;
+// }
 
 
 export const useInitiateChat = () => {
