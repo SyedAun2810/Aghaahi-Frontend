@@ -12,8 +12,11 @@ import {
   Scatter,
   ResponsiveContainer,
 } from 'recharts';
+import { fillColors } from './graphConst'; // Import color pool
 
-const data = [
+export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
+
+const defaultData = [
   { name: 'Page A', uv: 590, pv: 800, amt: 1400, cnt: 490 },
   { name: 'Page B', uv: 868, pv: 967, amt: 1506, cnt: 590 },
   { name: 'Page C', uv: 1397, pv: 1098, amt: 989, cnt: 350 },
@@ -22,9 +25,21 @@ const data = [
   { name: 'Page F', uv: 1400, pv: 680, amt: 1700, cnt: 380 },
 ];
 
-const ComposedChartComponent = () => {
+const ComposedChartComponent = ({
+  data = defaultData, // Use default data if none is provided
+  areaConfig = { dataKey: 'amt' },
+  barConfig = { dataKey: 'pv' },
+  lineConfig = { dataKey: 'uv' },
+  scatterConfig = { dataKey: 'cnt' },
+}: {
+  data?: { name: string; [key: string]: number | string }[];
+  areaConfig?: { dataKey: string };
+  barConfig?: { dataKey: string };
+  lineConfig?: { dataKey: string };
+  scatterConfig?: { dataKey: string };
+}) => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={"100%"}>
       <ComposedChart
         data={data}
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
@@ -34,10 +49,26 @@ const ComposedChartComponent = () => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Area type="monotone" dataKey="amt" fill="#8884d8" stroke="#8884d8" />
-        <Bar dataKey="pv" barSize={20} fill="#413ea0" />
-        <Line type="monotone" dataKey="uv" stroke="#ff7300" />
-        <Scatter dataKey="cnt" fill="red" />
+        <Area
+          type="monotone"
+          dataKey={areaConfig.dataKey}
+          fill={getRandomColor(fillColors)} // Dynamically set fill color
+          stroke={getRandomColor(fillColors)} // Dynamically set stroke color
+        />
+        <Bar
+          dataKey={barConfig.dataKey}
+          barSize={20}
+          fill={getRandomColor(fillColors)} // Dynamically set fill color
+        />
+        <Line
+          type="monotone"
+          dataKey={lineConfig.dataKey}
+          stroke={getRandomColor(fillColors)} // Dynamically set stroke color
+        />
+        <Scatter
+          dataKey={scatterConfig.dataKey}
+          fill={getRandomColor(fillColors)} // Dynamically set fill color
+        />
       </ComposedChart>
     </ResponsiveContainer>
   );

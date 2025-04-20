@@ -11,6 +11,7 @@ import PieChart from "@Assets/images/graphImges/PieChart/piechart.png";
 import GeoChart from "@Assets/images/graphImges/others/geo-graph.png";
 import RadarChart from "@Assets/images/graphImges/others/radar-chart.png";
 import RadialChart from "@Assets/images/graphImges/others/radial-chart.png";
+import MetricsCard from "@Assets/images/graphImges/metricsCard.png";
 
 const graphImages = () => {
   return {
@@ -30,7 +31,8 @@ const graphImages = () => {
     otherCharts: {
       GeoChart,
       RadarChart,
-      RadialChart
+      RadialChart,
+      MetricsCard
     }
   };
 };

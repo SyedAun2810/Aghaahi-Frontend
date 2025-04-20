@@ -14,9 +14,10 @@ const graphs = [
   { id: 5, name: "Customize Shape Bar Chart", category: "Bar Chart", image: graphImages().barCharts.CustomizeShapeBarChart },
   { id: 6, name: "Line And Bar Chart", category: "Bar Chart", image: graphImages().barCharts.LineAndBarChart },
   { id: 7, name: "Pie Chart", category: "Pie Chart", image: graphImages().pieCharts.PieChart },
-  { id: 8, name: "Geo Chart", category: "Others", image: graphImages().otherCharts.GeoChart },
+  // { id: 8, name: "Geo Chart", category: "Others", image: graphImages().otherCharts.GeoChart },
   { id: 9, name: "Radar Chart", category: "Others", image: graphImages().otherCharts.RadarChart },
   { id: 10, name: "Radial Chart", category: "Others", image: graphImages().otherCharts.RadialChart },
+  { id: 11, name: "Card", category: "Others", image: graphImages().otherCharts.MetricsCard },
 ];
 
 const categories = ["All", "Line Chart", "Bar Chart", "Pie Chart", "Others"];

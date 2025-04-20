@@ -1,4 +1,3 @@
-
 import { API_CONFIG_URLS } from "@Constants/config";
 import { queryKeys } from "@Constants/queryKeys";
 import ApiService from "@Services/ApiService";
@@ -9,7 +8,6 @@ import { useParams } from "react-router-dom";
 import ChatFooter from "./Components/ChatFooter";
 import { CloudCog } from "lucide-react";
 import { set } from "lodash";
-
 
 const PromptChat = () => {
     const [form] = Form.useForm();
@@ -43,7 +41,6 @@ const PromptChat = () => {
                 console.log("Setting new conversation ID:", newId);
                 window.history.replaceState(null, "", `/prompt-chat/${newId}`);
                 setParamId(newId); // Update the paramId state
-
             }
             setIsEmptyChat(false);
 
@@ -170,7 +167,6 @@ const PromptChat = () => {
     );
 };
 
-
 function ChatContent({
     chatData,
     isLoading,
@@ -184,6 +180,9 @@ function ChatContent({
         setIsExpanded((prev) => !prev);
     };
 
+    chatData.response = convertClassNameToClass(chatData.response);
+
+    console.log(chatData.base64_image);
     return (
         <div className="p-4 bg-white px-72 my-2">
             <UserPrompt
@@ -207,11 +206,22 @@ function ChatContent({
                     ></div>
                 </div>
             ) : (
-                <div dangerouslySetInnerHTML={{ __html: chatData.response }} />
+                chatData.base64_image ? (
+                    <div className="h-[600px]">
+                        <img
+                            className="h-[400px]"
+                            src={`data:image/jpeg;base64,${chatData.base64_image}`} // Removed extra `/`lkasdjlk"  /></div>
+                            alt="Chat Image"
+                        />
+                    </div>
+                ) : (
+                    <div dangerouslySetInnerHTML={{ __html: chatData.response }} />
+                )
             )}
         </div>
     );
 }
+
 function UserPrompt({
     isExpanded,
     toggleExpand,
@@ -253,12 +263,16 @@ export const useSendPrompt = ({ onSuccess, onVerificationFail }: any) => {
     );
 };
 
-async function sendPrompt(payload: any) {
+function convertClassNameToClass(htmlString: string): string {
+    return htmlString.replace(/className=/g, "class=");
+}
 
+async function sendPrompt(payload: any) {
     console.log(payload, "Payload in sendPrompt function");
     const response = await ApiService.post(
         `${API_CONFIG_URLS.Chatbot.ASK}`, payload
     );
+
     return response;
 }
 

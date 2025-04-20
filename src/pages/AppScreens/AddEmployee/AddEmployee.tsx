@@ -14,6 +14,7 @@ import styles from "./AddEmployee.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
+import RoundedContainer from "@Components/RoundedContainer/RoundedContainer";
 
 const GENDER_OPTIONS = [
     { label: "Male", value: "male" },
@@ -25,7 +26,7 @@ const AddEmployee = () => {
     const [form] = Form.useForm();
     const { id } = useParams(); // Get employee ID from URL for update mode
     const isUpdateMode = !!id;
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const { data: roles } = useEmployeeRoles();
     const { data: employeeDetails, isLoading: isEmployeeLoading } = useEmployeeDetail(id ? parseInt(id) : null);
@@ -34,7 +35,7 @@ const AddEmployee = () => {
         isUpdateMode ? updateEmployee : registerEmployee
     );
 
-    if(isSuccess)
+    if (isSuccess)
         navigate(`${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_DETAIL}/${id}`);
 
     // Set form values when in update mode and data is loaded
@@ -69,12 +70,12 @@ const AddEmployee = () => {
 
     return (
         <Wrapper>
-            <Flex vertical justify="center" className="px-20 py-12 h-full">
+            <Flex vertical justify="center" className="px-4 py-12 h-full">
                 <AuthHeader
                     headerTitle={isUpdateMode ? "Update Employee" : "Add Employee"}
                     subTitle={
-                        isUpdateMode 
-                            ? "Update the details of the employee" 
+                        isUpdateMode
+                            ? "Update the details of the employee"
                             : "Fill in the details to add a new employee"
                     }
                 />
@@ -85,83 +86,101 @@ const AddEmployee = () => {
                     initialValues={{
                         country_code: "+1",
                         gender: "female",
-                        status: true
+                        status: true,
                     }}
                 >
-                    <Form.Item name="name" rules={VALIDATE.SELLER_NAME as never}>
-                        <Input
-                            label="Name"
-                            placeholder="Enter full name"
-                        />
-                    </Form.Item>
+                    <Row gutter={16}>
+                        {/* Name */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="name" rules={VALIDATE.SELLER_NAME as never}>
+                                <Input label="Name" placeholder="Enter full name" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="email" rules={VALIDATE.EMAIL as never}>
-                        <Input
-                            label="Email"
-                            placeholder="Enter email address"
-                            disabled={isUpdateMode} // Email typically shouldn't be changed after creation
-                        />
-                    </Form.Item>
+                        {/* Email */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="email" rules={VALIDATE.EMAIL as never}>
+                                <Input
+                                    label="Email"
+                                    placeholder="Enter email address"
+                                    disabled={isUpdateMode} // Email typically shouldn't be changed after creation
+                                />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="country_code">
-                        <Input
-                            label="Country Code"
-                            placeholder="Enter country code"
-                        />
-                    </Form.Item>
+                        {/* Country Code */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="country_code">
+                                <Input label="Country Code" placeholder="Enter country code" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="phone_number" rules={VALIDATE.PHONE as never}>
-                        <Input
-                            label="Phone Number"
-                            placeholder="Enter phone number"
-                        />
-                    </Form.Item>
+                        {/* Phone Number */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="phone_number" rules={VALIDATE.PHONE as never}>
+                                <Input label="Phone Number" placeholder="Enter phone number" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="role_id" rules={VALIDATE.ROLE as never}>
-                        <CustomSelectInput
-                            label="Role"
-                            placeholder="Select role"
-                            options={roleOptions}
-                        />
-                    </Form.Item>
+                        {/* Role */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="role_id" rules={VALIDATE.ROLE as never}>
+                                <CustomSelectInput
+                                    label="Role"
+                                    placeholder="Select role"
+                                    options={roleOptions}
+                                />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="salary" rules={VALIDATE.SALARY as never}>
-                        <Input
-                            label="Salary"
-                            placeholder="Enter salary"
-                            type="number"
-                        />
-                    </Form.Item>
+                        {/* Salary */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="salary" rules={VALIDATE.SALARY as never}>
+                                <Input label="Salary" placeholder="Enter salary" type="number" />
+                            </Form.Item>
+                        </Col>
 
-                    {!isUpdateMode && (
-                        <Form.Item name="password" rules={VALIDATE.PASSWORD_PATTERN as never}>
-                            <Input
-                                isPassword
-                                label="Password"
-                                placeholder="Enter password"
-                            />
-                        </Form.Item>
-                    )}
+                        {/* Password (Only for Add Mode) */}
+                        {!isUpdateMode && (
+                            <Col xs={24} sm={24} md={12}>
+                                <Form.Item name="password" rules={VALIDATE.PASSWORD_PATTERN as never}>
+                                    <Input isPassword label="Password" placeholder="Enter password" />
+                                </Form.Item>
+                            </Col>
+                        )}
 
-                    <Form.Item name="gender" rules={VALIDATE.GENDER as never}>
-                        <CustomSelectInput
-                            label="Gender"
-                            placeholder="Select gender"
-                            options={GENDER_OPTIONS}
-                        />
-                    </Form.Item>
+                        {/* Gender */}
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item name="gender" rules={VALIDATE.GENDER as never}>
+                                <CustomSelectInput
+                                    label="Gender"
+                                    placeholder="Select gender"
+                                    options={GENDER_OPTIONS}
+                                />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item name="status" valuePropName="checked">
-                        <Checkbox>Employee Status Active?</Checkbox>
-                    </Form.Item>
+                        {/* Status */}
+                        <Col xs={24} sm={24} md={24}>
+                            <Form.Item name="status" valuePropName="checked">
+                                <Checkbox>Employee Status Active?</Checkbox>
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item className="mt-8 text-center">
-                        <CustomButton
-                            title={isUpdateMode ? "Update Employee" : "Add Employee"}
-                            className="text-base w-[90%]"
-                            isLoading={isSubmitting || isEmployeeLoading}
-                        />
-                    </Form.Item>
+                        <Col xs={24} sm={24} md={8}>
+                            <Form.Item className="mt-8 text-center">
+                                <CustomButton
+                                    title={isUpdateMode ? "Update Employee" : "Add Employee"}
+                                    className="text-base w-[100%]"
+                                    isLoading={isSubmitting}
+                                />
+                            </Form.Item>
+                        </Col>
+
+                    </Row>
+
+                    {/* Submit Button */}
+
                 </Form>
             </Flex>
         </Wrapper>
@@ -171,6 +190,10 @@ const AddEmployee = () => {
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className={`${styles["wrapper-container"]} `}>
+            <RoundedContainer className="my-4 mx-4">
+
+                {children}
+            </RoundedContainer>
             <Row>
                 <Col
                     xs={0}
@@ -179,20 +202,21 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
                     lg={14}
                     xl={14}
                     xxl={15}
-                    className={`${styles["left-container"]}`}
+                // className={`${styles["left-container"]}`}
                 >
-                    <div className="mt-8 ml-20 flex flex-col pb-16 h-full">
+
+                    {/* <div className="mt-8 ml-20 flex flex-col pb-16 h-full">
                         <img src={Logo} width={150} height={150} className="" />
                         <div className="text-white mt-auto">
                             <h1 className="2xl:text-[32px] xl:text-[30px] lg:text-[32px] mt-4 max-w-xl font-[700]">
                                 Aghaahi Get your Insights by Prompts
                             </h1>
                         </div>
-                    </div>
+                    </div> */}
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white">
+                {/* <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white">
                     {children}
-                </Col>
+                </Col> */}
             </Row>
         </div>
     );
@@ -240,7 +264,7 @@ const registerEmployee = (payload: any) => {
 };
 
 const updateEmployee = (payload: any) => {
-    let response  = ApiService.put(`${API_CONFIG_URLS.EMPLOYEE.UPDATE}/${payload.id}`, payload);
+    let response = ApiService.put(`${API_CONFIG_URLS.EMPLOYEE.UPDATE}/${payload.id}`, payload);
     return response;
 };
 

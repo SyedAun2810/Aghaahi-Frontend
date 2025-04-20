@@ -1,5 +1,8 @@
 import React from 'react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { fillColors } from './graphConst'; // Import color pool
+
+export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
 const defaultData = [
   { subject: 'Math', A: 120, B: 110, fullMark: 150 },
@@ -10,14 +13,33 @@ const defaultData = [
   { subject: 'History', A: 65, B: 85, fullMark: 150 },
 ];
 
-const RadarChartComponent = ({ data = defaultData }) => {
+const RadarChartComponent = ({
+  data = defaultData, // Use default data if none is provided
+  radarConfigs = [
+    { name: 'Student A', dataKey: 'A' },
+    { name: 'Student B', dataKey: 'B' },
+  ], // Expect configurations for multiple datasets
+}: {
+  data?: { subject: string; [key: string]: number | string }[];
+  radarConfigs: { name: string; dataKey: string }[];
+}) => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={"100%"}>
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
         <PolarGrid />
         <PolarAngleAxis dataKey="subject" />
         <PolarRadiusAxis />
-        <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+        <Tooltip formatter={(value, name) => [`${value}`, `${name}`]} /> {/* Add Tooltip */}
+        {radarConfigs.map((config, index) => (
+          <Radar
+            key={index}
+            name={config.name}
+            dataKey={config.dataKey}
+            stroke={getRandomColor(fillColors)} // Dynamically set stroke color
+            fill={getRandomColor(fillColors)} // Dynamically set fill color
+            fillOpacity={0.6} // Set default fill opacity
+          />
+        ))}
       </RadarChart>
     </ResponsiveContainer>
   );

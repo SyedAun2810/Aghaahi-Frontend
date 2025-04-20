@@ -1,5 +1,8 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { fillColors } from './graphConst'; // Import color pool
+
+export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
 const defaultData = [
   { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
@@ -11,9 +14,15 @@ const defaultData = [
   { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
 ];
 
-const AreaChartComponent = ({ data = defaultData }) => {
+const AreaChartComponent = ({
+  data = defaultData, // Use default data if none is provided
+  dataKeys = ['uv', 'pv', 'amt'], // Default data keys for areas
+}: {
+  data?: { name: string; [key: string]: number | string }[];
+  dataKeys?: string[];
+}) => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={"100%"}>
       <AreaChart
         data={data}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -22,9 +31,15 @@ const AreaChartComponent = ({ data = defaultData }) => {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Area type="monotone" dataKey="uv" stackId="1" stroke="#8884d8" fill="#8884d8" />
-        <Area type="monotone" dataKey="pv" stackId="1" stroke="#82ca9d" fill="#82ca9d" />
-        <Area type="monotone" dataKey="amt" stackId="1" stroke="#ffc658" fill="#ffc658" />
+        {dataKeys.map((dataKey, index) => (
+          <Area
+            key={index}
+            type="monotone"
+            dataKey={dataKey}
+            stroke={getRandomColor(fillColors)} // Dynamically set stroke color
+            fill={getRandomColor(fillColors)} // Dynamically set fill color
+          />
+        ))}
       </AreaChart>
     </ResponsiveContainer>
   );

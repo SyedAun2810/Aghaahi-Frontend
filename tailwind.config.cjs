@@ -29,7 +29,8 @@ module.exports = {
         "header-primary": "#0687EF",
         "header-selected-filter":"#0C73CB",
         "filter-color": "#DBEEFF",
-        "darkGray": '#292A2D'
+        "darkGray": '#292A2D',
+        "#5950CB":"#5950CB"
       },
       screens: {
         '2xl': '1440px',

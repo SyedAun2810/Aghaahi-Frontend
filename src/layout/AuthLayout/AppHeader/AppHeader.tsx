@@ -15,6 +15,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
 
     let isDashboard = arrayOfDashboardItems.includes(route[1]);
     let isEmployeeSection = route[1] === "add-new-employee";
+    let isEmployeeListing = route[1] === "employee-listing";
 
     let isAddNewGraph = route[1] === "add-new-graph";
     const navigate = useNavigate();
@@ -65,17 +66,17 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
             {!isDashboard && isOwner && (
                 <p
                     className="mr-4 cursor-pointer "
+                    onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_LISTING)}
+                >
+                    User Management
+                </p>
+            )}
+            {isEmployeeListing && isOwner && (
+                <p
+                    className="mr-4 cursor-pointer "
                     onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_EMPLOYEE)}
                 >
                     Add Employee
-                </p>
-            )}
-            {isEmployeeSection && isOwner && (
-                <p
-                    className="mr-4 cursor-pointer "
-                    onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_LISTING)}
-                >
-                    View Employees
                 </p>
             )}
 

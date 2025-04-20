@@ -1,16 +1,46 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-const defaultData = [
-  { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-  { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-  { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-  { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-  { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-  { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-  { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
-];
+// Define the LineConfig type
+interface LineConfig {
+  dataKey: string; // The key in the data object to be used for the line
+  stroke: string;  // The color of the line
+}
 
-const SimpleLineChart = ({ data = defaultData }) => {
+// Dummy data for demonstration purposes
+const dummyChartConfig = {
+  data: [
+    { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
+    { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
+    { name: "Page C", uv: 2000, pv: 9800, amt: 2290 },
+    { name: "Page D", uv: 2780, pv: 3908, amt: 2000 },
+    { name: "Page E", uv: 1890, pv: 4800, amt: 2181 },
+    { name: "Page F", uv: 2390, pv: 3800, amt: 2500 },
+    { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
+  ],
+  config: [
+    { dataKey: "pv", stroke: "#8884d8" },
+    { dataKey: "uv", stroke: "#82ca9d" },
+    { dataKey: "amt", stroke: "#ffc658" },
+  ],
+};
+
+// Adapted LineChart component to accept data from props
+const SimpleLineChart = ({
+  chartConfig = dummyChartConfig,
+}: {
+  chartConfig: { data: any[]; config: LineConfig[] };
+}) => {
+  const { data, config } = chartConfig;
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -22,8 +52,15 @@ const SimpleLineChart = ({ data = defaultData }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        {config.map((lineConfig: LineConfig, index: number) => (
+          <Line
+            key={index}
+            type="monotone"
+            dataKey={lineConfig.dataKey}
+            stroke={lineConfig.stroke}
+            activeDot={{ r: 8 }}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );
