@@ -27,7 +27,7 @@ export const API_CONFIG_URLS = {
     VALIDATE_DATABASE: `database-validator/verify`,
   },
   PROFILE: {
-    CHANGE_PASSWORD: `${personalController}/change-password`,
+    CHANGE_PASSWORD: `${employee}/reset-password`,
     EDIT_PROFILE: `${sellerAuthController}/profile`,
   },
   DOCUMENTS: {
