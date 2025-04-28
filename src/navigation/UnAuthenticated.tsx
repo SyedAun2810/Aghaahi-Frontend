@@ -9,6 +9,7 @@ import ForgotPassword from "@Pages/AuthScreens/ForgotPassword/ForgotPassword";
 import ResetPassword from "@Pages/AuthScreens/ResetPassword/ResetPassword";
 import RegisterDatabase from "@Pages/AuthScreens/RegisterDatabase/index";
 import LandingPage from "@Pages/AuthScreens/LandingPage";
+import ContactUsPage from "@Pages/AuthScreens/ContactUs";
 
 const RouteList = [
     {
@@ -38,6 +39,10 @@ const RouteList = [
     {
         path: NavigationRoutes.AUTH_ROUTES.LANDING_PAGE,
         component: LandingPage
+    },
+    {
+        path: NavigationRoutes.AUTH_ROUTES.CONTACT_US,
+        component: ContactUsPage
     }
 ];
 

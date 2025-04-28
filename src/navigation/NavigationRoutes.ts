@@ -10,6 +10,7 @@ export const NavigationRoutes = {
     FORGOT_PASSWORD: "/forgot-password",
     VALIDATE_DATABASE: "/validate-database",
     LANDING_PAGE: "/home",
+    CONTACT_US : "/contact-us",
   },
   DASHBOARD_ROUTES: {
     DASHBOARD: "/dashboard",
