@@ -17,7 +17,8 @@ export const useRegister = (onSuccess: (email?: string) => void) => {
                 onSuccess(payload?.email);
                 return data;
             }
-            NotificationService.error(data?.data?.metadata?.message);
+            console.log("error", response);
+            NotificationService.error(response?.message);
             throw response.message;
         },
         onError: (err: any) => {

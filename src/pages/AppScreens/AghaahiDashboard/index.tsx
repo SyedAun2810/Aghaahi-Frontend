@@ -95,7 +95,7 @@ const graphData = [
     { id: "12", type: "customBarChart", component: <CustomizeBarChartComponent /> },
 ];
 
-const AghaahiDashboard: FunctionComponent<Props> = (props) => {
+const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const [layouts, setLayouts] = useState(defaultLayouts);
     const [mounted, setMounted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,7 +129,7 @@ const AghaahiDashboard: FunctionComponent<Props> = (props) => {
                         gridColumn: `span ${layoutItem.w}`,
                         gridRow: `span ${layoutItem.h}`,
                     }}
-                    className="custom-grid rounded-lg shadow-md" // Added box shadow class
+                    className="rounded-lg shadow-md " // Added box shadow class
                 >
                     {mounted && graph ? (
                         <>
@@ -144,16 +144,19 @@ const AghaahiDashboard: FunctionComponent<Props> = (props) => {
                                         </Menu.Item>
                                     </Menu>
                                 }
-                                trigger={["click"]}
+                                trigger={["hover"]} // Change trigger to hover
                             >
-                                <button className="absolute top-2 right-2 bg-transparent border-none cursor-pointer">
+                                <button
+                                    className="absolute top-2 right-2 bg-transparent border-none cursor-pointer"
+                                    onClick={(e) => e.stopPropagation()} // Prevent drag event propagation
+                                >
                                     <ThreeDotsIcon
                                         height={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
                                         width={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
                                     />
                                 </button>
                             </Dropdown>
-                            <div className={`dragMe h-full bg-white ${graph.type === "analyticsCard" ? "" : "pt-12"}`}>
+                            <div className={`dragMe h-full bg-white ${graph.type === "analyticsCard" ? "" : "py-12 "}`}>
                                 {graph.type === "analyticsCard" ? (
                                     <AnalyticsCard
                                         title={graph.title}
@@ -202,9 +205,9 @@ const AghaahiDashboard: FunctionComponent<Props> = (props) => {
     );
 };
 
-export default AghaahiDashboard;
+export default AgaahiDashboard;
 
-AghaahiDashboard.defaultProps = {
+AgaahiDashboard.defaultProps = {
     className: "layout",
     rowHeight: 30,
     onLayoutChange: (layout: any, layouts: any) => {},

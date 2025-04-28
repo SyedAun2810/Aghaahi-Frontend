@@ -7,7 +7,8 @@ import SignUp from "@Pages/AuthScreens/SignUp/SignUp";
 import AuthLayout from "@Layout/UnAuthLayout/UnAuthLayout";
 import ForgotPassword from "@Pages/AuthScreens/ForgotPassword/ForgotPassword";
 import ResetPassword from "@Pages/AuthScreens/ResetPassword/ResetPassword";
-import RegisterDatabase from "@Pages/AuthScreens/RegisterDatabase";
+import RegisterDatabase from "@Pages/AuthScreens/RegisterDatabase/index";
+import LandingPage from "@Pages/AuthScreens/LandingPage";
 
 const RouteList = [
     {
@@ -33,6 +34,10 @@ const RouteList = [
     {
         path: NavigationRoutes.AUTH_ROUTES.VALIDATE_DATABASE,
         component: RegisterDatabase
+    },
+    {
+        path: NavigationRoutes.AUTH_ROUTES.LANDING_PAGE,
+        component: LandingPage
     }
 ];
 

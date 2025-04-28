@@ -9,6 +9,7 @@ export const NavigationRoutes = {
     RESET_PASSWORD: "/reset-password",
     FORGOT_PASSWORD: "/forgot-password",
     VALIDATE_DATABASE: "/validate-database",
+    LANDING_PAGE: "/home",
   },
   DASHBOARD_ROUTES: {
     DASHBOARD: "/dashboard",

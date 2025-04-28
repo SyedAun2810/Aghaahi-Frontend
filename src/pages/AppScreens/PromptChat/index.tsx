@@ -1,3 +1,4 @@
+import Logo from "@Assets/images/logo.png";
 import { API_CONFIG_URLS } from "@Constants/config";
 import { queryKeys } from "@Constants/queryKeys";
 import ApiService from "@Services/ApiService";
@@ -6,14 +7,14 @@ import { Flex, Form } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import ChatFooter from "./Components/ChatFooter";
-import { CloudCog } from "lucide-react";
-import { set } from "lodash";
+import { LikeOutlined, DislikeOutlined, CopyOutlined, SoundOutlined } from "@ant-design/icons";
 
 const PromptChat = () => {
     const [form] = Form.useForm();
     const [localMessage, setLocalMessage] = useState("");
     const [payload, setPayload] = useState<any>(false); // Create state for payload
     const [listingData, setListingData] = useState<any[]>([]); // Create state for listingData
+    const [lastCnoversationId, setLastConversationId] = useState<any>(); // Create state for listingData
     const [paramId, setParamId] = useState<any>(); // Create state for listingData
     let { id } = useParams();
     const [isEmptyChat, setIsEmptyChat] = useState<boolean>();
@@ -47,11 +48,16 @@ const PromptChat = () => {
             // Get the last item and update it with the response
             const updatedItem = {
                 ...listingData[listingData.length - 1], // Get the last item
-                response: data.data.response.response, // Replace loader with actual response
+                response: data.data.response.response,
+                format: data.data.response.format,
+                // conversation_id : data?.data?.response?.conversation_id, // Replace loader with actual response
                 isLoading: false, // Remove the loader
+                isTyping: true
             };
 
-            // Replace the last item in the listingData array
+            setLastConversationId(data.data.response.conversation_id);
+
+            // Replace the last item in the listingsetListingDatay
             setListingData((prev) => {
                 const updatedList = [...prev];
                 updatedList.pop(); // Remove the last item
@@ -68,6 +74,12 @@ const PromptChat = () => {
             conversation_id: id || null,
             is_new: !id,
         };
+
+        if (lastCnoversationId != null || lastCnoversationId != undefined) {
+            payload.conversation_id = lastCnoversationId;
+            payload.is_new = false;
+        }
+
 
         // Add a temporary ChatContent with a loader    
         const tempId = listingData.length;
@@ -99,9 +111,13 @@ const PromptChat = () => {
             setListingData(conversationListing?.data?.chat_history || []);
         }
     }, [conversationListing]);
-    if (listingData?.length > 0 && listingData[0].conversation_id !== id && !isFetching) {
-        setListingData([]);
-    }
+
+    useEffect(() => {
+        if (listingData?.length > 0 && listingData[0].conversation_id !== id && !isFetching) {
+            setListingData([]);
+        }
+    }, [id, isFetching, listingData]);
+
     useEffect(() => {
         if (paramId === undefined) {
             setParamId(id);
@@ -118,12 +134,20 @@ const PromptChat = () => {
         } else {
             setIsEmptyChat(false);
         }
-    }, [id])
+    }, [id]);
+
+    // Clear listingData on component unmount or id change
+    useEffect(() => {
+        return () => {
+            setListingData([]); // Clear listingData
+        };
+    }, [id]);
+
     return (
-        <div className="h-[100%] bg-white">
+        <div className="h-[100%] bg-white rounded-[12px] overflow-hidden pt-2">
             {isFetching ? (
                 // Skeleton Loader
-                <div className="h-[85%] bg-white overflow-y-auto px-72 ">
+                <div className="h-[85%] bg-white overflow-y-auto  pl-48 pr-60 ">
                     {[...Array(6)].map((_, index) => (
                         <div
                             key={index}
@@ -144,7 +168,7 @@ const PromptChat = () => {
             ) : (
                 // Chat Listing
                 listingData?.length > 0 && (
-                    <div className="h-[85%] bg-white overflow-y-auto" ref={containerRef}>
+                    <div className="h-[82%] bg-white overflow-y-auto" ref={containerRef}>
                         {listingData.map((item: any, index: number) => (
                             <ChatContent
                                 key={index}
@@ -175,16 +199,44 @@ function ChatContent({
     isLoading?: boolean;
 }) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [typedResponse, setTypedResponse] = useState("");
+    const [typingComplete, setTypingComplete] = useState(false);
 
     const toggleExpand = () => {
         setIsExpanded((prev) => !prev);
     };
 
-    chatData.response = convertClassNameToClass(chatData.response);
+    // Effect for typing animation
+    useEffect(() => {
+        if (chatData.response !== null && chatData.response !== undefined) {
+            const processedResponse = convertClassNameToClass(chatData.response);
 
-    console.log(chatData.base64_image);
+            if (chatData.isTyping && !typingComplete) {
+                setTypedResponse("");
+                setTypingComplete(false);
+
+                let i = 0;
+                const fullText = processedResponse;
+                const typingInterval = setInterval(() => {
+                    if (i < fullText.length) {
+                        setTypedResponse(fullText.substring(0, i + 1));
+                        i++;
+                    } else {
+                        clearInterval(typingInterval);
+                        setTypingComplete(true);
+                    }
+                }, 20); // Typing speed (ms per character)
+
+                return () => clearInterval(typingInterval);
+            } else {
+                setTypedResponse(processedResponse);
+                setTypingComplete(true);
+            }
+        }
+    }, [chatData.response, chatData.isTyping, typingComplete]);
+
     return (
-        <div className="p-4 bg-white px-72 my-2">
+        <div className="p-4 bg-white px-48 my-2">
             <UserPrompt
                 isExpanded={isExpanded}
                 toggleExpand={toggleExpand}
@@ -192,52 +244,130 @@ function ChatContent({
             />
 
             {isLoading ? (
-                <div
-                    className={`p-4 animate-pulse rounded-lg my-8 ${true ? "text-left" : "text-right"
-                        }`}
-                >
-                    <div
-                        className={`h-8 bg-gray-300 rounded ${true ? "w-3/4 ml-0" : "w-3/4 ml-auto"
-                            } mb-2`}
-                    ></div>
-                    <div
-                        className={`h-8 bg-gray-300 rounded ${true ? "w-1/2 ml-0" : "w-1/2 ml-auto"
-                            }`}
-                    ></div>
+                <div className="p-4 animate-pulse rounded-lg my-8 text-left">
+                    <div className="h-8 bg-gray-300 rounded w-3/4 ml-0 mb-2"></div>
+                    <div className="h-8 bg-gray-300 rounded w-1/2 ml-0"></div>
                 </div>
-            ) : (
-                chatData.base64_image ? (
-                    <div className="h-[600px]">
+            ) : chatData.format === "graph" ? (
+                <div className="flex " >
+                    <div className="mt-2">  
+                        <img src={Logo} alt="logo here" width={50} />
+                    </div>
+                    <div className="bg-gray-100 p-8 rounded-xl shadow-md">
+                         <   div className="text-lg" dangerouslySetInnerHTML={{ __html: typedResponse }} />
                         <img
-                            className="h-[400px]"
-                            src={`data:image/jpeg;base64,${chatData.base64_image}`} // Removed extra `/`lkasdjlk"  /></div>
-                            alt="Chat Image"
+                            className="h-[400px] w-auto"
+                            src={`data:image/jpeg;base64,${chatData.base64_image}`}
+                            alt="Graph"
                         />
                     </div>
-                ) : (
-                    <div dangerouslySetInnerHTML={{ __html: chatData.response }} />
-                )
+                </div>
+            ) : (
+                <div className="flex">
+                    <div className="mt-2">
+                        <img src={Logo} alt="logo here" width={50} />
+                    </div>
+                    <div className="">
+                        {typingComplete ? (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: chatData.response
+                                        ? convertClassNameToClass(chatData.response)
+                                        : "<p>No response available</p>",
+                                }}
+                            />
+                        ) : (
+                            <div dangerouslySetInnerHTML={{ __html: typedResponse }} />
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {(typingComplete || !chatData.isTyping) && (
+                <div className="pl-16 flex mt-2 space-x-4">
+                    <LikeOutlined
+                        className="text-green-500 text-xl cursor-pointer hover:text-green-600"
+                        onClick={() => console.log("Liked response:", chatData.response)}
+                    />
+                    <DislikeOutlined
+                        className="text-red-500 text-xl cursor-pointer hover:text-red-600"
+                        onClick={() => console.log("Disliked response:", chatData.response)}
+                    />
+                    <CopyOutlined
+                        className="text-blue-500 text-xl cursor-pointer hover:text-blue-600"
+                        onClick={() => {
+                            if (!chatData.response) {
+                                console.error("No response available to copy.");
+                                return;
+                            }
+                            const textContent = extractTextFromHTML(chatData.response); // Extract plain text
+                            navigator.clipboard.writeText(textContent); // Copy plain text
+                            console.log("Copied response:", textContent);
+                        }}
+                    />
+                    <SoundOutlined
+                        className="text-purple-500 text-xl cursor-pointer hover:text-purple-600"
+                        onClick={() => {
+                            const textContent = chatData.response
+                                ? extractTextFromHTML(chatData.response)
+                                : "No response available to read.";
+                            if (!textContent) {
+                                console.error("No text available to read.");
+                                return;
+                            }
+                            const utterance = new SpeechSynthesisUtterance(textContent);
+                            window.speechSynthesis.speak(utterance);
+                            console.log("Reading aloud:", textContent);
+                        }}
+                    />
+                </div>
             )}
         </div>
     );
+}
+
+function extractTextFromHTML(htmlString: string): string {
+    if (!htmlString) return ""; // Return an empty string if the input is null or undefined
+
+    const tempElement = document.createElement("div"); // Create a temporary DOM element
+    tempElement.innerHTML = htmlString; // Set the HTML content
+    return tempElement.textContent || tempElement.innerText || ""; // Extract and return the plain text
 }
 
 function UserPrompt({
     isExpanded,
     toggleExpand,
     content,
+    response, // Add response as a prop
 }: {
     isExpanded: boolean;
     toggleExpand: () => void;
     content: string;
+    response: string; // Add response type
 }) {
     return (
-        <div className="flex justify-end">
-            <Flex className="mb-8 bg-gray-100 py-4 px-6 rounded-3xl max-w-3xl">
-                <div className="whitespace-pre-wrap break-words break-all">
-                    {content}
+        <div className="mb-2">
+            <div className="flex justify-end">
+                <Flex className="mb-8 bg-gray-100 py-4 px-6 rounded-3xl max-w-3xl">
+                    <div className="whitespace-pre-wrap break-words break-all">
+                        {content}
+                    </div>
+                </Flex>
+                <div className="bg-red-200 relative">
+                    <CopyOutlined
+                        className="text-blue-500 text-xl cursor-pointer hover:text-blue-600 absolute bottom-2 right-4"
+                        onClick={() => {
+                            if (!response) {
+                                console.error("No response available to copy.");
+                                return;
+                            }
+                            const textContent = extractTextFromHTML(response); // Extract plain text
+                            navigator.clipboard.writeText(textContent); // Copy plain text
+                            console.log("Copied response:", textContent);
+                        }}
+                    />
                 </div>
-            </Flex>
+            </div>
         </div>
     );
 }
@@ -294,6 +424,7 @@ const useConversationListing = (id: any) => {
         }
     );
 };
+
 async function GetConversationListing(id: any) {
     if (!id) {
         console.log("GetConversationListing: ID is undefined, returning default response.");

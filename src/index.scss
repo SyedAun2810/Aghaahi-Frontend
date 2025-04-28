@@ -310,3 +310,18 @@ body {
         top:0;
     }
 }
+
+.ant-layout-sider-zero-width-trigger {
+    border-radius: 0px 0px 0px 0px !important;
+    width: 40px !important;
+    background-color: transparent !important;
+    top: 8px !important;
+    left: 10px !important;
+     /* Initially hidden */
+     border: none !important;
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.wrapper-container:hover .ant-layout-sider-zero-width-trigger {
+    opacity: 1; /* Show on hover */
+}

@@ -23,7 +23,8 @@ module.exports = {
         "#FFEEDB":"#FFEEDB",
         "light-border": "#E5E8E8",
         "link-color": "#7C5EF2",
-        "darkGray": '#121212'
+        "darkGray": '#121212',
+        "#5950CB":"#5950CB",
       },
       backgroundColor: {
         "header-primary": "#0687EF",

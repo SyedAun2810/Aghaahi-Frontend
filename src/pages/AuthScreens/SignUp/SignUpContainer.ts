@@ -22,7 +22,7 @@ export default function useSignUpContainer() {
     } = usePlaceHandler(form);
 
     const onSignupSuccess = (email?: string) => {
-        navigate(NavigationRoutes.AUTH_ROUTES.VERIFY_EMAIL, {
+        navigate(NavigationRoutes.AUTH_ROUTES.VALIDATE_DATABASE, {
             state: { from: FROM_SCREEN.SIGN_UP, email: email }
         });
     };

@@ -5,10 +5,12 @@ import ColoredText from "@Components/ColorText/ColorText";
 import CustomSelectInput from "@Components/CustomSelectInput/CustomSelectInput";
 import Input from "@Components/TextInput/TextInput";
 import { VALIDATE } from "@Constants/validationConstants";
+import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import NotificationService from "@Services/NotificationService";
 import { useMutation } from "@tanstack/react-query";
 import utilService from "@Utils/utils.service";
 import { Flex, Form } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const DATABASE_TYPE_OPTIONS = [
     { label: "Postgres", value: "postgres" },
@@ -17,6 +19,7 @@ const DATABASE_TYPE_OPTIONS = [
 
 const RegisterDatabase = () => {
     const [form] = Form.useForm();
+    const navigate = useNavigate();
 
       const { mutate: validateDatabase, isLoading: isValidating } = useValidateDatabase();
     const handleSubmit = async (values: any) => {
@@ -25,6 +28,7 @@ const RegisterDatabase = () => {
 
     const handleBackToLogin = () => {
         // Navigate back to the login screen
+        navigate(NavigationRoutes.AUTH_ROUTES.LOGIN)
         console.log("Navigate to login screen");
     };
 

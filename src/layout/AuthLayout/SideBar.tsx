@@ -5,10 +5,10 @@ import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import { ModalMethodsTypes } from "@Utils/types";
 import { Flex } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAuthLayoutContainer } from "./useAuthLayoutContainer";
 
-import { EllipsisOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Input, Modal } from "antd";
 import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -17,9 +17,12 @@ import ApiService, { apiService } from "@Services/ApiService";
 import { API_CONFIG_URLS } from "@Constants/config";
 import NotificationService from "@Services/NotificationService";
 import { queryClient } from "@Api/Client";
+import dayjs from "dayjs"; // Ensure dayjs is installed for date manipulation
+import { useLocation } from "react-router-dom"; // Ensure react-router-dom is installed
 
 const SideBar = () => {
     const { route, selectedKey, navigate } = useAuthLayoutContainer();
+    const location = useLocation(); // Get the current URL
     const modalRef = useRef<ModalMethodsTypes | null>(null);
 
     // State to track the list of chats
@@ -36,6 +39,7 @@ const SideBar = () => {
 
     // State to track whether the sidebar is collapsed
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+    const [isHovered, setIsHovered] = useState<boolean>(false); // Track hover state
 
     // State for renaming a chat
     const [renamingChat, setRenamingChat] = useState<string | null>(null);
@@ -118,10 +122,39 @@ const SideBar = () => {
     const { mutateAsync: renameChatApi, isLoading: isRenamingChat } = useRenameChat();
 
     async function handleNewChat() {
+        queryClient.invalidateQueries([queryKeys.chat.conversation]);
         navigate(`${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}`);
     }
+
+    // Categorize chats into "Today" and "Last 7 Days"
+    const categorizedChats = chatHistoryData.reduce(
+        (acc: { today: any[]; last7Days: any[] }, chat) => {
+            const createdAt = dayjs.unix(chat.created_at); // Convert timestamp to dayjs object
+            const now = dayjs();
+
+            if (createdAt.isSame(now, "day")) {
+                acc.today.push(chat);
+            } else if (createdAt.isAfter(now.subtract(7, "days"))) {
+                acc.last7Days.push(chat);
+            }
+
+            return acc;
+        },
+        { today: [], last7Days: [] }
+    );
+
+    useEffect(() => {
+        const match = location.pathname.match(/prompt-chat\/(\d+)/); 
+        if (match && match[1]) {
+            const chatId = match[1];
+            setSelectedChat(chatId); 
+        }
+    }, [location.pathname]);
+
+    const [hoveredChat, setHoveredChat] = useState<string | null>(null);
+
     return (
-        <div className="">
+        <div>
             {
                 !isDashboard &&
                 <Sider
@@ -130,8 +163,29 @@ const SideBar = () => {
                     collapsedWidth="0"
                     collapsible
                     theme="light"
-                    className={`bg-light-bg ${customSiderClass} h-[100vh]`}
+                    className={`bg-white ${customSiderClass} h-[100vh]`}
                     onCollapse={(collapsed) => setIsCollapsed(collapsed)}
+                    trigger={
+                        <div
+                            onMouseEnter={() => setIsHovered(true)} // Show hover state
+                            onMouseLeave={() => setIsHovered(false)} // Hide hover state
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                                cursor: "pointer",
+                                backgroundColor: isHovered ? "#f0f0f0" : "transparent", // Change background on hover
+                                transition: "background-color 0.3s",
+                            }}
+                        >
+                            {isCollapsed ? (
+                                <MenuUnfoldOutlined style={{ fontSize: "18px" }} />
+                            ) : (
+                                <MenuFoldOutlined style={{ fontSize: "18px" }} />
+                            )}
+                        </div>
+                    }
                 >
                     {!isCollapsed && (
                         <>
@@ -144,7 +198,7 @@ const SideBar = () => {
                             </Flex>
 
                             <div className="flex items-center justify-center">
-                                <button className="border-none flex items-center justify-center cursor-pointer" onClick={() => {
+                                <button className="border-none flex items-center justify-center bg-white cursor-pointer" onClick={() => {
                                     handleNewChat()
 
                                 }}>
@@ -158,7 +212,7 @@ const SideBar = () => {
                                 {isFetching ? (
                                     // Skeleton Loader
                                     <div className="px-4">
-                                        {[...Array(5)].map((_, index) => (
+                                        {[...Array(8)].map((_, index) => (
                                             <div
                                                 key={index}
                                                 className="p-4 bg-gray-200 animate-pulse rounded-lg my-4"
@@ -169,42 +223,91 @@ const SideBar = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    // Chat History
-                                    chatHistoryData.length > 0 ? (
-                                        chatHistoryData.map((chatHistoryobject, index) => {
-                                            const chat = chatHistoryobject?.name || "User Prompt";
-                                            const id = chatHistoryobject?.id || index;
-                                            return (
-                                                <Flex
-                                                    key={index}
-                                                    align="center"
-                                                    className={`ml-2 mr-4 my-4 cursor-pointer px-3 py-2 rounded-2xl ${selectedChat === id ? "bg-gray-200" : "bg-transparent"
-                                                        }`}
-                                                    style={{ position: "relative" }}
-                                                >
-                                                    <p className="ml-2" onClick={() => handleChatSelect(id)}>
-                                                        {chat}
-                                                    </p>
-                                                    <div className="ml-auto">
-                                                        <Dropdown
-                                                            overlay={menu(id)}
-                                                            trigger={["click"]}
-                                                            overlayStyle={{ minWidth: 120 }}
-                                                        >
-                                                            <EllipsisOutlined
-                                                                style={{
-                                                                    fontSize: "18px",
-                                                                    cursor: "pointer",
-                                                                }}
-                                                            />
-                                                        </Dropdown>
-                                                    </div>
-                                                </Flex>
-                                            );
-                                        })
-                                    ) : (
-                                        <p className="ml-4">No Recent Chats</p>
-                                    )
+                                    <>
+                                        {/* Render "Today" Chats */}
+                                        {categorizedChats.today.length > 0 && (
+                                            <>
+                                                <p className="ml-3 text-md font-bold  text-[#5950CB]">Today</p>
+                                                {categorizedChats.today.map((chat, index) => (
+                                                    <Flex
+                                                        key={index}
+                                                        align="center"
+                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${selectedChat === chat.id.toString() ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2" : "bg-transparent ml-2 my-2"
+                                                            }`}
+                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())} // Set hovered chat
+                                                        onMouseLeave={() => setHoveredChat(null)} // Clear hovered chat
+                                                        onClick={() => handleChatSelect(chat.id)}
+                                                        style={{ position: "relative" }}
+                                                    >
+                                                        <p className="ml-2 text-md">
+                                                            {chat.name || "User Prompt"}
+                                                        </p>
+                                                        {hoveredChat === chat.id.toString() && ( // Show dots on hover
+                                                            <div className="ml-auto mr-2">
+                                                                <Dropdown
+                                                                    overlay={menu(chat.id)}
+                                                                    trigger={["click"]}
+                                                                    overlayStyle={{ minWidth: 120 }}
+                                                                >
+                                                                    <EllipsisOutlined
+                                                                        style={{
+                                                                            fontSize: "18px",
+                                                                            cursor: "pointer",
+                                                                        }}
+                                                                    />
+                                                                </Dropdown>
+                                                            </div>
+                                                        )}
+                                                    </Flex>
+                                                ))}
+                                            </>
+                                        )}
+
+                                        {/* Render "Last 7 Days" Chats */}
+                                        {categorizedChats.last7Days.length > 0 && (
+                                            <>
+                                                <p className="ml-3 text-md font-bold  text-[#5950CB]">Last 7 Days</p>
+                                                {categorizedChats.last7Days.map((chat, index) => (
+                                                    <Flex
+                                                        key={index}
+                                                        align="center"
+                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${selectedChat === chat.id.toString() ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2" : "bg-transparent ml-2 my-2"
+                                                            }`}
+                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())} // Set hovered chat
+                                                        onMouseLeave={() => setHoveredChat(null)} // Clear hovered chat
+                                                        onClick={() => handleChatSelect(chat.id)}
+                                                        style={{ position: "relative" }}
+                                                    >
+                                                        <p className="ml-2 text-md">
+                                                            {chat.name || "User Prompt"}
+                                                        </p>
+                                                        {hoveredChat === chat.id.toString() && ( // Show dots on hover
+                                                            <div className="ml-auto mr-2">
+                                                                <Dropdown
+                                                                    overlay={menu(chat.id)}
+                                                                    trigger={["click"]}
+                                                                    overlayStyle={{ minWidth: 120 }}
+                                                                >
+                                                                    <EllipsisOutlined
+                                                                        style={{
+                                                                            fontSize: "18px",
+                                                                            cursor: "pointer",
+                                                                        }}
+                                                                    />
+                                                                </Dropdown>
+                                                            </div>
+                                                        )}
+                                                    </Flex>
+                                                ))}
+                                            </>
+                                        )}
+
+                                        {/* No Chats */}
+                                        {categorizedChats.today.length === 0 &&
+                                            categorizedChats.last7Days.length === 0 && (
+                                                <p className="ml-4">No Recent Chats</p>
+                                            )}
+                                    </>
                                 )}
                             </div>
                         </>

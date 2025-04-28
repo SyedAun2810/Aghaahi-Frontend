@@ -51,7 +51,7 @@ const SignUp = () => {
     return (
         <Flex vertical justify="center" className="px-20 py-12 h-full">
             <AuthHeader
-                headerTitle="Create a Company"
+                headerTitle="Register Business"
                 subTitle="Create your account to continue"
             />
             <Form

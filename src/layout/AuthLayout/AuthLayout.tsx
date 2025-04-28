@@ -27,7 +27,7 @@ const AppLayout = () => {
                 <SideBar />
                 <Layout className="body-bg h-[100vh]">
                     <Header
-                        className="cus-header bg-white flex justify-end h-[7vh]"
+                        className="cus-header bg-white flex justify-end h-[8vh]"
                         style={{
                             padding: 0
                         }}
@@ -38,7 +38,7 @@ const AppLayout = () => {
                         // style={{
                         //     padding: "2vh 20px 20px 2vh"
                         // }}
-                        className="cus-main-content overflow-y-auto h-[89vh] bg-light-bg"
+                        className="cus-main-content overflow-y-auto h-[85vh] bg-light-bg p-2 "
                     >
                         <React.Suspense fallback={<FullPageLoader />}>
                             <Outlet />

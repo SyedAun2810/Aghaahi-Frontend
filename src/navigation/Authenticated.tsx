@@ -1,7 +1,7 @@
 import AppLayout from "@Layout/AuthLayout/AuthLayout";
 import AddEmployee from "@Pages/AppScreens/AddEmployee/AddEmployee";
 import AddNewGraph from "@Pages/AppScreens/AddNewGraph";
-import AghaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
+import AgaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
 import EmployeeView from "@Pages/AppScreens/EmployeeListing";
 import PromptChat from "@Pages/AppScreens/PromptChat";
 import RequestManagement from "@Pages/AppScreens/RequestManagement";
@@ -45,7 +45,7 @@ const DashboardRoutes = [
     {
         title: "Dashboard",
         path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
-        component: <AghaahiDashboard />
+        component: <AgaahiDashboard />
     },
     {
         title: "AddNewGraph",
@@ -157,7 +157,7 @@ const Authenticated = () => {
         : NavigationRoutes.AUTH_ROUTES.LOGIN;
 
     useEffect(() => {
-        document.title = "User-Management - Admin-Aghaahi";
+        document.title = "User-Management - Admin-Agaahi";
     }, []);
 
     return (

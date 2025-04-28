@@ -209,7 +209,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
                         <img src={Logo} width={150} height={150} className="" />
                         <div className="text-white mt-auto">
                             <h1 className="2xl:text-[32px] xl:text-[30px] lg:text-[32px] mt-4 max-w-xl font-[700]">
-                                Aghaahi Get your Insights by Prompts
+                                Agaahi Get your Insights by Prompts
                             </h1>
                         </div>
                     </div> */}

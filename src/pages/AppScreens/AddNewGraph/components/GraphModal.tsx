@@ -1,19 +1,10 @@
 import { CustomButton } from "@Components/Button";
+import AreaChartComponent from "@Components/Graphs/AreaChartComponent";
 import Input from "@Components/TextInput/TextInput";
 import { Modal } from "antd";
-import { Graph } from "./GraphCard";
 import React from "react";
-import SimpleLineChart from "@Components/Graphs/LineChart";
 import { useNavigate } from "react-router-dom";
-import AreaChartComponent from "@Components/Graphs/AreaChartComponent";
-import CustomizeLineChart from "@Components/Graphs/CustomizeLineChart";
-import CustomizeBarChartComponent from "@Components/Graphs/CustomizeShapeBarChart";
-import ComposedChartComponent from "@Components/Graphs/LineBarAreaChart";
-import RadarChartComponent from "@Components/Graphs/RadarCharts";
-import RadialBarChartComponent from "@Components/Graphs/RadialBarChart";
-import BarChartComponent from "@Components/Graphs/SimpleBarChart";
-import PieChartComponent from "@Components/Graphs/SimplePieChart";
-import SimplePieChartComponent from "@Components/Graphs/SimplePieChart";
+import { Graph } from "./GraphCard";
 
 interface GraphModalProps {
     isOpen: boolean;
@@ -33,7 +24,7 @@ const GraphModal: React.FC<GraphModalProps> = ({
     onAdd,
 }) => {
     const navigate = useNavigate(); 
-    const [isGraphGenerated, setIsGraphGenerated] = React.useState(true); // New state for graph generation
+    const [isGraphGenerated, setIsGraphGenerated] = React.useState(false); // New state for graph generation
 
     const handleViewResults = () => {
         if (graph && prompt.trim()) {

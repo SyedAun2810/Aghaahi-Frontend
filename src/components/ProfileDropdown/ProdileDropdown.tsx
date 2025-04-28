@@ -20,8 +20,8 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
     const { userData } = useAuthStore();
 
     const image = userData?.store?.image?.url || "";
-    const name = userData?.store?.name || "";
-
+    const name = userData?.name || "";
+console.log("userData", userData);
     const items: MenuProps["items"] = [
         {
             key: "2",
@@ -53,7 +53,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                 overlayClassName="top-[40px]"
             >
                 <Flex align="center" gap={8}>
-                    {true ? (
+                    {false ? (
                         <Avatar alt="User Image" src={Logo} />
                     ) : (
                         <CustomAvatar
@@ -64,7 +64,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                             size={32}
                         />
                     )}
-                    <h4 className="hr-mr-12 hr-mr-6">User</h4>
+                    <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
                     <DropdownIcon />
                 </Flex>
             </Dropdown>

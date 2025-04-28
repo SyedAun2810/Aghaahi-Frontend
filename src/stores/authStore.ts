@@ -51,6 +51,7 @@ const useAuthStore = create<StoreState & StoreAction>()(
           accessToken: payload?.token,
           role : payload?.employee?.role.name,
           isOwner: payload?.employee?.role.name === 'Owner',
+          userData: payload?.employee,
           // chatToken: payload?.chatToken,
           // refreshToken: payload?.refreshToken,
           // userData: payload.user,
