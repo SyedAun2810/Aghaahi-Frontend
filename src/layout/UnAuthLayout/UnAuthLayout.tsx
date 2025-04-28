@@ -7,7 +7,7 @@ import styles from "./index.module.scss";
 export default function AuthLayout() {
     const location = useLocation();
 
-    if (location.pathname === "/home") {
+    if (location.pathname === "/home" ||  location.pathname === "/contact-us") {
         return <Outlet />;
     }
 
