@@ -27,10 +27,16 @@ const RegisterDatabase = () => {
     const [isVerified, setIsVerified] = useState(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const { setUserAuthentication } = useAuthStore();
+    const { setUserAuthentication,
+        accessToken,
+        role,
+        isOwner,
+        userData,
+        company, } = useAuthStore();
 
     const location = useLocation();
     const { companyId } = location.state || {};
+    
 
 
 
@@ -43,12 +49,24 @@ const RegisterDatabase = () => {
         setLoading(false);
         form.resetFields();
         setIsVerified(false);
+        const payload = {
+            token: accessToken,
+            role: role,
+            isOwner: isOwner,
+            employee: userData,
+            company: company,
+            isAuth: true
+        }
+        setUserAuthentication(payload);
+        navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT);
     });
 
     const handleSubmit = (values: any) => {
         setLoading(true);
         values.port = Number(values.port);
-        const payload = { ...values, companyId };
+        const payload = { ...values, company_id : userData?.company?.id };
+
+        console.log("payload", payload);
 
         if (!isVerified) {
             // Verify connection
@@ -67,7 +85,7 @@ const RegisterDatabase = () => {
             />
             <Form
                 form={form}
-                // initialValues={defaultValues} // Set default values here
+                // initialValues={defaultValues}
                 onKeyDown={(e) => utilService.preventFormSubmitOnSelectingAddress(e)}
                 onFinish={handleSubmit}
                 scrollToFirstError
@@ -122,7 +140,7 @@ const RegisterDatabase = () => {
                     <CustomButton
                         title={isVerified ? "Add Database" : "Verify"}
                         className="text-base w-[90%]"
-                        isLoading={loading}
+                        isLoading={false}
                     />
                 </Form.Item>
             </Form>
@@ -145,6 +163,7 @@ export const useVerifyConnection = (onSuccess: (data?: any) => void) => {
         onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
                 console.log("Verify Data ",)
+                NotificationService.success("Connection verified successfully.");
                 onSuccess(payload);
                 return data;
             }
@@ -167,6 +186,7 @@ export const useAddDbConnection = (onSuccess: (data?: any) => void) => {
     return useMutation((payload: any) => addDbConnection(payload), {
         onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
+                NotificationService.success("Your database has successfully configured.");
                 onSuccess(data);
                 return data;
             }

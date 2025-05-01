@@ -26,7 +26,7 @@ export default function AuthLayout() {
                     <div className={`mt-8 ml-20 flex flex-col h-screen pb-16`}>
                         <img src={Logo} width={150} height={150} className="" />
                         <div className="mt-auto text-white ">
-                            <h1 className="2xl:text-[32px] xl:text-[30px] lg:text-[32px] mt-4 max-w-xl font-[700]">
+                            <h1 className="2xl:text-[34px] xl:text-[34px] lg:text-[34px] mt-4 max-w-xl font-[700]">
                                 Agaahi Get your Insights by Prompts
                             </h1>
                         </div>

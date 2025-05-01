@@ -24,6 +24,8 @@ export default function useSignUpContainer() {
     } = usePlaceHandler(form);
 
     const onSignupSuccess = (data: any | null) => {
+        const authData = {...data, isAuth: false };
+        setUserAuthentication(authData);
         navigate(NavigationRoutes.AUTH_ROUTES.VALIDATE_DATABASE, {
             state: { from: FROM_SCREEN.SIGN_UP, companyId: data.company?.id }
         });

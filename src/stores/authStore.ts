@@ -49,7 +49,7 @@ const useAuthStore = create<StoreState & StoreAction>()(
       ...initialState,
       setUserAuthentication: (payload: any) =>
         set(() => ({
-          isAuth: true,
+          isAuth: payload.isAuth,
           accessToken: payload?.token,
           role : payload?.employee?.role.name,
           isOwner: payload?.employee?.role.name === 'Owner',

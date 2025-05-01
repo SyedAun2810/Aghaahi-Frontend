@@ -1,7 +1,38 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import robot_contact_us from '@Assets/images/robot_contact_us.jpg'; // Adjust the path as necessary 
+import { useMutation } from '@tanstack/react-query';
+import NotificationService from '@Services/NotificationService';
+import ApiService from '@Services/ApiService';
+import { API_CONFIG_URLS } from '@Constants/config';
 
 const ContactUsPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const submitContactForm = useSubmitContactForm();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      first_name: formData.get('firstName'),
+      last_name: formData.get('lastName'),
+      email: formData.get('email'),
+      phone: formData.get('phoneNumber'),
+      message: formData.get('message'),
+    };
+
+    setIsLoading(true);
+    try {
+      await submitContactForm.mutateAsync(payload);
+      console.log('Form submitted successfully:', payload);
+      formRef.current?.reset(); // Reset the form
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="relative text-gray-800">
       {/* Background Shapes */}
@@ -69,16 +100,18 @@ const ContactUsPage = () => {
               Let's create a constellation of innovation. Fill out the form and let's light up the sky together.
             </p>
 
-            <form className="space-y-4">
+            <form ref={formRef} className="space-y-4" onSubmit={handleSubmit}>
               <div className="flex gap-4">
                 <input
                   type="text"
+                  name="lastName"
                   placeholder="Last Name"
                   className="w-1/2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
                   style={{ focusRingColor: '#A855F7' }}
                 />
                 <input
                   type="text"
+                  name="firstName"
                   placeholder="First Name"
                   className="w-1/2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
                   style={{ focusRingColor: '#A855F7' }}
@@ -86,17 +119,20 @@ const ContactUsPage = () => {
               </div>
               <input
                 type="email"
+                name="email"
                 placeholder="Email"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
                 style={{ focusRingColor: '#A855F7' }}
               />
               <input
                 type="tel"
+                name="phoneNumber"
                 placeholder="Phone Number"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
                 style={{ focusRingColor: '#A855F7' }}
               />
               <textarea
+                name="message"
                 placeholder="Message"
                 rows="4"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
@@ -104,12 +140,15 @@ const ContactUsPage = () => {
               ></textarea>
               <button
                 type="submit"
-                className="w-full text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
+                className={`w-full text-white py-3 rounded-md font-semibold hover:opacity-90 transition ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
                 style={{
                   background: 'linear-gradient(to right, #A855F7, #FFD1A4)',
                 }}
+                disabled={isLoading}
               >
-                Send to the moon 🚀
+                {isLoading ? 'Sending...' : 'Send to the moon 🚀'}
               </button>
             </form>
           </div>
@@ -143,3 +182,26 @@ const ContactUsPage = () => {
 };
 
 export default ContactUsPage;
+
+
+export const useSubmitContactForm = () => {
+  return useMutation((payload: any) => submitcontactResponse(payload), {
+      onSuccess: ({ ok, response, data }: any, payload: any) => {
+          if (ok) {
+              NotificationService.success("Your Response has been Recorded.");
+              return data;
+          }
+          console.log("error", response);
+          NotificationService.error(response?.message);
+          throw response.message;
+      },
+      onError: (err: any) => {
+          throw err;
+      }
+  });
+};
+
+async function submitcontactResponse(payload: any) {
+  const response = await ApiService.post("contact-us", payload);
+  return response;
+}
