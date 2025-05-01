@@ -140,7 +140,7 @@ const RegisterDatabase = () => {
                     <CustomButton
                         title={isVerified ? "Add Database" : "Verify"}
                         className="text-base w-[90%]"
-                        isLoading={false}
+                        isLoading={loading}
                     />
                 </Form.Item>
             </Form>
