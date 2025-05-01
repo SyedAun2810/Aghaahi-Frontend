@@ -11,6 +11,8 @@ export const NavigationRoutes = {
     VALIDATE_DATABASE: "/validate-database",
     LANDING_PAGE: "/home",
     CONTACT_US : "/contact-us",
+    PRIVACY_POLICY : "/privacy-policy",
+    PRICING : "/pricing",
   },
   DASHBOARD_ROUTES: {
     DASHBOARD: "/dashboard",
@@ -34,10 +36,12 @@ export const NavigationRoutes = {
     USER_MANAGEMENT:"/user-management",
     REQUEST_MANAGEMENT:"/request-management",
     PROMPT_CHAT:"/prompt-chat",
+    EMPLOYEE_PROMPT_CHAT:"employee-prompt-chat",
     ADD_NEW_GRAPH:"/add-new-graph",
     ADD_NEW_EMPLOYEE:"/add-new-employee",
     EMPLOYEE_LISTING:"/employee-listing",
     EMPLOYEE_DETAIL:"/employee-detail",
     UPDATE_EMPLOYEE:"/employee",
+    EMPLOYEE: "/employee"
   },
 };

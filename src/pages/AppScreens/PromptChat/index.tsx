@@ -8,15 +8,25 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import ChatFooter from "./Components/ChatFooter";
 import { LikeOutlined, DislikeOutlined, CopyOutlined, SoundOutlined } from "@ant-design/icons";
+import { useAuthLayoutContainer } from "@Layout/AuthLayout/useAuthLayoutContainer";
 
 const PromptChat = () => {
     const [form] = Form.useForm();
     const [localMessage, setLocalMessage] = useState("");
+    const { route } = useAuthLayoutContainer();
     const [payload, setPayload] = useState<any>(false); // Create state for payload
+
+
     const [listingData, setListingData] = useState<any[]>([]); // Create state for listingData
     const [lastCnoversationId, setLastConversationId] = useState<any>(); // Create state for listingData
     const [paramId, setParamId] = useState<any>(); // Create state for listingData
-    let { id } = useParams();
+    console.log("The route is here", route);
+
+    const last = route[route.length - 1];
+
+    const id = /^\d+$/.test(last) ? parseInt(last) : null;
+
+    console.log(id);     // let { id } = useParams();
     const [isEmptyChat, setIsEmptyChat] = useState<boolean>();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -185,7 +195,7 @@ const PromptChat = () => {
                 setLocalMessage={setLocalMessage}
                 localMessage={localMessage}
                 handleFormSubmit={handleFormSubmit}
-                isEmptyChat={isEmptyChat}
+                isEmptyChat={isEmptyChat || listingData?.length === 0}
             />
         </div>
     );
@@ -250,11 +260,11 @@ function ChatContent({
                 </div>
             ) : chatData.format === "graph" ? (
                 <div className="flex " >
-                    <div className="mt-2">  
+                    <div className="mt-2">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
                     <div className="bg-gray-100 p-8 rounded-xl shadow-md">
-                         <   div className="text-lg" dangerouslySetInnerHTML={{ __html: typedResponse }} />
+                        <   div className="text-lg" dangerouslySetInnerHTML={{ __html: typedResponse }} />
                         <img
                             className="h-[400px] w-auto"
                             src={`data:image/jpeg;base64,${chatData.base64_image}`}

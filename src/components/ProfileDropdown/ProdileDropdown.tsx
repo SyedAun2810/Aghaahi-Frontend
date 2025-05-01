@@ -24,6 +24,18 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
 console.log("userData", userData);
     const items: MenuProps["items"] = [
         {
+            key: "1",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.DASHBOARD_ROUTES.EDIT_PROFILE);
+                    }}
+                >
+                    Edit Profile
+                </h5>
+            )
+        },
+        {
             key: "2",
             label: (
                 <h5

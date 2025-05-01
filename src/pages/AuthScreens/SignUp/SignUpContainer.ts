@@ -7,10 +7,12 @@ import usePlaceHandler from "@Hooks/usePlaceHandler";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import NotificationService from "@Services/NotificationService";
 import { useUploadDocuments } from "@Hooks/useDocumentUploadQuery";
+import useAuthStore from "@Store/authStore";
 
 export default function useSignUpContainer() {
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const { setUserAuthentication } = useAuthStore();
 
     const {
         latitude,
@@ -21,9 +23,9 @@ export default function useSignUpContainer() {
         CHANGED_AFTER_SELECTION_ERROR
     } = usePlaceHandler(form);
 
-    const onSignupSuccess = (email?: string) => {
+    const onSignupSuccess = (data: any | null) => {
         navigate(NavigationRoutes.AUTH_ROUTES.VALIDATE_DATABASE, {
-            state: { from: FROM_SCREEN.SIGN_UP, email: email }
+            state: { from: FROM_SCREEN.SIGN_UP, companyId: data.company?.id }
         });
     };
 

@@ -10,7 +10,7 @@ import { useAuthLayoutContainer } from "./useAuthLayoutContainer";
 
 import { EllipsisOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Input, Modal } from "antd";
-import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
+import { arrayOfDashboardItems, CheckRoute } from "@Constants/dashboard.constants";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@Constants/queryKeys";
 import ApiService, { apiService } from "@Services/ApiService";
@@ -24,6 +24,9 @@ const SideBar = () => {
     const { route, selectedKey, navigate } = useAuthLayoutContainer();
     const location = useLocation(); // Get the current URL
     const modalRef = useRef<ModalMethodsTypes | null>(null);
+    const id = parseInt(route[route.length - 1]) || null; // Extract the ID from the URL
+
+
 
     // State to track the list of chats
     const [historyChats, setHistoryChats] = useState<string[]>([
@@ -33,7 +36,13 @@ const SideBar = () => {
         "Sales Details",
     ]);
 
-    let isDashboard = arrayOfDashboardItems.includes(route[1]);
+    let employeeId = null;
+
+    if (route[1] && route[2] == "employee-prompt-chat") {
+        employeeId = route[1];
+    }
+    console.log("route", employeeId);
+    let isDashboard = CheckRoute(route);
 
     const [selectedChat, setSelectedChat] = useState<string | null>(historyChats[0]);
 
@@ -54,8 +63,10 @@ const SideBar = () => {
 
         // Check if the selected chat is already in the historyChats array
         navigate(`${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/${chatId}`);
-        setSelectedChat(chatId);
+        setSelectedChat(id);
     };
+
+    // setSelectedChat(id);
 
     const handleRenameChat = (chat: string) => {
         setRenamingChat(chat);
@@ -99,7 +110,7 @@ const SideBar = () => {
         setChatToDelete(null);
     };
 
-    const { data: chatHistory, isFetching } = useChatHistoryListing();
+    const { data: chatHistory, isFetching } = useChatHistoryListing(employeeId);
     const chatHistoryData = chatHistory?.data.result || [];
 
 
@@ -144,13 +155,18 @@ const SideBar = () => {
     );
 
     useEffect(() => {
-        const match = location.pathname.match(/prompt-chat\/(\d+)/); 
+        const match = location.pathname.match(/prompt-chat\/(\d+)/);
         if (match && match[1]) {
             const chatId = match[1];
-            setSelectedChat(chatId); 
+            setSelectedChat(chatId);
         }
     }, [location.pathname]);
 
+    
+    useEffect(() => {
+        console.log("route", id);
+        setSelectedChat(`${id}`);
+    }, [route]);
     const [hoveredChat, setHoveredChat] = useState<string | null>(null);
 
     return (
@@ -340,9 +356,9 @@ const SideBar = () => {
     );
 };
 
-const useChatHistoryListing = () => {
+const useChatHistoryListing = (employeeId: any) => {
     return useQuery([queryKeys.chat.history], async () => {
-        const { ok, data } = await GetChatHistoryListing();
+        const { ok, data } = await GetChatHistoryListing(employeeId);
         if (ok) {
             return data;
         }
@@ -350,12 +366,15 @@ const useChatHistoryListing = () => {
     });
 };
 
-async function GetChatHistoryListing() {
-    const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
-    return response;
+async function GetChatHistoryListing(employeeId: any) {
+    if (employeeId) {
+        // Call the employee-specific chat history API
+        return await ApiService.get(`${API_CONFIG_URLS.Chatbot.EMPLOYEE_CHAT_HISTORY}/${employeeId}`);
+    } else {
+        // Call the general chat history API
+        return await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
+    }
 }
-
-
 export const useInitiateChat = () => {
     return useMutation(() => initiateChat(), {
         onSuccess: ({ ok, response, data }: any) => {
