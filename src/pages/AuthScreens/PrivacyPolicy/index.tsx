@@ -3,6 +3,7 @@ import React from 'react';
 const PrivacyPolicy = () => {
   return (
     <div className="relative bg-gray-50 text-gray-800 font-sans">
+      {/* Spatial Background Shapes */}
       <div
         className="absolute rounded-full"
         style={{
