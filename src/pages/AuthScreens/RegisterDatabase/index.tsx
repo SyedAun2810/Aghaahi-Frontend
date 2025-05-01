@@ -1,4 +1,3 @@
-import { AuthApiService } from "@Api/auth-service";
 import AuthHeader from "@Components/AuthHeader/AuthHeader";
 import { CustomButton } from "@Components/Button";
 import ColoredText from "@Components/ColorText/ColorText";
@@ -7,7 +6,6 @@ import Input from "@Components/TextInput/TextInput";
 import { API_CONFIG_URLS } from "@Constants/config";
 import { VALIDATE } from "@Constants/validationConstants";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
-import UnAuthenticated from "@Navigation/UnAuthenticated";
 import ApiService from "@Services/ApiService";
 import NotificationService from "@Services/NotificationService";
 import useAuthStore from "@Store/authStore";

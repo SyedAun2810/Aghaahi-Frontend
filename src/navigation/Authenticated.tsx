@@ -48,6 +48,11 @@ const DashboardRoutes = [
         component: <PromptChat />
     },
     {
+        title: "EmployeePromptChat",
+        path: `/:id/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}/:id`,
+        component: <PromptChat />
+    },
+    {
         title: "Dashboard",
         path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
         component: <AgaahiDashboard />

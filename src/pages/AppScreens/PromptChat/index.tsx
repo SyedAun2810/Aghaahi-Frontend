@@ -24,7 +24,8 @@ const PromptChat = () => {
 
     const last = route[route.length - 1];
 
-    const id = /^\d+$/.test(last) ? parseInt(last) : null;
+    // const {id} = /^\d+$/.test(last) ? parseInt(last) : null;
+    const {id} = useParams();
 
     console.log(id);     // let { id } = useParams();
     const [isEmptyChat, setIsEmptyChat] = useState<boolean>();
