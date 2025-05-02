@@ -1,10 +1,16 @@
 import { Col, Row } from "antd";
+import { motion } from "framer-motion";
 import utilService from "@Utils/utils.service";
 
 // Status configuration
 const EMPLOYEE_STATUS = {
   0: { name: "Active", color: "#52C41A", bgColor: "#F6FFED" },
   1: { name: "Inactive", color: "#FF4D4F", bgColor: "#FFF2F0" }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
 export default function EmployeeDetailBody({ data = null }: { data: any }) {
@@ -28,11 +34,23 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
     const formattedStatus = typeof status === 'boolean' ? (status ? 0 : 1) : 1;
     
     return (
-        <>
-            <Row className="px-4 my-4 pb-4 pt-2" gutter={[10, 20]}>
+        <motion.div
+            className="px-4 my-4 pb-4 pt-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <Row gutter={[10, 20]}>
                 {/* Personal Information Section */}
                 <Col span={24}>
-                    <h3 className="text-lg font-semibold mb-2">Personal Information</h3>
+                    <motion.h3
+                        className="text-lg font-semibold mb-2"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        Personal Information
+                    </motion.h3>
                 </Col>
                 
                 <Col xxl={6} xl={6} lg={6} md={6} xs={24}>
@@ -57,7 +75,14 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
 
                 {/* Employment Details Section */}
                 <Col span={24} className="mt-4">
-                    <h3 className="text-lg font-semibold mb-2">Employment Details</h3>
+                    <motion.h3
+                        className="text-lg font-semibold mb-2"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        Employment Details
+                    </motion.h3>
                 </Col>
                 
                 <Col xxl={6} xl={6} lg={6} md={6} xs={24}>
@@ -72,23 +97,33 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                 
                 <Col xxl={6} xl={6} lg={6} md={6} xs={24}>
                     <Label title="Status" />
-                    <div
+                    <motion.div
                         className={`px-[12px] py-[4px] rounded-[4px] inline-block`}
                         style={{
                             color: EMPLOYEE_STATUS[formattedStatus as keyof typeof EMPLOYEE_STATUS]?.color,
                             backgroundColor: EMPLOYEE_STATUS[formattedStatus as keyof typeof EMPLOYEE_STATUS]?.bgColor,
                             width: "fit-content"
                         }}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
                     >
                         {EMPLOYEE_STATUS[formattedStatus as keyof typeof EMPLOYEE_STATUS]?.name}
-                    </div>
+                    </motion.div>
                 </Col>
 
                 {/* Company Information Section */}
                 {company && (
                     <>
                         <Col span={24} className="mt-4">
-                            <h3 className="text-lg font-semibold mb-2">Company Information</h3>
+                            <motion.h3
+                                className="text-lg font-semibold mb-2"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
+                                Company Information
+                            </motion.h3>
                         </Col>
                         
                         <Col xxl={6} xl={6} lg={6} md={6} xs={24}>
@@ -108,7 +143,12 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                         
                         <Col xxl={6} xl={6} lg={6} md={6} xs={24}>
                             <Label title="Verification Status" />
-                            <div className="flex gap-2">
+                            <motion.div
+                                className="flex gap-2"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
                                 <StatusPill 
                                     verified={company.is_email_verified} 
                                     text="Email" 
@@ -117,12 +157,12 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                                     verified={company.is_phone_verified} 
                                     text="Phone" 
                                 />
-                            </div>
+                            </motion.div>
                         </Col>
                     </>
                 )}
             </Row>
-        </>
+        </motion.div>
     );
 }
 

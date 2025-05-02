@@ -8,6 +8,7 @@ const documentController = "/documents";
 const company = "company";
 const employee = "employee";
 const chat = "chat";
+const databaseValidator = "database-validator";
 
 export const API_CONFIG_URLS = {
   AUTH: {
@@ -106,6 +107,12 @@ export const API_CONFIG_URLS = {
   Chatbot: {
     ASK: `${chat}/ask`,
     HISTORY: `${chat}/history`,
+    EMPLOYEE_CHAT_HISTORY: `${chat}/employee-history`,
+    CONVERSATION: `${chat}/conversation`,
+  },
+  DatabaseValidator: {
+    VERIFY: `${databaseValidator}/verify`,
+    SCHEMA: `${databaseValidator}/schema`,
     CONVERSATION: `${chat}/conversation`,
   },
 };

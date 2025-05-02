@@ -10,7 +10,7 @@ import { useAuthLayoutContainer } from "./useAuthLayoutContainer";
 
 import { EllipsisOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Input, Modal } from "antd";
-import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
+import { arrayOfDashboardItems, CheckRoute } from "@Constants/dashboard.constants";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@Constants/queryKeys";
 import ApiService, { apiService } from "@Services/ApiService";
@@ -24,6 +24,9 @@ const SideBar = () => {
     const { route, selectedKey, navigate } = useAuthLayoutContainer();
     const location = useLocation(); // Get the current URL
     const modalRef = useRef<ModalMethodsTypes | null>(null);
+    const id = parseInt(route[route.length - 1]) || null; // Extract the ID from the URL
+
+
 
     // State to track the list of chats
     const [historyChats, setHistoryChats] = useState<string[]>([
@@ -33,11 +36,20 @@ const SideBar = () => {
         "Sales Details",
     ]);
 
-    let isDashboard = arrayOfDashboardItems.includes(route[1]);
+    let employeeId = null;
+    let isEmployeeChat = false
+
+    if (route[1] && route[2] == "employee-prompt-chat") {
+        employeeId = route[1];
+        isEmployeeChat = true;
+    }
+    console.log("route", employeeId);
+    let isDashboard = CheckRoute(route);
 
     const [selectedChat, setSelectedChat] = useState<string | null>(historyChats[0]);
 
     // State to track whether the sidebar is collapsed
+    const [hoveredChat, setHoveredChat] = useState<string | null>(null);
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false); // Track hover state
 
@@ -50,12 +62,17 @@ const SideBar = () => {
     const customSiderClass =
         selectedKey === "banner-ad-management" ? " change-svg custom-sidebar" : "custom-sidebar";
 
-    const handleChatSelect = (chatId: any) => {
+    const handleChatSelect = (chatId: any) => { 
+        if(isEmployeeChat){
+            navigate(`/${employeeId}/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}/${chatId}`);
+        }else{
+            navigate(`${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/${chatId}`);
+        }
 
-        // Check if the selected chat is already in the historyChats array
-        navigate(`${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/${chatId}`);
-        setSelectedChat(chatId);
+        setSelectedChat(id);
     };
+
+    // setSelectedChat(id);navigate(`/${couponId}/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}`)
 
     const handleRenameChat = (chat: string) => {
         setRenamingChat(chat);
@@ -99,9 +116,14 @@ const SideBar = () => {
         setChatToDelete(null);
     };
 
-    const { data: chatHistory, isFetching } = useChatHistoryListing();
+    const { data: chatHistory, isFetching } = useChatHistoryListing(employeeId);
+
+    console.log("chatHistory", employeeId);
     const chatHistoryData = chatHistory?.data.result || [];
 
+    useEffect(() => {
+        queryClient.invalidateQueries([queryKeys.chat.history]);
+    },[]);
 
     const menu = (chat: string) => (
         <Menu>
@@ -144,14 +166,18 @@ const SideBar = () => {
     );
 
     useEffect(() => {
-        const match = location.pathname.match(/prompt-chat\/(\d+)/); 
+        const match = location.pathname.match(/prompt-chat\/(\d+)/);
         if (match && match[1]) {
             const chatId = match[1];
-            setSelectedChat(chatId); 
+            setSelectedChat(chatId);
         }
     }, [location.pathname]);
 
-    const [hoveredChat, setHoveredChat] = useState<string | null>(null);
+    
+    useEffect(() => {
+       
+    }, [route]);
+
 
     return (
         <div>
@@ -340,22 +366,31 @@ const SideBar = () => {
     );
 };
 
-const useChatHistoryListing = () => {
-    return useQuery([queryKeys.chat.history], async () => {
-        const { ok, data } = await GetChatHistoryListing();
-        if (ok) {
-            return data;
+const useChatHistoryListing = (employeeId: any) => {
+    return useQuery(
+        [queryKeys.chat.history, employeeId], // Include employeeId in the query key
+        async () => {
+            const { ok, data } = await GetChatHistoryListing(employeeId);
+            if (ok) {
+                return data;
+            }
+            throw new Error("Failed to fetch chat history");
+        },
+        {
+            enabled: !!employeeId || employeeId === null, // Ensure the query runs only when employeeId is defined or null
         }
-        throw new Error("Failed to fetch employee roles");
-    });
+    );
 };
 
-async function GetChatHistoryListing() {
-    const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
-    return response;
+async function GetChatHistoryListing(employeeId: any) {
+    if (employeeId) {
+        // Call the employee-specific chat history API
+        return await ApiService.get(`${API_CONFIG_URLS.Chatbot.EMPLOYEE_CHAT_HISTORY}/${employeeId}`);
+    } else {
+        // Call the general chat history API
+        return await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}`);
+    }
 }
-
-
 export const useInitiateChat = () => {
     return useMutation(() => initiateChat(), {
         onSuccess: ({ ok, response, data }: any) => {

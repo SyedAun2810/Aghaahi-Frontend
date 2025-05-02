@@ -41,6 +41,16 @@ const DashboardRoutes = [
         title: "PromptChat",
         path: `${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/:id`,
         component: <PromptChat />
+    }, 
+    {
+        title: "EmployeePromptChat",
+        path: `/:id/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}`,
+        component: <PromptChat />
+    },
+    {
+        title: "EmployeePromptChat",
+        path: `/:id/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}/:id`,
+        component: <PromptChat />
     },
     {
         title: "Dashboard",
@@ -126,7 +136,7 @@ const DashboardRoutes = [
     {
         title: "RequestManagement",
         path: NavigationRoutes.DASHBOARD_ROUTES.REQUEST_MANAGEMENT,
-        component: <RequestManagement/>
+        component: <RequestManagement />
     },
     // {
     //     title: "BannerDetails",
