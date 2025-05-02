@@ -12,6 +12,9 @@ import Sarah from "../../../assets/images/sarah.jpg";
 import Khushbkaht from "../../../assets/images/khushbakht.jpg";
 import Stars from "@Assets/icons/stars.svg";
 import Logo from "@Assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
+import UnAuthenticated from "@Navigation/UnAuthenticated";
+import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 
 const faqs = [
     { id: 1, question: 'What is Agaahi?', answer: 'Wonderchat is a chatbot platform designed to simplify customer interactions.' },
@@ -23,6 +26,8 @@ const faqs = [
 
 const LandingPage = () => {
     const [activeId, setActiveId] = useState(null);
+
+    const navigate = useNavigate();
 
     const toggleFAQ = (id) => {
         setActiveId(prevId => (prevId === id ? null : id));
@@ -37,10 +42,9 @@ const LandingPage = () => {
                     <div className="text-3xl font-bold tracking-wide"> Agaahi</div> {/* Increased font size and added letter spacing */}
                 </div>
                 <nav className="flex space-x-8">
-                    <a href="#features" className="hover:underline text-[#77798F]">Features</a>
-                    <a href="#pricing" className="hover:underline text-[#77798F]">Pricing</a>
-                    <a href="#contact" className="hover:underline text-[#77798F]">Contact</a>
-                    <a href="#affiliates" className="hover:underline text-[#77798F]">Affiliates</a>
+                    <a href="#features" className="hover:underline text-[#77798F]" onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRICING) }>Pricing</a>
+                    <a href="#pricing" className="hover:underline text-[#77798F]" onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY) }>Privacy Policy</a>
+                    <a href="#contact" className="hover:underline text-[#77798F]"  onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.CONTACT_US) }>Contact</a>
                 </nav>
                 <div className="flex space-x-4">
                     <button
@@ -313,7 +317,7 @@ const LandingPage = () => {
                     <div>© 2023  Agaahi Inc. All rights reserved.</div>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
                         <a href="/terms" style={{ color: '#999', textDecoration: 'none' }}>Terms of Service</a>
-                        <a href="/privacy" style={{ color: '#999', textDecoration: 'none' }}>Privacy Policy</a>
+                        <a href="/privacy" style={{ color: '#999', textDecoration: 'none' }}  onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY) }>Privacy Policy</a>
                         <a href="/cookies" style={{ color: '#999', textDecoration: 'none' }}>Cookies</a>
                     </div>
                 </div>

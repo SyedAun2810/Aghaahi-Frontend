@@ -5,18 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import { useAuthLayoutContainer } from "../useAuthLayoutContainer";
 import ProfileDropdown from "@Components/ProfileDropdown/ProdileDropdown";
-import { arrayOfDashboardItems } from "@Constants/dashboard.constants";
+import { arrayOfDashboardItems, CheckRoute } from "@Constants/dashboard.constants";
 import UserIcon from "@Assets/icons/userIcon.svg";
 import DashboardIcon from "@Assets/icons/DashboardIcon.svg"; // Already imported
 import ChatIcon from "@Assets/icons/chatIcon.svg"; // Already imported
 
 const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: number }) => {
-    let { removeUserAuthentication, isOwner, userData, role } = useAuthStore();
+    let { removeUserAuthentication, isOwner, userData } = useAuthStore();
     const { route } = useAuthLayoutContainer();
+    const role = userData?.role?.name // Default to "Owner" if role is not defined
+    console.log(role)
 
-    console.log(route)
-
-let isDashboard = arrayOfDashboardItems.includes(route[1]);
+    let isDashboard = CheckRoute(route);
     let isEmployeeSection = route[1] === "add-new-employee";
     let isEmployeeListing = route[1] === "employee-listing";
 
@@ -36,7 +36,7 @@ let isDashboard = arrayOfDashboardItems.includes(route[1]);
             <div className="flex items-center gap-2 ml-12">
                 <p className="text-lg text-[#5950CB]">{userData?.company?.name} - {role}</p>
             </div>
-    
+
             {/* Right Section: Rest of the Content */}
             <div className="flex items-center gap-2">
                 {!isDashboard ? (
@@ -83,7 +83,7 @@ let isDashboard = arrayOfDashboardItems.includes(route[1]);
                         )}
                     </>
                 )}
-                {!isDashboard && isOwner && (
+                {!isDashboard && isOwner && role === "Owner" && (
                     <>
                         <UserIcon />
                         <p

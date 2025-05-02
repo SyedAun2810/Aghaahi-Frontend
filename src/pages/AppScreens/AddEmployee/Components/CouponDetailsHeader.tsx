@@ -6,6 +6,7 @@ import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import BackIcon from "@Assets/icons/backIcon.svg";
 import EditIcon from "@Assets/icons/editIcon.svg";
 import DeleteIcon from "@Assets/icons/deleteIcon.svg";
+import { CustomButton } from "@Components/Button";
 
 interface CouponDetailsHeaderType {
     status: number;
@@ -21,21 +22,29 @@ export default function CouponDetailsHeader({
     deleteIconClickHandler
 }: CouponDetailsHeaderType) {
     const navigate = useNavigate();
+
     return (
-        <Flex align="center" gap={"middle"} justify="space-between" className="border-bottom pb-6">
+        <Flex align="center" gap={"middle"} justify="space-between" className="border-bottom pb-6 px-4">
             <Flex align="center" gap={"middle"}>
                 <BackIcon className="cursor-pointer mt-[3px]" onClick={() => navigate(-1)} />
                 <h1 className="font-[500] text-[1.2rem] md:text-xxl text-dark-main">
-                    {" "}
-                    Employee Details{" "}
+                    Employee Details
                 </h1>
             </Flex>
-            <div className="flex">
+            <div className="flex justify-center items-center gap-4">
+
+                <CustomButton
+                    title={"View Employee Chat"}
+                    className="text-sm px-4 py-2 w-auto h-auto" // Smaller text and button size
+                    onClick={() =>
+                        navigate(`/${couponId}/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}`)
+                    }
+                />
                 <Link
                     to={`${NavigationRoutes.DASHBOARD_ROUTES.UPDATE_EMPLOYEE}/${couponId}`}
                     className="text-large text-main-orange font-[500] cursor-pointer"
                 >
-                    <EditIcon className=" ml-2" />
+                    <EditIcon className="ml-2" />
                 </Link>
             </div>
         </Flex>

@@ -1,16 +1,19 @@
-import { AuthApiService } from "@Api/auth-service";
 import AuthHeader from "@Components/AuthHeader/AuthHeader";
 import { CustomButton } from "@Components/Button";
 import ColoredText from "@Components/ColorText/ColorText";
 import CustomSelectInput from "@Components/CustomSelectInput/CustomSelectInput";
 import Input from "@Components/TextInput/TextInput";
+import { API_CONFIG_URLS } from "@Constants/config";
 import { VALIDATE } from "@Constants/validationConstants";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
+import ApiService from "@Services/ApiService";
 import NotificationService from "@Services/NotificationService";
+import useAuthStore from "@Store/authStore";
 import { useMutation } from "@tanstack/react-query";
 import utilService from "@Utils/utils.service";
 import { Flex, Form } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DATABASE_TYPE_OPTIONS = [
     { label: "Postgres", value: "postgres" },
@@ -19,17 +22,57 @@ const DATABASE_TYPE_OPTIONS = [
 
 const RegisterDatabase = () => {
     const [form] = Form.useForm();
+    const [isVerified, setIsVerified] = useState(false);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const { setUserAuthentication,
+        accessToken,
+        role,
+        isOwner,
+        userData,
+        company, } = useAuthStore();
 
-      const { mutate: validateDatabase, isLoading: isValidating } = useValidateDatabase();
-    const handleSubmit = async (values: any) => {
-        validateDatabase(values)
-    };
+    const location = useLocation();
+    const { companyId } = location.state || {};
+    
 
-    const handleBackToLogin = () => {
-        // Navigate back to the login screen
-        navigate(NavigationRoutes.AUTH_ROUTES.LOGIN)
-        console.log("Navigate to login screen");
+
+
+    const verifyConnection = useVerifyConnection(() => {
+        setIsVerified(true);
+        setLoading(false);
+    });
+
+    const addDbConnection = useAddDbConnection(() => {
+        setLoading(false);
+        form.resetFields();
+        setIsVerified(false);
+        const payload = {
+            token: accessToken,
+            role: role,
+            isOwner: isOwner,
+            employee: userData,
+            company: company,
+            isAuth: true
+        }
+        setUserAuthentication(payload);
+        navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT);
+    });
+
+    const handleSubmit = (values: any) => {
+        setLoading(true);
+        values.port = Number(values.port);
+        const payload = { ...values, company_id : userData?.company?.id };
+
+        console.log("payload", payload);
+
+        if (!isVerified) {
+            // Verify connection
+            verifyConnection.mutate(payload);
+        } else {
+            // Add database connection
+            addDbConnection.mutate(payload);
+        }
     };
 
     return (
@@ -40,6 +83,7 @@ const RegisterDatabase = () => {
             />
             <Form
                 form={form}
+                // initialValues={defaultValues}
                 onKeyDown={(e) => utilService.preventFormSubmitOnSelectingAddress(e)}
                 onFinish={handleSubmit}
                 scrollToFirstError
@@ -92,9 +136,9 @@ const RegisterDatabase = () => {
 
                 <Form.Item className="mt-8 text-center">
                     <CustomButton
-                        title="Register Database"
+                        title={isVerified ? "Add Database" : "Verify"}
                         className="text-base w-[90%]"
-                        isLoading={isValidating}
+                        isLoading={loading}
                     />
                 </Form.Item>
             </Form>
@@ -102,7 +146,7 @@ const RegisterDatabase = () => {
                 Already registered?&nbsp;
                 <ColoredText
                     text="Login"
-                    onClick={handleBackToLogin}
+                    onClick={() => navigate(NavigationRoutes.AUTH_ROUTES.LOGIN)}
                     className="underline cursor-pointer"
                 />
             </p>
@@ -112,14 +156,17 @@ const RegisterDatabase = () => {
 
 export default RegisterDatabase;
 
-
-const useValidateDatabase = () => {
-    return useMutation((payload: any) => AuthApiService.valdiateDatabase(payload), {
+export const useVerifyConnection = (onSuccess: (data?: any) => void) => {
+    return useMutation((payload: any) => verifyDbConnection(payload), {
         onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
+                console.log("Verify Data ",)
+                NotificationService.success("Connection verified successfully.");
+                onSuccess(payload);
                 return data;
             }
-            NotificationService.error(data?.data?.metadata?.message);
+            console.log("error", response);
+            NotificationService.error(response?.message);
             throw response.message;
         },
         onError: (err: any) => {
@@ -127,3 +174,31 @@ const useValidateDatabase = () => {
         }
     });
 };
+
+async function verifyDbConnection(payload: any) {
+    const response = await ApiService.post(API_CONFIG_URLS.DatabaseValidator.VERIFY, payload);
+    return response;
+}
+
+export const useAddDbConnection = (onSuccess: (data?: any) => void) => {
+    return useMutation((payload: any) => addDbConnection(payload), {
+        onSuccess: ({ ok, response, data }: any, payload: any) => {
+            if (ok) {
+                NotificationService.success("Your database has successfully configured.");
+                onSuccess(data);
+                return data;
+            }
+            console.log("error", response);
+            NotificationService.error(response?.message);
+            throw response.message;
+        },
+        onError: (err: any) => {
+            throw err;
+        }
+    });
+};
+
+async function addDbConnection(payload: any) {
+    const response = await ApiService.post(API_CONFIG_URLS.DatabaseValidator.SCHEMA, payload);
+    return response;
+}

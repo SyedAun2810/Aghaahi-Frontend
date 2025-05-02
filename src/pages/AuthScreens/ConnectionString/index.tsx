@@ -1,23 +1,62 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Select, Typography, Card } from "antd";
+import { useLocation } from "react-router-dom";
+import useAuthStore from "@Store/authStore";
+import ApiService from "@Services/ApiService";
+import { API_CONFIG_URLS } from "@Constants/config";
+import NotificationService from "@Services/NotificationService";
+import { useMutation } from "@tanstack/react-query";
+import TypedInputNumber from "antd/es/input-number";
+
 
 const { Title } = Typography;
 const { Option } = Select;
 
 const ConnectionString = () => {
     const [form] = Form.useForm();
-    const [submittedData, setSubmittedData] = useState<any>(null);
+    const [isVerified, setIsVerified] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const location = useLocation();
+    const { companyId } = location.state || {};
+
+    console.log("companyId", companyId);
+    console.log("companyId", companyId);
+    console.log("companyId", companyId);
+    console.log("companyId", companyId);
+    console.log("companyId", companyId);
+    console.log("companyId", companyId);
+    
+    const verifyConnection = useVerifyConnection(() => {
+        console.log("companyId", companyId);
+        setIsVerified(true);
+        setLoading(false);
+    });
+
+    const addDbConnection = useAddDbConnection(() => {
+        setLoading(false);
+        form.resetFields();
+        setIsVerified(false);
+    });
 
     const handleSubmit = (values: any) => {
-        setSubmittedData(values); // Save submitted values to state
-        console.log("Submitted Data:", values);
+        setLoading(true);
+        const payload = { ...values, companyId };
+
+        if (!isVerified) {
+            // Verify connection
+            verifyConnection.mutate(payload);
+        } else {
+            // Add database connection
+            addDbConnection.mutate(payload);
+        }
     };
 
     return (
         <div className="h-[100vh] flex justify-center items-center bg-gray-100">
             <Card className="w-[400px] shadow-lg">
                 <Title level={3} className="text-center mb-4">
-                    Enter Database Credentials
+                    Enter Database 
                 </Title>
                 <Form
                     form={form}
@@ -27,7 +66,7 @@ const ConnectionString = () => {
                 >
                     <Form.Item
                         label="Host Name"
-                        name="hostName"
+                        name="host"
                         rules={[{ required: true, message: "Please enter the host name!" }]}
                     >
                         <Input placeholder="Enter host name" />
@@ -35,7 +74,7 @@ const ConnectionString = () => {
 
                     <Form.Item
                         label="Database Name"
-                        name="dbName"
+                        name="defaultdb"
                         rules={[{ required: true, message: "Please enter the database name!" }]}
                     >
                         <Input placeholder="Enter database name" />
@@ -43,7 +82,7 @@ const ConnectionString = () => {
 
                     <Form.Item
                         label="Username"
-                        name="username"
+                        name="user"
                         rules={[{ required: true, message: "Please enter the username!" }]}
                     >
                         <Input placeholder="Enter username" />
@@ -58,8 +97,16 @@ const ConnectionString = () => {
                     </Form.Item>
 
                     <Form.Item
+                        label="Port"
+                        name="port"
+                        rules={[{ required: true, message: "Please enter the port!" }]}
+                    >
+                        <TypedInputNumber placeholder="Enter port" />
+                    </Form.Item>
+
+                    <Form.Item
                         label="Database Type"
-                        name="dbType"
+                        name="type"
                         rules={[{ required: true, message: "Please select the database type!" }]}
                     >
                         <Select placeholder="Select database type">
@@ -69,21 +116,20 @@ const ConnectionString = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
-                            Submit
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            block
+                            loading={loading}
+                        >
+                            {isVerified ? "Add Database" : "Verify"}
                         </Button>
                     </Form.Item>
                 </Form>
-
-                {submittedData && (
-                    <div className="mt-4">
-                        <Title level={4}>Submitted Data:</Title>
-                        <pre className="bg-gray-100 p-4 rounded">{JSON.stringify(submittedData, null, 2)}</pre>
-                    </div>
-                )}
             </Card>
         </div>
     );
 };
+
 
 export default ConnectionString;
