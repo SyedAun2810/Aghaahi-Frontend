@@ -17,7 +17,7 @@ export const useRegister = (onSuccess: (data?: any) => void) => {
                 onSuccess(data?.data);
                 return data;
             }
-            console.log("error", response);
+            //console.log("error", response);
             NotificationService.error(response?.message);
             throw response.message;
         },

@@ -1,12 +1,8 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { fillColors } from './graphConst'; // Import color pool
 
-// Define the LineConfig type
-interface LineConfig {
-  dataKey: string; // The key in the data object to be used for the line
-  stroke: string;  // The color of the line
-  dot?: React.ReactNode; // Optional custom dot component
-}
+export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
 // Default chart configuration
 const defaultChartConfig = {
@@ -20,26 +16,23 @@ const defaultChartConfig = {
     { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
   ],
   config: [
-    { dataKey: 'pv', stroke: '#8884d8'},
-    { dataKey: 'uv', stroke: '#82ca9d' },
+    { dataKey: 'pv' },
+    { dataKey: 'uv' },
   ],
 };
 
-const CustomizedDot = (props) => {
-  const { cx, cy, value } = props;
-  const color = value > 2500 ? 'red' : 'green';
-  return <circle cx={cx} cy={cy} r={5} fill={color} stroke="none" />;
-};
-
 const CustomizeLineChart = ({
-  chartConfig = defaultChartConfig,
+  chartConfig = defaultChartConfig, // Use default chart configuration if none is provided
 }: {
-  chartConfig: { data: any[]; config: LineConfig[] };
+  chartConfig: {
+    data: { name: string; [key: string]: number | string }[];
+    config: { dataKey: string }[];
+  };
 }) => {
   const { data, config } = chartConfig;
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={"100%"}>
       <LineChart
         data={data}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -49,13 +42,12 @@ const CustomizeLineChart = ({
         <YAxis />
         <Tooltip />
         <Legend />
-        {config.map((lineConfig: LineConfig, index: number) => (
+        {config.map((lineConfig, index) => (
           <Line
             key={index}
             type="monotone"
             dataKey={lineConfig.dataKey}
-            stroke={lineConfig.stroke}
-            dot={<CustomizedDot/>}
+            stroke={getRandomColor(fillColors)} // Assign random color dynamically
           />
         ))}
       </LineChart>

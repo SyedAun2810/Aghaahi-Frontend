@@ -8,15 +8,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { getRandomColor } from "./AreaChartComponent";
+import { strokeColors } from "./graphConst";
 
 // Define the LineConfig type
 interface LineConfig {
   dataKey: string; // The key in the data object to be used for the line
   stroke: string;  // The color of the line
 }
-
 // Dummy data for demonstration purposes
-const dummyChartConfig = {
+export const dummyChartConfig = {
   data: [
     { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
     { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
@@ -37,9 +38,15 @@ const dummyChartConfig = {
 const SimpleLineChart = ({
   chartConfig = dummyChartConfig,
 }: {
-  chartConfig: { data: any[]; config: LineConfig[] };
+  chartConfig?: { data: any[]; config: LineConfig[] };
 }) => {
-  const { data, config } = chartConfig;
+  let { data, config } = chartConfig;
+
+  if(!config){
+    config = dummyChartConfig.config;
+  }
+
+  //console.log("LineChart data: ", data);  
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -57,7 +64,7 @@ const SimpleLineChart = ({
             key={index}
             type="monotone"
             dataKey={lineConfig.dataKey}
-            stroke={lineConfig.stroke}
+            stroke={getRandomColor(strokeColors)}
             activeDot={{ r: 8 }}
           />
         ))}

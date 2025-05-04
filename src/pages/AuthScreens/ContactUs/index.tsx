@@ -24,7 +24,7 @@ const ContactUsPage = () => {
     setIsLoading(true);
     try {
       await submitContactForm.mutateAsync(payload);
-      console.log('Form submitted successfully:', payload);
+      //console.log('Form submitted successfully:', payload);
       formRef.current?.reset(); // Reset the form
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -191,7 +191,7 @@ export const useSubmitContactForm = () => {
               NotificationService.success("Your Response has been Recorded.");
               return data;
           }
-          console.log("error", response);
+          //console.log("error", response);
           NotificationService.error(response?.message);
           throw response.message;
       },

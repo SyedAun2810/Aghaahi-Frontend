@@ -17,7 +17,7 @@ const graphs = [
   // { id: 8, name: "Geo Chart", category: "Others", image: graphImages().otherCharts.GeoChart },
   { id: 9, name: "Radar Chart", category: "Others", image: graphImages().otherCharts.RadarChart },
   { id: 10, name: "Radial Chart", category: "Others", image: graphImages().otherCharts.RadialChart },
-  { id: 11, name: "Card", category: "Others", image: graphImages().otherCharts.MetricsCard },
+  { id: 11, name: "Analytics Card", category: "Others", image: graphImages().otherCharts.MetricsCard },
 ];
 
 const categories = ["All", "Line Chart", "Bar Chart", "Pie Chart", "Others"];
@@ -42,8 +42,8 @@ const Dashboard = () => {
   };
 
   const handleAddToDashboard = () => {
-    console.log(`Graph ID: ${selectedGraph.id}`);
-    console.log(`Prompt: ${prompt}`);
+    //console.log(`Graph ID: ${selectedGraph.id}`);
+    //console.log(`Prompt: ${prompt}`);
     handleCloseModal();
   };
 

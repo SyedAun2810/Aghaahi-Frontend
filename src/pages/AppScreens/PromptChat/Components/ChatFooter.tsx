@@ -28,7 +28,7 @@ const ChatFooter: React.FC<{ form: any; localMessage: string; setLocalMessage: (
     }, [browserSupportsSpeechRecognition]);
 
     useEffect(() => {
-        console.log("Transcript", transcript)
+        //console.log("Transcript", transcript)
         setLocalMessage(transcript); // Update the local message with the transcript
     }, [transcript, setLocalMessage]);
 

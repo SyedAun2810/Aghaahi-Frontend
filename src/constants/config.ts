@@ -9,6 +9,7 @@ const company = "company";
 const employee = "employee";
 const chat = "chat";
 const databaseValidator = "database-validator";
+const dashboard = "dashboard";
 
 export const API_CONFIG_URLS = {
   AUTH: {
@@ -35,9 +36,11 @@ export const API_CONFIG_URLS = {
       UPLOAD_DOCUMENTS:`${documentController}`
   },
   DASHBOARD: {
-    ANALYTICAL_BOX: "/sellers/dashboard/metrics",
-    RECENT_EARNINGS: "/sellers/dashboard/new-orders",
-    RECENT_PAYOUTS: "/sellers/dashboard/recent-payouts"
+    GENERATE_GRAPH: `${dashboard}/generate-chart`,
+    SAVE_GRAPH: `${dashboard}/save-chart`,
+    LAYOUT: `${dashboard}/dashboard-layout`,
+    DASHBOARD_DATA: `${dashboard}/dashboard-data`,
+    UPDATE_LAYOUT: `${dashboard}/dashboard-layout`,
   },
   PRODUCT: {
     ADD_PRODUCT: `/products`,

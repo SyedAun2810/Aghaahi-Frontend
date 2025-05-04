@@ -1,14 +1,25 @@
+import React from "react";
+import SimpleLineChart from "./LineChart";
+import { Component } from "lucide-react";
+import AnalyticsCard from "@Components/AnalyticsCard/AnalyticsCard";
+import BarChartComponent from "./SimpleBarChart";
+import AreaChartComponent from "./AreaChartComponent";
+import CustomizeBarChartComponent from "./CustomizeShapeBarChart";
+import CustomizeLineChart from "./CustomizeLineChart";
+import SimplePieChartComponent from "./SimplePieChart";
+
 // Centralized arrays of colors for stroke and fill
 export const strokeColors = ['#8884d8', '#82ca9d', '#ffc658', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 export const fillColors = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c', '#d0ed57', '#ffc658'];
 
-export const graphConst = {
-    graphs: [
+function  GraphConst() {
+    const graphs = [
         {
             id: 1,
             name: "Line Chart",
             category: "Line Chart",
             image: "graphImages().lineCharts.LineChart",
+            Component: <SimpleLineChart />,
             defaultData: [
                 { name: "Page A", uv: 4000, pv: 2400, amt: 2400, stroke: strokeColors[0] },
                 { name: "Page B", uv: 3000, pv: 1398, amt: 2210, stroke: strokeColors[1] },
@@ -24,24 +35,26 @@ export const graphConst = {
             name: "Stacked Area Chart",
             category: "Line Chart",
             image: "graphImages().lineCharts.StackedAreaChart",
+            Component: <AreaChartComponent />,
             defaultData: {
-                "data": [
-                  { "name": "Page A", "uv": 4000, "pv": 2400, "amt": 2400 },
-                  { "name": "Page B", "uv": 3000, "pv": 1398, "amt": 2210 },
-                  { "name": "Page C", "uv": 2000, "pv": 9800, "amt": 2290 },
-                  { "name": "Page D", "uv": 2780, "pv": 3908, "amt": 2000 },
-                  { "name": "Page E", "uv": 1890, "pv": 4800, "amt": 2181 },
-                  { "name": "Page F", "uv": 2390, "pv": 3800, "amt": 2500 },
-                  { "name": "Page G", "uv": 3490, "pv": 4300, "amt": 2100 }
+                data: [
+                    { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
+                    { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
+                    { name: "Page C", uv: 2000, pv: 9800, amt: 2290 },
+                    { name: "Page D", uv: 2780, pv: 3908, amt: 2000 },
+                    { name: "Page E", uv: 1890, pv: 4800, amt: 2181 },
+                    { name: "Page F", uv: 2390, pv: 3800, amt: 2500 },
+                    { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
                 ],
-                "dataKeys": ["uv", "pv", "amt"]
-              },
+                dataKeys: ["uv", "pv", "amt"],
+            },
         },
         {
             id: 3,
             name: "Customize Line Chart",
             category: "Line Chart",
             image: "graphImages().lineCharts.CustomizeLineChart",
+            Component: <CustomizeLineChart/>,
             defaultData: {
                 data: [
                     { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
@@ -62,6 +75,7 @@ export const graphConst = {
             id: 4,
             name: "Simple Bar Chart",
             category: "Bar Chart",
+            Component: <BarChartComponent />,
             image: "graphImages().barCharts.SimpleBarChart",
             defaultData: {
                 data: [
@@ -80,6 +94,7 @@ export const graphConst = {
             name: "Customize Shape Bar Chart",
             category: "Bar Chart",
             image: "graphImages().barCharts.CustomizeShapeBarChart",
+            Component: <CustomizeBarChartComponent/>,
             defaultData: {
                 "data": [
                     { "name": "Page A", "uv": 4000, "pv": 2400, "amt": 2400 },
@@ -118,6 +133,7 @@ export const graphConst = {
             name: "Pie Chart",
             category: "Pie Chart",
             image: "graphImages().pieCharts.PieChart",
+            Component: <SimplePieChartComponent/>,
             defaultData: {
                 "data": [
                     { "name": "Category 1", "value": 500 },
@@ -182,9 +198,10 @@ export const graphConst = {
         },
         {
             id: 11,
-            name: "Card",
+            name: "Analytics Card",
             category: "Others",
             image: "graphImages().otherCharts.MetricsCard",
+            Component: <AnalyticsCard/>,
             defaultData: [
                 { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
                 { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
@@ -195,5 +212,12 @@ export const graphConst = {
                 { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
             ],
         },
-    ],
+    ];
+
+ return{
+    graphs
+ }
+
 };
+
+export default GraphConst;

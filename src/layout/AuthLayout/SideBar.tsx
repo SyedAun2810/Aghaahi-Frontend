@@ -43,7 +43,7 @@ const SideBar = () => {
         employeeId = route[1];
         isEmployeeChat = true;
     }
-    console.log("route", employeeId);
+    //console.log("route", employeeId);
     let isDashboard = CheckRoute(route);
 
     const [selectedChat, setSelectedChat] = useState<string | null>(historyChats[0]);
@@ -76,10 +76,10 @@ const SideBar = () => {
 
     const handleRenameChat = (chat: string) => {
         setRenamingChat(chat);
-        console.log("chat", chat);
+        //console.log("chat", chat);
         let name = chatHistory.data.result.find((item: any) => item.id === chat)?.name;
         setRenameValue(name);
-        console.log("name", chatHistory);
+        //console.log("name", chatHistory);
     };
 
     const handleRenameSubmit = () => {
@@ -118,7 +118,7 @@ const SideBar = () => {
 
     const { data: chatHistory, isFetching } = useChatHistoryListing(employeeId);
 
-    console.log("chatHistory", employeeId);
+    //console.log("chatHistory", employeeId);
     const chatHistoryData = chatHistory?.data.result || [];
 
     useEffect(() => {
@@ -395,8 +395,8 @@ export const useInitiateChat = () => {
     return useMutation(() => initiateChat(), {
         onSuccess: ({ ok, response, data }: any) => {
 
-            console.log("data from use muttation ", data);
-            console.log("respponse  from use muttation ", response);
+            //console.log("data from use muttation ", data);
+            //console.log("respponse  from use muttation ", response);
             return data;
         },
         onError: (err: any) => {

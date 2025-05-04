@@ -64,7 +64,7 @@ const RegisterDatabase = () => {
         values.port = Number(values.port);
         const payload = { ...values, company_id : userData?.company?.id };
 
-        console.log("payload", payload);
+        //console.log("payload", payload);
 
         if (!isVerified) {
             // Verify connection
@@ -160,12 +160,12 @@ export const useVerifyConnection = (onSuccess: (data?: any) => void) => {
     return useMutation((payload: any) => verifyDbConnection(payload), {
         onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
-                console.log("Verify Data ",)
+                //console.log("Verify Data ",)
                 NotificationService.success("Connection verified successfully.");
                 onSuccess(payload);
                 return data;
             }
-            console.log("error", response);
+            //console.log("error", response);
             NotificationService.error(response?.message);
             throw response.message;
         },
@@ -188,7 +188,7 @@ export const useAddDbConnection = (onSuccess: (data?: any) => void) => {
                 onSuccess(data);
                 return data;
             }
-            console.log("error", response);
+            //console.log("error", response);
             NotificationService.error(response?.message);
             throw response.message;
         },

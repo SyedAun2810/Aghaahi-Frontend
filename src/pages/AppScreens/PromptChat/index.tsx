@@ -20,14 +20,14 @@ const PromptChat = () => {
     const [listingData, setListingData] = useState<any[]>([]); // Create state for listingData
     const [lastCnoversationId, setLastConversationId] = useState<any>(); // Create state for listingData
     const [paramId, setParamId] = useState<any>(); // Create state for listingData
-    console.log("The route is here", route);
+    //console.log("The route is here", route);
 
     const last = route[route.length - 1];
 
     // const {id} = /^\d+$/.test(last) ? parseInt(last) : null;
     const {id} = useParams();
 
-    console.log(id);     // let { id } = useParams();
+    //console.log(id);     // let { id } = useParams();
     const [isEmptyChat, setIsEmptyChat] = useState<boolean>();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,7 +50,7 @@ const PromptChat = () => {
             // If id is null, update it with the conversation ID from the response
             if (!id && data.data.response.conversation_id) {
                 const newId = data.data.response.conversation_id;
-                console.log("Setting new conversation ID:", newId);
+                //console.log("Setting new conversation ID:", newId);
                 window.history.replaceState(null, "", `/prompt-chat/${newId}`);
                 setParamId(newId); // Update the paramId state
             }
@@ -94,7 +94,7 @@ const PromptChat = () => {
 
         // Add a temporary ChatContent with a loader    
         const tempId = listingData.length;
-        console.log(" The id is here ", tempId);
+        //console.log(" The id is here ", tempId);
         const tempObject = {
             id: tempId,
             conversation_id: id,
@@ -102,13 +102,13 @@ const PromptChat = () => {
             response: null, // No response yet
             isLoading: true, // Show loader
         };
-        console.log(" The temp is here ", tempObject);
+        //console.log(" The temp is here ", tempObject);
 
         setListingData((prev) => [...prev, tempObject]); // Add temporary ChatContent
         scrollToBottom(); // Scroll to the bottom
 
         setPayload(payload.message);
-        console.log("Payload", payload);
+        //console.log("Payload", payload);
         sendPromptMutate(payload); // Trigger the mutation
     }
 
@@ -117,7 +117,7 @@ const PromptChat = () => {
     const { data: conversationListing, isFetching } = useConversationListing(id);
 
     useEffect(() => {
-        console.log("Conversation Listing:", conversationListing);
+        //console.log("Conversation Listing:", conversationListing);
         if (conversationListing) {
             setListingData(conversationListing?.data?.chat_history || []);
         }
@@ -298,12 +298,14 @@ function ChatContent({
                 <div className="pl-16 flex mt-2 space-x-4">
                     <LikeOutlined
                         className="text-green-500 text-xl cursor-pointer hover:text-green-600"
-                        onClick={() => console.log("Liked response:", chatData.response)}
+                        onClick={() =>{}
+                             //console.log("Liked response:", chatData.response)
+                            }
                     />
                     <DislikeOutlined
                         className="text-red-500 text-xl cursor-pointer hover:text-red-600"
-                        onClick={() => console.log("Disliked response:", chatData.response)}
-                    />
+                        // onClick={() => //console.log("Disliked response:", chatData.response)}
+                />
                     <CopyOutlined
                         className="text-blue-500 text-xl cursor-pointer hover:text-blue-600"
                         onClick={() => {
@@ -313,7 +315,7 @@ function ChatContent({
                             }
                             const textContent = extractTextFromHTML(chatData.response); // Extract plain text
                             navigator.clipboard.writeText(textContent); // Copy plain text
-                            console.log("Copied response:", textContent);
+                            //console.log("Copied response:", textContent);
                         }}
                     />
                     <SoundOutlined
@@ -328,7 +330,7 @@ function ChatContent({
                             }
                             const utterance = new SpeechSynthesisUtterance(textContent);
                             window.speechSynthesis.speak(utterance);
-                            console.log("Reading aloud:", textContent);
+                            //console.log("Reading aloud:", textContent);
                         }}
                     />
                 </div>
@@ -374,7 +376,7 @@ function UserPrompt({
                             }
                             const textContent = extractTextFromHTML(response); // Extract plain text
                             navigator.clipboard.writeText(textContent); // Copy plain text
-                            console.log("Copied response:", textContent);
+                            //console.log("Copied response:", textContent);
                         }}
                     />
                 </div>
@@ -386,7 +388,7 @@ function UserPrompt({
 export const useSendPrompt = ({ onSuccess, onVerificationFail }: any) => {
     return useMutation(
         async (payload: any) => {
-            console.log(payload, "Payload in useSendPrompt function");
+            //console.log(payload, "Payload in useSendPrompt function");
             const response = await sendPrompt(payload); // Await the API call
             return response; // Return the response
         },
@@ -409,7 +411,7 @@ function convertClassNameToClass(htmlString: string): string {
 }
 
 async function sendPrompt(payload: any) {
-    console.log(payload, "Payload in sendPrompt function");
+    //console.log(payload, "Payload in sendPrompt function");
     const response = await ApiService.post(
         `${API_CONFIG_URLS.Chatbot.ASK}`, payload
     );
@@ -421,7 +423,7 @@ const useConversationListing = (id: any) => {
     return useQuery(
         [queryKeys.chat.conversation, id],
         async () => {
-            console.log("Fetching conversation listing for ID:", id);
+            //console.log("Fetching conversation listing for ID:", id);
             const { ok, data } = await GetConversationListing(id);
             if (ok) {
                 return data;
@@ -438,7 +440,7 @@ const useConversationListing = (id: any) => {
 
 async function GetConversationListing(id: any) {
     if (!id) {
-        console.log("GetConversationListing: ID is undefined, returning default response.");
+        //console.log("GetConversationListing: ID is undefined, returning default response.");
         return { ok: true, data: { chat_history: [] } }; // Return an empty chat history
     }
     const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}/${id}`);

@@ -53,7 +53,9 @@ export const queryKeys = {
     dashboard: {
         analyticalBoxes: "ANALYTICAL_BOXES",
         recentOrders: "RECENT_ORDERS",
-        recentPayouts: "RECENT_PAYOUTS"
+        recentPayouts: "RECENT_PAYOUTS",
+        getLayout : "GET_LAYOUT",
+        getGraphData: "GET_GRAPH_DATA",
     },
     notifications: {
         listing: "NOTIFICATION_LISTING",

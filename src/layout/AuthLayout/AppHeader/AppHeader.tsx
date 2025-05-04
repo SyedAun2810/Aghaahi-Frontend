@@ -14,7 +14,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
     let { removeUserAuthentication, isOwner, userData } = useAuthStore();
     const { route } = useAuthLayoutContainer();
     const role = userData?.role?.name // Default to "Owner" if role is not defined
-    console.log(role)
+    //console.log(role)
 
     let isDashboard = CheckRoute(route);
     let isEmployeeSection = route[1] === "add-new-employee";

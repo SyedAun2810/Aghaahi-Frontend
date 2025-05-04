@@ -60,7 +60,7 @@ export default function GenerateLabels() {
                 pagination={{
                     total: generateLabelsListingData?.pagination?.totalCount
                 }}
-                onChange={() => console.log("OnChange")}
+                onChange={() => //console.log("OnChange")}
                 totalCount={generateLabelsListingData?.pagination?.totalCount}
                 onPaginate={(page) => {
                     pageClickHandler(page);

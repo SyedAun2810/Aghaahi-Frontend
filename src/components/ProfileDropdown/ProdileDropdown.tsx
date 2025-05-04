@@ -21,7 +21,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
 
     const image = userData?.store?.image?.url || "";
     const name = userData?.name || "";
-console.log("userData", userData);
+//console.log("userData", userData);
     const items: MenuProps["items"] = [
         {
             key: "1",

@@ -13,30 +13,37 @@ const defaultData = [
   { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
   { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
 ];
+const defaultConfig = [
+  { dataKey: 'pv', stroke: '#8884d8' },
+  { dataKey: 'uv', stroke: '#82ca9d' },
+  { dataKey: 'amt', stroke: '#ffc658' },
+];
 
 const AreaChartComponent = ({
-  data = defaultData, // Use default data if none is provided
-  dataKeys = ['uv', 'pv', 'amt'], // Default data keys for areas
+  chartConfig = { data: defaultData, config: defaultConfig }, // Ensure default values for chartConfig
 }: {
-  data?: { name: string; [key: string]: number | string }[];
-  dataKeys?: string[];
+  chartConfig: { data: any[]; config: { dataKey: string; stroke: string }[] };
 }) => {
+  let { data, config } = chartConfig;
+
+  //console.log("AreaChart data: ", data); // Log the data for debugging
+  //console.log("AreaChart config: ", config); // Log the config for debugging
   return (
     <ResponsiveContainer width="100%" height={"100%"}>
       <AreaChart
-        data={data}
+        data={data} // Use the passed data
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        {dataKeys.map((dataKey, index) => (
+        {config.map((areaConfig, index) => (
           <Area
             key={index}
             type="monotone"
-            dataKey={dataKey}
-            stroke={getRandomColor(fillColors)} // Dynamically set stroke color
+            dataKey={areaConfig.dataKey} // Use the dataKey from config
+            stroke={areaConfig.stroke || getRandomColor(fillColors)} // Use stroke from config or random color
             fill={getRandomColor(fillColors)} // Dynamically set fill color
           />
         ))}

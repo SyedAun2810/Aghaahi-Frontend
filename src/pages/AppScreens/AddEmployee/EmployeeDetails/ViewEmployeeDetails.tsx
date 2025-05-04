@@ -16,7 +16,7 @@ export default function ViewEmployeeDetails() {
     const { data: employeeDetails } = useEmployeeDetail(employeeId);
 
     const data = employeeDetails?.data;
-    console.log(data);
+    //console.log(data);
     return (
         <>
             <Flex className="" vertical gap={"large"}>
@@ -25,10 +25,10 @@ export default function ViewEmployeeDetails() {
                         status={0}
                         couponId={Number(employeeId)}
                         backButtonClickHandler={()=>{
-                            console.log('backButtonClickHandler');
+                            //console.log('backButtonClickHandler');
                         }}
                         deleteIconClickHandler={()=>{
-                            console.log('backButtonClickHandler');
+                            //console.log('backButtonClickHandler');
                         }}
                     />
                     <EmployeeDetailBody data={data || {}} />
