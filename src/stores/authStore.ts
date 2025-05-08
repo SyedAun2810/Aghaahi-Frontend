@@ -18,16 +18,19 @@ type StoreState = {
   chatToken: null | string;
   isAuth: boolean;
   isDark: boolean;
-  showSidebar: boolean; 
+  showSidebar: boolean;
+   role: null | string,
+  isOwner: boolean,
+  company: null | any;
 };
 
 type StoreAction = {
-  setUserAuthentication: (data: LoginResponse) => void;
+  setUserAuthentication: (data: any) => void;
   removeUserAuthentication: () => void;
   updateUserData: (data: any) => void;
 }; 
 
-const initialState: StoreState = {
+const initialState: any = {
   isAuth: false,
   userData: null,
   accessToken: null,
@@ -35,18 +38,25 @@ const initialState: StoreState = {
   refreshToken: null,
   isDark: false,
   showSidebar: false,
+  role: null,
+  isOwner: false,
+  company : null
 };
 
 const useAuthStore = create<StoreState & StoreAction>()(
   persist(
     (set) => ({
       ...initialState,
-      setUserAuthentication: (payload: LoginResponse) =>
+      setUserAuthentication: (payload: any) =>
         set(() => ({
-          isAuth: true,
+          isAuth: payload.isAuth,
           accessToken: payload?.token,
-          chatToken: payload?.chatToken,
-          refreshToken: payload?.refreshToken,
+          role : payload?.employee?.role.name,
+          isOwner: payload?.employee?.role.name === 'Owner',
+          userData: payload?.employee,
+          company: payload?.company,
+          // chatToken: payload?.chatToken,
+          // refreshToken: payload?.refreshToken,
           // userData: payload.user,
         })),
       removeUserAuthentication: () =>
@@ -67,6 +77,9 @@ const useAuthStore = create<StoreState & StoreAction>()(
         userData,
         isDark,
         showSidebar,
+        isOwner, 
+        company,
+        role
       }) => ({
         isAuth,
         userData,
@@ -75,6 +88,9 @@ const useAuthStore = create<StoreState & StoreAction>()(
         refreshToken,
         isDark,
         showSidebar, 
+        isOwner, 
+        role,
+        company,
       }),
     }
   )

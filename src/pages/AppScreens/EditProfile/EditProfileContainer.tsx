@@ -7,7 +7,9 @@ import { useUploadDocuments } from "@Hooks/useDocumentUploadQuery";
 
 const useEditProfileContainer = () => {
     const [form] = Form.useForm();
-    const { userData, chatToken } = useAuthStore();
+    const { userData, chatToken,role } = useAuthStore();
+
+    //console.log("userData", userData?.name);
     const {
         latitude,
         longitude,
@@ -23,25 +25,35 @@ const useEditProfileContainer = () => {
     const { mutate: updateProfile, isLoading: isEditingProfile } = useEditProfile();
 
     const initialValues = {
-        firstName: userData?.firstName,
+        name: userData?.name,
         email: userData?.email,
-        phoneNumber: userData?.phoneNumber,
-
-        image: userData?.store?.image?.url,
-        addressId: userData?.store?.address?.id,
-        imageId: userData?.store?.image?.id,
-        store: {
-            name: userData?.store?.name,
-            address: {
-                fullAddress: userData.store?.address.fullAddress,
-                city: userData?.store?.address?.city,
-                state: userData?.store?.address?.state,
-                country: userData?.store?.address?.country,
-                zipCode: userData?.store?.address?.zipCode,
-                id: userData?.store?.address?.id,
-                street: userData?.store?.address?.street
-            }
-        }
+        phoneNumber: userData?.phone_number,
+        countryCode: userData?.country_code,
+        salary: userData?.salary,
+        status: userData?.status ? "Active" : "Inactive",
+        language: userData?.language,
+        gender: userData?.gender,
+        image: userData?.image,
+        role: {
+            id: userData?.role?.id,
+            name: userData?.role?.name,
+            description: userData?.role?.description,
+            status: userData?.role?.status,
+        },
+        company: {
+            id: userData?.company?.id,
+            name: userData?.company?.name,
+            email: userData?.company?.email,
+            phoneNumber: userData?.company?.phone_number,
+            countryCode: userData?.company?.country_code,
+            language: userData?.company?.language,
+            firstName: userData?.company?.first_name,
+            lastName: userData?.company?.last_name,
+            isActive: userData?.company?.is_active,
+            isEmailVerified: userData?.company?.is_email_verified,
+            isPhoneVerified: userData?.company?.is_phone_verified,
+            isDatabaseValidated: userData?.company?.is_database_validated,
+        },
     };
 
     const handleFinish = async (payload: any) => {
@@ -78,7 +90,8 @@ const useEditProfileContainer = () => {
         selectedAddress,
         handlePlaceSelect,
         CHANGED_AFTER_SELECTION_ERROR,
-        form
+        form,
+        role
     };
 };
 

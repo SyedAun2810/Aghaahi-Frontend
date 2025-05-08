@@ -1,27 +1,21 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { NavigationRoutes } from "./NavigationRoutes";
-import useAuthStore from "@Store/authStore";
 import AppLayout from "@Layout/AuthLayout/AuthLayout";
+import AddEmployee from "@Pages/AppScreens/AddEmployee/AddEmployee";
+import AddNewGraph from "@Pages/AppScreens/AddNewGraph";
+import AgaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
+import EmployeeView from "@Pages/AppScreens/EmployeeListing";
+import PromptChat from "@Pages/AppScreens/PromptChat";
+import RequestManagement from "@Pages/AppScreens/RequestManagement";
+import useAuthStore from "@Store/authStore";
+import { useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import {
-    Chat,
-    Dashboard,
-    OrderDetails,
-    OrderManagement,
-    PaymentDetails,
-    MyEarnings,
-    ProductManagement,
-    ProductDetails,
-    AddProduct,
-    UserManagement,
-    RequestBanner,
     ChangePassword,
     EditProfile,
-    BannerManagementDetails,
-    GenerateLabels
+    UserManagement
 } from "./LazyImports";
-import { useEffect } from "react";
-import RequestManagement from "@Pages/AppScreens/RequestManagement";
-import PromptChat from "@Pages/AppScreens/PromptChat";
+import { NavigationRoutes } from "./NavigationRoutes";
+import ViewEmployeeDetails from "@Pages/AppScreens/AddEmployee/EmployeeDetails/ViewEmployeeDetails";
+import RoleManagement from "@Pages/AppScreens/RoleManagement";
 
 const DashboardRoutes = [
     // {
@@ -34,20 +28,71 @@ const DashboardRoutes = [
     //     path: NavigationRoutes.DASHBOARD_ROUTES.MY_EARNINGGS,
     //     component: <MyEarnings />
     // },
-    {
-        title: "Chat",
-        path: NavigationRoutes.DASHBOARD_ROUTES.CHAT,
-        component: <Chat />
-    },
-    {
-        title: "ChatDetails",
-        path: NavigationRoutes.DASHBOARD_ROUTES.CHAT_DETAILS,
-        component: <Chat />
-    },
+    // {
+    //     title: "ChatDetails",
+    //     path: NavigationRoutes.DASHBOARD_ROUTES.CHAT_DETAILS,
+    //     component: <Chat />
+    // },
     {
         title: "PromptChat",
         path: NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT,
         component: <PromptChat />
+    },
+    {
+        title: "PromptChat",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}/:id`,
+        component: <PromptChat />
+    }, 
+    {
+        title: "EmployeePromptChat",
+        path: `/:id/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}`,
+        component: <PromptChat />
+    },
+    {
+        title: "EmployeePromptChat",
+        path: `/:id/${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_PROMPT_CHAT}/:id`,
+        component: <PromptChat />
+    },
+    {
+        title: "Dashboard",
+        path: NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD,
+        component: <AgaahiDashboard />
+    },
+    {
+        title: "AddNewGraph",
+        path: NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_GRAPH,
+        component: <AddNewGraph />
+    },
+
+    {
+        title: "AddNewEmployee",
+        path: NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_EMPLOYEE,
+        component: <AddEmployee />
+    },
+    {
+        title: "UpdateEmployee",
+        path: NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_EMPLOYEE,
+        component: <AddEmployee />
+    },
+    {
+        title: "EmployeeListing",
+        path: NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_LISTING,
+        component: <EmployeeView />
+    },
+    {
+        title: "EmplpoyeeDetail",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_DETAIL}/:id`,
+        component: <ViewEmployeeDetails />
+    },
+    {
+        title: "UdateEmployee",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.UPDATE_EMPLOYEE}/:id`,
+        component: <AddEmployee />
+    },
+    {
+        title: "RoleManagement",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.ROLE_MANAGEMENT}`,
+        component: <RoleManagement/>
     },
     // {
     //     title: "OrderManagement",
@@ -97,7 +142,7 @@ const DashboardRoutes = [
     {
         title: "RequestManagement",
         path: NavigationRoutes.DASHBOARD_ROUTES.REQUEST_MANAGEMENT,
-        component: <RequestManagement/>
+        component: <RequestManagement />
     },
     // {
     //     title: "BannerDetails",
@@ -128,7 +173,7 @@ const Authenticated = () => {
         : NavigationRoutes.AUTH_ROUTES.LOGIN;
 
     useEffect(() => {
-        document.title = "User-Management - Admin-Aghaahi";
+        document.title = "User-Management - Admin-Agaahi";
     }, []);
 
     return (

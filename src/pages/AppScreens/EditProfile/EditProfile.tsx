@@ -1,141 +1,119 @@
-import { Col, Flex, Form, Row } from "antd";
-
-import { CustomButton } from "@Components/Button";
-import Input from "@Components/TextInput/TextInput";
-import PictureUpload from "@Components/PictureUpload";
+import { Col, Row } from "antd";
+import { motion } from "framer-motion";
 import RoundedContainer from "@Components/RoundedContainer/RoundedContainer";
 import useEditProfileContainer from "./EditProfileContainer";
-import { VALIDATE } from "@Constants/validationConstants";
-import { GoogleAutocomplete } from "@Components/GoogleAutocomplete";
-import { MAP_OPTIONS } from "@Pages/AuthScreens/SignUp/SignUp";
-import utilService from "@Utils/utils.service";
+import PictureUpload from "@Components/PictureUpload";
 
 const EditProfile = () => {
-    const {
-        form,
-        initialValues,
-        handleFinish,
-        isEditingProfile,
-        isUploadingDocument,
-        handlePlaceSelect
-    } = useEditProfileContainer();
+    const { initialValues } = useEditProfileContainer();
+
+    const containerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    };
+
     return (
-        <RoundedContainer className="">
-            <h1 className="font-[500] text-xxl border-bottom pb-4  ">Edit Profile</h1>
-            <Form
-                form={form}
-                onKeyDown={(e) => utilService.preventFormSubmitOnSelectingAddress(e)}
-                onFinish={handleFinish}
-                initialValues={initialValues}
-                className="mt-4"
+        <RoundedContainer className="pt-12 px-12">
+            <motion.h1
+                className="font-[500] text-xxl border-bottom pb-4"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
             >
-                <Form.Item name="profileImage">
-                    <PictureUpload
-                        userName={initialValues.store?.name}
-                        image={initialValues.image}
-                        isLoading={false}
-                    />
-                </Form.Item>
-                <Row gutter={[12, 0]}>
-                    <Col span={12}>
-                        <Form.Item name="firstName" rules={VALIDATE.SELLER_NAME as never}>
-                            <Input label="Name" placeholder="Enter your name" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="email" rules={VALIDATE.EMAIL as never}>
-                            <Input label="Email" placeholder="Enter your email" disabled />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[12, 0]}>
-                    <Col span={12}>
-                        <Form.Item name={["store", "name"]} rules={VALIDATE.STORE_NAME as never}>
-                            <Input label="Store Name" placeholder="Enter store name" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="phoneNumber" rules={VALIDATE.PHONE as never}>
-                            <Input label="Contact#" placeholder="Enter contact number" />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[12, 0]}>
-                    <Col span={12}>
-                        <Form.Item
-                            name={["store", "address", "fullAddress"]}
-                            rules={VALIDATE.STORE_ADDRESS as never}
-                            shouldUpdate
-                        >
-                            <GoogleAutocomplete
-                                label={"Store Address"}
-                                inputStyles="course-input"
-                                placeholder={"Enter store address"}
-                                onLocationSelect={handlePlaceSelect}
-                                componentRestrictions={MAP_OPTIONS}
+                Your Profile
+            </motion.h1>
+            <motion.div
+                className="mt-8"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <Row gutter={[16, 16]} className="mb-8">
+                    <Col span={8} className="text-center">
+                        <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                            <PictureUpload
+                                userName={initialValues.name}
+                                image={initialValues.image}
+                                isLoading={false}
                             />
-                        </Form.Item>
+                            <h2 className="mt-4 text-xl font-bold">{initialValues.name}</h2>
+                            <p className="text-gray-500">{initialValues.role?.name}</p>
+                        </motion.div>
                     </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name={["store", "address", "street"]}
-                            rules={VALIDATE.STORE_ADDRESS_STREET as never}
-                            shouldUpdate
+                    <Col span={16}>
+                        <motion.div
+                            className="grid grid-cols-2 gap-4"
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
                         >
-                            <Input label="Street Address" placeholder="Enter Street Address" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name={["store", "address", "city"]}
-                            rules={VALIDATE.STORE_ADDRESS_CITY as never}
-                        >
-                            <Input label="City Name" placeholder="Enter city name" />
-                        </Form.Item>
-                    </Col>
-                    {/* </Row>
-
-                <Row gutter={[12, 0]}> */}
-                    <Col span={12}>
-                        <Form.Item
-                            validateFirst
-                            name={["store", "address", "state"]}
-                            rules={VALIDATE.STORE_ADDRESS_STATE as never}
-                        >
-                            <Input label="State Name" placeholder="Enter state name" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            shouldUpdate
-                            name={["store", "address", "country"]}
-                            rules={VALIDATE.STORE_ADDRESS_COUNTRY as never}
-                        >
-                            <Input label="Country Name" placeholder="Enter country name" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            shouldUpdate
-                            name={["store", "address", "zipCode"]}
-                            rules={VALIDATE.STORE_ADDRESS_POSTAL_CODE as never}
-                        >
-                            <Input label="Postal Code" placeholder="Enter postal code" />
-                        </Form.Item>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Email</h3>
+                                <p className="text-gray-800">{initialValues.email}</p>
+                            </div>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Contact#</h3>
+                                <p className="text-gray-800">
+                                    {initialValues.countryCode} {initialValues.phoneNumber}
+                                </p>
+                            </div>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Salary</h3>
+                                <p className="text-gray-800">{initialValues.salary}</p>
+                            </div>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Language</h3>
+                                <p className="text-gray-800">{initialValues.language}</p>
+                            </div>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Gender</h3>
+                                <p className="text-gray-800">{initialValues.gender}</p>
+                            </div>
+                            <div className="mb-4">
+                                <h3 className="text-gray-600 font-semibold">Status</h3>
+                                <p className="text-gray-800">{initialValues.status ? "Active" : "Inactive"}</p>
+                            </div>
+                        </motion.div>
                     </Col>
                 </Row>
-
-                <Form.Item className="text-center mt-8">
-                    <Flex justify="flex-end">
-                        <CustomButton
-                            title={"Save"}
-                            className="text-base  w-auto px-12"
-                            htmlType="submit"
-                            isLoading={isEditingProfile || isUploadingDocument}
-                        />
-                    </Flex>
-                </Form.Item>
-            </Form>
+                <motion.h2
+                    className="text-lg font-bold mb-4"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    Company Details
+                </motion.h2>
+                <motion.div
+                    className="grid grid-cols-2 gap-4"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <div className="mb-4">
+                        <h3 className="text-gray-600 font-semibold">Company Name</h3>
+                        <p className="text-gray-800">{initialValues.company?.name}</p>
+                    </div>
+                    <div className="mb-4">
+                        <h3 className="text-gray-600 font-semibold">Company Email</h3>
+                        <p className="text-gray-800">{initialValues.company?.email}</p>
+                    </div>
+                    <div className="mb-4">
+                        <h3 className="text-gray-600 font-semibold">Company Contact#</h3>
+                        <p className="text-gray-800">
+                            {initialValues.company?.countryCode} {initialValues.company?.phoneNumber}
+                        </p>
+                    </div>
+                    <div className="mb-4">
+                        <h3 className="text-gray-600 font-semibold">First Name</h3>
+                        <p className="text-gray-800">{initialValues.company?.firstName}</p>
+                    </div>
+                    <div className="mb-4">
+                        <h3 className="text-gray-600 font-semibold">Last Name</h3>
+                        <p className="text-gray-800">{initialValues.company?.lastName}</p>
+                    </div>
+                </motion.div>
+            </motion.div>
         </RoundedContainer>
     );
 };

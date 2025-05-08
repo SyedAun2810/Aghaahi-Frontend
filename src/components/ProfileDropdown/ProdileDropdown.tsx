@@ -6,6 +6,9 @@ import useAuthStore from "@Store/authStore";
 import CustomAvatar from "@Components/CustomAvatar";
 import DropdownIcon from "@Assets/icons/dropdownIcon.svg";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
+import Logo from "@Assets/images/logo.png";
+
+
 
 interface propParams {
     logout: () => void;
@@ -17,9 +20,21 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
     const { userData } = useAuthStore();
 
     const image = userData?.store?.image?.url || "";
-    const name = userData?.store?.name || "";
-
+    const name = userData?.name || "";
+//console.log("userData", userData);
     const items: MenuProps["items"] = [
+        {
+            key: "1",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.DASHBOARD_ROUTES.EDIT_PROFILE);
+                    }}
+                >
+                    Edit Profile
+                </h5>
+            )
+        },
         {
             key: "2",
             label: (
@@ -43,28 +58,28 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
     ];
 
     return (
-            <Dropdown
-                menu={{ items }}
-                placement="bottomRight"
-                arrow
-                overlayClassName="top-[55px]"
-            >
-                <Flex align="center" gap={8}>
-                    {image ? (
-                        <Avatar alt="User Image" src={image} />
-                    ) : (
-                        <CustomAvatar
-                            name={name}
-                            textSize={"text-6xl"}
-                            className="rounded-full "
-                            imageUrl={image}
-                            size={32}
-                        />
-                    )}
-                    <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
-                    <DropdownIcon />
-                </Flex>
-            </Dropdown>
+                <Dropdown
+                    menu={{ items }}
+                    placement="bottomRight"
+                    arrow
+                    overlayClassName="top-[60px]"
+                >
+                    <Flex align="center" gap={8}>
+                        {false ? (
+                            <Avatar alt="User Image" src={Logo} />
+                        ) : (
+                            <CustomAvatar
+                                name={name}
+                                textSize={"text-6xl"}
+                                className="rounded-full "
+                                imageUrl={image}
+                                size={32}
+                            />
+                        )}
+                        <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
+                        <DropdownIcon />
+                    </Flex>
+                </Dropdown>
     );
 };
 

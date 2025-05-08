@@ -56,7 +56,7 @@ const ProductManagement = () => {
                         pagination={{
                             total: productListingData?.pagination?.totalCount
                         }}
-                        onChange={() => console.log("OnChange")}
+                        onChange={() => {}}//console.log("OnChange")}
                         totalCount={productListingData?.pagination?.totalCount}
                         onPaginate={(page) => {
                             updateFilterData(PAGE_KEY, page);

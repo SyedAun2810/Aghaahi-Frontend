@@ -81,3 +81,12 @@
     }
   }
 }
+
+
+.hoverable-icon {
+  display: none;
+}
+.hoverable-icon:hover,
+.hoverable-icon-container:hover .hoverable-icon {
+  display: block;
+}

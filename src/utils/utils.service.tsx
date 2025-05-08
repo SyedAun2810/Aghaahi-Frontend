@@ -404,6 +404,19 @@ const checkStripeConnection = (data: number | boolean) => {
     return true;
 };
 
+export function generateUniqueId() {
+    const uniqueId = uuid();
+    return uniqueId;
+  }
+
+export function capitalizedString(inputString: string) {
+const words = inputString.split("_");
+const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+return capitalizedWords.join("");
+}
+
+  
+
 const utilService = {
     baseUrl: import.meta.env.VITE_APP_BASE_URL,
     apiUrl: import.meta.env.VITE_APP_API_URL,

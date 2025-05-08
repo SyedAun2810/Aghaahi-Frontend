@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
 
 import PaymentProcess from "./PaymentProcess";
 import ProgressLoader from "@Components/ProgressLoader/ProgressLoader";
 
-const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_KEY); // stripe publishable key
+// const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_KEY); // stripe publishable key
 
 type CheckoutFormTypes = {
     clientSecret: string;
@@ -34,9 +34,9 @@ export default function CheckoutForm({ onFinish, clientSecret }: CheckoutFormTyp
                     <ProgressLoader />
                 </div>
             )}
-            <Elements stripe={stripePromise} options={options}>
+            {/* <Elements stripe={stripePromise} options={options}>
                 <PaymentProcess onReady={onReady} onFinish={onFinish} />
-            </Elements>
+            </Elements> */}
         </div>
     );
 }

@@ -11,7 +11,7 @@ export default function ScrollToTop() {
     window.scrollTo(0, 0);
     document.title = `${utilService.formatAndCapitalizeString(
       pathname
-    )} - Aghaahi`;
+    )} - Agaahi`;
   }, [locationArr]);
 
   return null;

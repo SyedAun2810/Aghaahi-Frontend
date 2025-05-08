@@ -10,14 +10,15 @@ interface registerTypes {
     data: any;
 }
 
-export const useRegister = (onSuccess: (email?: string) => void) => {
-    return useMutation((payload: registerPayload) => AuthApiService.register(payload), {
-        onSuccess: ({ ok, response, data }: registerTypes, payload: registerPayload) => {
+export const useRegister = (onSuccess: (data?: any) => void) => {
+    return useMutation((payload: any) => AuthApiService.register(payload), {
+        onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
-                onSuccess(payload?.email);
+                onSuccess(data?.data);
                 return data;
             }
-            NotificationService.error(data?.data?.metadata?.message);
+            //console.log("error", response);
+            NotificationService.error(response?.message);
             throw response.message;
         },
         onError: (err: any) => {

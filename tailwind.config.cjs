@@ -22,12 +22,16 @@ module.exports = {
         "#606060":"#606060",
         "#FFEEDB":"#FFEEDB",
         "light-border": "#E5E8E8",
-        "link-color": "#7C5EF2"
+        "link-color": "#7C5EF2",
+        "darkGray": '#121212',
+        "#5950CB":"#5950CB",
       },
       backgroundColor: {
         "header-primary": "#0687EF",
         "header-selected-filter":"#0C73CB",
-        "filter-color": "#DBEEFF"
+        "filter-color": "#DBEEFF",
+        "darkGray": '#292A2D',
+        "#5950CB":"#5950CB"
       },
       screens: {
         '2xl': '1440px',

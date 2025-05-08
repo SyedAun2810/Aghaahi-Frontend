@@ -5,12 +5,17 @@ const personalController = "personal";
 const sellerAuthController = "sellers";
 const sellerTokenController = "tokens";
 const documentController = "/documents";
+const company = "company";
+const employee = "employee";
+const chat = "chat";
+const databaseValidator = "database-validator";
+const dashboard = "dashboard";
 
 export const API_CONFIG_URLS = {
   AUTH: {
     ME: `${personalController}/profile`,
-    LOGIN: `${sellerTokenController}/login`,
-    REGISTER: `${sellerAuthController}/register`,
+    LOGIN: `${employee}/login`,
+    REGISTER: `${company}/register-company`,
     LOGOUT: `${sellerTokenController}/logout`,
     RESEND_OTP: `${authController}/resend-otp`,
     UPDATE_PROFILE: `${personalController}/update-profile`,
@@ -21,6 +26,7 @@ export const API_CONFIG_URLS = {
     REFRESH_ACCESS_TOKEN: `${sellerTokenController}/refresh`,
     VERIFY_FORGOT_OTP: `${authController}/verify-forget-otp`,
     VERIFY_OTP: `${authController}/verify-otp`,
+    VALIDATE_DATABASE: `database-validator/verify`,
   },
   PROFILE: {
     CHANGE_PASSWORD: `${personalController}/change-password`,
@@ -30,9 +36,11 @@ export const API_CONFIG_URLS = {
       UPLOAD_DOCUMENTS:`${documentController}`
   },
   DASHBOARD: {
-    ANALYTICAL_BOX: "/sellers/dashboard/metrics",
-    RECENT_EARNINGS: "/sellers/dashboard/new-orders",
-    RECENT_PAYOUTS: "/sellers/dashboard/recent-payouts"
+    GENERATE_GRAPH: `${dashboard}/generate-chart`,
+    SAVE_GRAPH: `${dashboard}/save-chart`,
+    LAYOUT: `${dashboard}/dashboard-layout`,
+    DASHBOARD_DATA: `${dashboard}/dashboard-data`,
+    UPDATE_LAYOUT: `${dashboard}/dashboard-layout`,
   },
   PRODUCT: {
     ADD_PRODUCT: `/products`,
@@ -90,7 +98,27 @@ export const API_CONFIG_URLS = {
     LISTING: `/notifications`,
     UPDATE_STATUS: `/notifications/toggle-status`,
     COUNT: `/notifications/count`
-  }
+  },
+  EMPLOYEE: {
+    ADD: `${employee}/add-employee`,
+    LISTING: `/employee`,
+    DETAIL: `/employee`,
+    DELETE: `/employees`,
+    ROLES:"role",
+    UPDATE: `${employee}`
+  },
+  Chatbot: {
+    ASK: `${chat}/ask`,
+    HISTORY: `${chat}/history`,
+    EMPLOYEE_CHAT_HISTORY: `${chat}/employee-history`,
+    CONVERSATION: `${chat}/conversation`,
+  },
+  DatabaseValidator: {
+    VERIFY: `${databaseValidator}/verify`,
+    SCHEMA: `${databaseValidator}/schema`,
+    TABLES: `${databaseValidator}/tables`,
+    CONVERSATION: `${chat}/conversation`,
+  },
 };
 
 export const multiFormDataHeader = {

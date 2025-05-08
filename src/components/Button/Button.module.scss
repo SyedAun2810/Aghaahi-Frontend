@@ -96,8 +96,8 @@
     height:em(52);
     border: 1px solid  $primary-color;
     &:hover {
-      color:$white;
-      background-color: $primary-color !important;
+      // color:$white;
+      // background-color: $primary-color !important;
       border: 1px solid $primary-color;
     }
     &:focus,

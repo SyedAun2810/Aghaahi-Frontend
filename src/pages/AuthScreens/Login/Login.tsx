@@ -14,7 +14,7 @@ const Login = () => {
     return (
         <Flex vertical justify="center" className="px-20 h-screen">
             <AuthHeader
-                headerTitle="Login to Aghaahi Account"
+                headerTitle="Login to Agaahi Account"
                 subTitle="Please enter your email and password to continue"
             />
             <Form
@@ -55,7 +55,7 @@ const Login = () => {
             <Flex justify="center" align="center">
                 <p className=" font-[400] text-large mr-1">Don't have a account?</p>
                 <ColoredText
-                    text={"Create Account"}
+                    text={"Register Company"}
                     onClick={handleSignUp}
                     className="underline cursor-pointer"
                 />

@@ -1,10 +1,16 @@
 import { Col, Row } from "antd";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import Logo from "@Assets/images/logo.png";
 import styles from "./index.module.scss";
 
 export default function AuthLayout() {
+    const location = useLocation();
+
+    if (location.pathname === "/home" ||  location.pathname === "/contact-us" || location.pathname === "/privacy-policy" || location.pathname === "/pricing") {
+        return <Outlet />;
+    }
+
     return (
         <div className={`${styles["wrapper-container"]} `}>
             <Row>
@@ -20,8 +26,8 @@ export default function AuthLayout() {
                     <div className={`mt-8 ml-20 flex flex-col h-screen pb-16`}>
                         <img src={Logo} width={150} height={150} className="" />
                         <div className="mt-auto text-white ">
-                            <h1 className="2xl:text-[32px] xl:text-[30px] lg:text-[32px] mt-4 max-w-xl font-[700]">
-                                Aghaahi Get your Insights by Prompts
+                            <h1 className="2xl:text-[34px] xl:text-[34px] lg:text-[34px] mt-4 max-w-xl font-[700]">
+                                Agaahi Get your Insights by Prompts
                             </h1>
                         </div>
                     </div>

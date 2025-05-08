@@ -19,6 +19,7 @@ export const apiService = {
   put,
   patch,
   remove,
+  postWithoutHandleResponse,
   handleResponse: handleResponse,
 };
 
@@ -65,6 +66,11 @@ async function postUnAuthorized(url: string, queryParams: any) {
 async function post(url: string, data?: any, config?: AxiosRequestConfig) {
   const response = await apiService.apiSauceInstance.post(url, data, config);
   return apiService.handleResponse(response);
+}
+
+async function postWithoutHandleResponse(url: string, data?: any, config?: AxiosRequestConfig) {
+  const response = await apiService.apiSauceInstance.post(url, data, config);
+  return response;
 }
 
 async function put(url: string, data?: any, config?: any) {
@@ -166,6 +172,7 @@ const ApiService: any = {
   remove: apiService.remove,
   getUnAuthorized: apiServiceUnAuthorized.getUnAuthorized,
   postUnAuthorized: apiServiceUnAuthorized.postUnAuthorized,
+  postWithoutHandleResponse: apiService.postWithoutHandleResponse,
 };
 
 export default ApiService;

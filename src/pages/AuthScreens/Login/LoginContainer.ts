@@ -15,9 +15,10 @@ export default function useLoginContainer(){
     const { setUserAuthentication } = useAuthStore();
 
     const onLoginSuccess = (data: any) => {
-        setUserAuthentication(data?.data);
+        const authData = {...data?.data, isAuth: true };
+        setUserAuthentication(authData);
         queryClient.invalidateQueries({ queryKey: ["USER_DETAIL"] });
-        navigate(NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD);
+        navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT);
       };
     
     const onVerificationFail = (email :string) => {
@@ -33,8 +34,6 @@ export default function useLoginContainer(){
 
 
     const handleSubmit = (data:any) =>{
-        data.DeviceId = "any";
-        data.role = USER_ROLE;
         loginMutate(data);
     }
     const handleSignUp = () =>{

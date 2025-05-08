@@ -98,7 +98,10 @@ export const VALIDATE = {
     { required: true, message: "Confirm password is required" },
     validateConfirmPassword,
   ],
-  SELLER_NAME: [{ required: true, message: ERROR_MESSAGES.NAME_REQUIRED }],
+  SELLER_NAME: [
+    { required: true, message: ERROR_MESSAGES.NAME_REQUIRED },
+    { min: 3, message: "Name must be at least 3 characters long" },
+  ],
   ACCOUNT_TITLE: [{ required: true, message: ERROR_MESSAGES.ACCOUNT_TITLE_REQUIRED },
  
   ],
@@ -149,5 +152,14 @@ export const VALIDATE = {
     WIDTH: [{ required: true, message: "Width is required" }],
     QUANTITY: [{ required: true, message: "Quantity is required" }],
 
-  }
+  },
+  ROLE: [
+    { required: true, message: "Role is required" },
+  ],
+  SALARY: [
+    { required: true, message: "Salary is required" },
+  ],
+  GENDER: [
+    { required: true, message: "Gender is required" },
+  ],
 };
