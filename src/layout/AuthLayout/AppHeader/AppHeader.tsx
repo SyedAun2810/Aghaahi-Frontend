@@ -9,6 +9,7 @@ import { arrayOfDashboardItems, CheckRoute } from "@Constants/dashboard.constant
 import UserIcon from "@Assets/icons/userIcon.svg";
 import DashboardIcon from "@Assets/icons/DashboardIcon.svg"; // Already imported
 import ChatIcon from "@Assets/icons/chatIcon.svg"; // Already imported
+import RoleIcon from '@Assets/images/userRole.png';
 
 const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: number }) => {
     let { removeUserAuthentication, isOwner, userData } = useAuthStore();
@@ -102,6 +103,13 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                             onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_EMPLOYEE)}
                         >
                             Add Employee
+                        </p>
+                        <img src={RoleIcon} alt="" />
+                        <p
+                            className="mr-4 cursor-pointer text-md"
+                            onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.ROLE_MANAGEMENT)}
+                        >
+                            Role Management
                         </p>
                     </>
                 )}

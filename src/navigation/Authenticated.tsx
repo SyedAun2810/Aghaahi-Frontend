@@ -15,6 +15,7 @@ import {
 } from "./LazyImports";
 import { NavigationRoutes } from "./NavigationRoutes";
 import ViewEmployeeDetails from "@Pages/AppScreens/AddEmployee/EmployeeDetails/ViewEmployeeDetails";
+import RoleManagement from "@Pages/AppScreens/RoleManagement";
 
 const DashboardRoutes = [
     // {
@@ -87,6 +88,11 @@ const DashboardRoutes = [
         title: "UdateEmployee",
         path: `${NavigationRoutes.DASHBOARD_ROUTES.UPDATE_EMPLOYEE}/:id`,
         component: <AddEmployee />
+    },
+    {
+        title: "RoleManagement",
+        path: `${NavigationRoutes.DASHBOARD_ROUTES.ROLE_MANAGEMENT}`,
+        component: <RoleManagement/>
     },
     // {
     //     title: "OrderManagement",

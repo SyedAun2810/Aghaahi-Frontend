@@ -121,6 +121,7 @@ const SideBar = () => {
     //console.log("chatHistory", employeeId);
     const chatHistoryData = chatHistory?.data.result || [];
 
+
     useEffect(() => {
         queryClient.invalidateQueries([queryKeys.chat.history]);
     },[]);
@@ -156,7 +157,7 @@ const SideBar = () => {
 
             if (createdAt.isSame(now, "day")) {
                 acc.today.push(chat);
-            } else if (createdAt.isAfter(now.subtract(7, "days"))) {
+            } else {
                 acc.last7Days.push(chat);
             }
 
@@ -164,7 +165,6 @@ const SideBar = () => {
         },
         { today: [], last7Days: [] }
     );
-
     useEffect(() => {
         const match = location.pathname.match(/prompt-chat\/(\d+)/);
         if (match && match[1]) {
@@ -172,12 +172,6 @@ const SideBar = () => {
             setSelectedChat(chatId);
         }
     }, [location.pathname]);
-
-    
-    useEffect(() => {
-       
-    }, [route]);
-
 
     return (
         <div>

@@ -155,10 +155,15 @@ const PromptChat = () => {
     }, [id]);
 
     return (
-        <div className="h-[100%] bg-white rounded-[12px] overflow-hidden pt-2">
+        <div className="relative h-[100%] bg-white rounded-[12px] overflow-hidden pt-2">
+            <img
+                src={Logo}
+                alt="Watermark Logo"
+                className="absolute opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2"
+            />
             {isFetching ? (
                 // Skeleton Loader
-                <div className="h-[85%] bg-white overflow-y-auto  pl-48 pr-60 ">
+                <div className="h-[85%] bg-white overflow-y-auto pl-48 pr-60">
                     {[...Array(6)].map((_, index) => (
                         <div
                             key={index}
@@ -190,7 +195,6 @@ const PromptChat = () => {
                     </div>
                 )
             )}
-
             <ChatFooter
                 form={form}
                 setLocalMessage={setLocalMessage}

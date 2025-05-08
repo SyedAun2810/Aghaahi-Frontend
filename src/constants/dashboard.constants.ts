@@ -1,4 +1,4 @@
-export const arrayOfDashboardItems = ["dashboard", "add-new-graph", "add-new-employee","employee-listing", "employee-detail", "employee", "edit-profile" ];
+export const arrayOfDashboardItems = ["dashboard", "add-new-graph", "add-new-employee","employee-listing", "employee-detail", "employee", "edit-profile","role-management" ];
 
 export function CheckRoute(route: string[]) {
     for (let i = 0; i < arrayOfDashboardItems.length; i++) {

@@ -42,6 +42,7 @@ export const NavigationRoutes = {
     EMPLOYEE_LISTING:"/employee-listing",
     EMPLOYEE_DETAIL:"/employee-detail",
     UPDATE_EMPLOYEE:"/employee",
-    EMPLOYEE: "/employee"
+    EMPLOYEE: "/employee",
+    ROLE_MANAGEMENT:"/role-management",
   },
 };

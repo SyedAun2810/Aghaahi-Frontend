@@ -20,8 +20,7 @@ import RadarChartComponent from "@Components/Graphs/RadarCharts";
 import AreaChartComponent from "@Components/Graphs/AreaChartComponent";
 import LineBarAreaChartComponent from "@Components/Graphs/LineBarAreaChart";
 import CustomizeBarChartComponent from "@Components/Graphs/CustomizeShapeBarChart";
-import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@Constants/queryKeys";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import ApiService from "@Services/ApiService";
 import { API_CONFIG_URLS } from "@Constants/config";
 import { useDashboardGraphData, useRenderGeneratedGraph } from "./useDashboardContainer";
@@ -68,20 +67,8 @@ const shimmerStyles = `
 
 const defaultLayouts = {
     lg: [
-        { w: 4, h: 3, x: 0, y: 0, i: "0", static: false },
-        { w: 4, h: 3, x: 8, y: 0, i: "1", static: false },
-        { w: 8, h: 8, x: 16, y: 0, i: "2", static: false },
-        { w: 4, h: 3, x: 0, y: 3, i: "3", static: false },
-        { w: 4, h: 3, x: 8, y: 3, i: "4", static: false },
-        { w: 8, h: 8, x: 16, y: 8, i: "5", static: false },
-        { w: 8, h: 8, x: 0, y: 6, i: "6", static: false },
-        { w: 8, h: 8, x: 8, y: 6, i: "7", static: false },
-        { w: 8, h: 8, x: 16, y: 16, i: "8", static: false },
-        { w: 8, h: 8, x: 0, y: 14, i: "9", static: false },
-        { w: 8, h: 8, x: 8, y: 14, i: "10", static: false },
-        { w: 8, h: 8, x: 16, y: 24, i: "11", static: false },
-        { w: 8, h: 8, x: 0, y: 22, i: "12", static: false },
-        { w: 8, h: 8, x: 8, y: 22, i: "13", static: false },
+        { w: 4, h: 3, x: 0, y: 0, i: "200", static: false, minW: 4, minH: 3 },
+        { w: 4, h: 3, x: 8, y: 0, i: "1", static: false, minW: 4, minH: 3 },
     ],
 };
 
@@ -106,56 +93,105 @@ const graphData = [
 const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph();
 
-    const [layouts, setLayouts] = useState(layoutData || defaultLayouts); // Use layoutData or defaultLayouts
-    const [lastUpdatedLayout, setLastUpdatedLayout] = useState(layoutData || defaultLayouts); // Track the last updated layout
+    const [layouts, setLayouts] = useState(); // Use layoutData or defaultLayouts
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false); // Track edit mode3
+
+    const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { })
 
     useEffect(() => {
         if (layoutData) {
-            setLayouts(layoutData); // Update layouts when layoutData changes
-            setLastUpdatedLayout(layoutData); // Initialize lastUpdatedLayout
-            //console.log("Updated Layouts:", layoutData); // Log the updated layouts
+            console.log("Original Layout Data:", layoutData); // Log the original layoutData
+
+            // Transform layoutData to match the expected structure
+            const transformedLayouts = {
+                lg: layoutData.lg.map((item: any) => ({
+                    w: item.width,
+                    h: item.height,
+                    x: item.position_x,
+                    y: item.position_y,
+                    i: item.grid_i.toString(), // Ensure `i` is a string
+                    static: item.is_static,
+                    minW: 4, // Add minimum width
+                    minH: 3, // Add minimum height
+                })),
+            };
+
+            console.log("Transformed Layouts:", transformedLayouts); // Log the transformed layouts
+
+            setLayouts(transformedLayouts); // Set the transformed layouts
         }
     }, [layoutData]);
 
     const handleLayoutChange = (layout: any, allLayouts: any) => {
-        setLayouts({ lg: allLayouts.lg }); // Update layouts state for `lg` only
-        //console.log("Layout Changed:", layout); // Log the updated layouts
-
-        // Compare with lastUpdatedLayout to find changes
-        const changedItems = layout.filter((item: any) => {
-            const existingItem = lastUpdatedLayout.lg.find((existing: any) => existing.i === item.i);
-            return (
-                existingItem &&
-                (existingItem.x !== item.x ||
-                    existingItem.y !== item.y ||
-                    existingItem.w !== item.w ||
-                    existingItem.h !== item.h)
-            );
-        });
-
-        if (changedItems.length > 0) {
-            // //console.log("Changed Items:", changedItems); // Log the specific items that changed
-            setLastUpdatedLayout({ lg: layout }); // Update lastUpdatedLayout to the current layout
-        } else {
-            // //console.log("No items were changed.");
+        if (isEditMode) {
+            setLayouts({ lg: allLayouts.lg }); // Update layouts state for `lg` only
         }
     };
 
     const handleDelete = (id: string) => {
-        setLayouts((prevLayouts) => ({
-            lg: prevLayouts.lg.filter((item) => item.i !== id),
-        }));
+        if (isEditMode) {
+            setLayouts((prevLayouts) => ({
+                lg: prevLayouts.lg.filter((item) => item.i !== id),
+            }));
+        }
+    };
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === "Enter" && isEditMode) {
+            const payload = mapLayoutsToApiFormat(layouts);
+            console.log("Payload to be sent to API:", payload); // Log the payload
+        }
+    };
+
+    const handleSaveChanges = () => {
+        const payload = mapLayoutsToApiFormat(layouts);
+        console.log("Payload to be sent to API:", payload);
+        updateLayout({laoyouts:payload}) // Log the payload
+        setIsEditMode(false); // Exit edit mode
+    };
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPress);
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [layouts, isEditMode]);
+
+    const mapLayoutsToApiFormat = (layouts: any) => {
+        if (layouts?.lg?.length > 0 && layoutData?.lg?.length > 0 && layouts?.lg[0].i != 200) {
+            console.log({ layouts });
+            return layouts.lg.map((layoutItem: any) => {
+                const matchingLayout = layoutData?.lg.find((dataItem: any) => dataItem.grid_i == layoutItem.i);
+                return {
+                    id: matchingLayout?.id,
+                    breakpoint: "lg",
+                    width: layoutItem.w,
+                    height: layoutItem.h,
+                    position_x: layoutItem.x,
+                    position_y: layoutItem.y,
+                    is_static: layoutItem.static,
+                    grid_i: matchingLayout.grid_i,
+                    employee_id: matchingLayout?.employee_id || 0,
+                    chart_id: matchingLayout?.chart_id || 0,
+                    chart: {
+                        id: matchingLayout?.chart?.id || 0,
+                        x_axis: matchingLayout?.chart?.x_axis || "",
+                        y_axis: matchingLayout?.chart?.y_axis || "",
+                        sql_query: matchingLayout?.chart?.sql_query || "",
+                        meta_info: matchingLayout?.chart?.meta_info || "",
+                        chart_id: matchingLayout?.chart?.chart_id || 0,
+                    },
+                };
+            });
+        }
     };
 
     const generateDOM = () =>
         (layoutData && graphDataFromBackend ? layoutData?.lg : defaultLayouts.lg).map((layoutItem) => {
             const graph = graphDataFromBackend?.find((g) => g.chart_id === layoutItem.chart_id);
             const metaData = JSON.parse(graph?.chart?.meta_info || '{}');
-            console.log({metaData})
-            // console.log({layoutItem})
-            console.log(metaData.chart_id === 11) 
             return (
                 <div
                     key={layoutItem.i}
@@ -165,46 +201,45 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                     }}
                     className="rounded-lg shadow-md "
                 >
-                    <Dropdown
-                        overlay={
-                            <Menu>
-                                <Menu.Item key="delete" onClick={() => handleDelete(layoutItem.i)}>
-                                    Delete Graph
-                                </Menu.Item>
-                                <Menu.Item key="edit" onClick={() => setSelectedGraph(graph)}>
-                                    Edit Graph
-                                </Menu.Item>
-                            </Menu>
-                        }
-                        trigger={["hover"]} // Change trigger to hover
-                    >
-                        <button
-                            className="absolute top-2 right-2 bg-transparent border-none cursor-pointer"
-                            onClick={(e) => e.stopPropagation()} // Prevent drag event propagation
+                    {isEditMode && (
+                        <Dropdown
+                            overlay={
+                                <Menu>
+                                    <Menu.Item key="delete" onClick={() => handleDelete(layoutItem.i)}>
+                                        Delete Graph
+                                    </Menu.Item>
+                                    <Menu.Item key="edit" onClick={() => setSelectedGraph(graph)}>
+                                        Edit Graph
+                                    </Menu.Item>
+                                </Menu>
+                            }
+                            trigger={["hover"]}
                         >
-                            <ThreeDotsIcon
-                                height={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
-                                width={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
-                            />
-                        </button>
-                    </Dropdown>
-                    {true && graph ? (
-                        <>
-
-                            <div className={`dragMe h-full bg-white ${metaData.chart_id === 11 ? "" : "py-12"}`}>
-                                {graph.type === "analyticsCard" ? (
-                                    <AnalyticsCard
-                                        title={graph.title}
-                                        count={graph.count}
-                                        icon={graph.icon}
-                                        showDollar={graph.showDollar}
-                                        className="bg-white rounded"
-                                    />
-                                ) : (
-                                    renderGeneratedGraph(graph)
-                                )}
-                            </div>
-                        </>
+                            <button
+                                className="absolute top-2 right-2 bg-transparent border-none cursor-pointer"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <ThreeDotsIcon
+                                    height={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
+                                    width={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
+                                />
+                            </button>
+                        </Dropdown>
+                    )}
+                    {graph ? (
+                        <div className={`dragMe h-full bg-white ${metaData.chart_id === 11 ? "" : "py-12"}`}>
+                            {graph.type === "analyticsCard" ? (
+                                <AnalyticsCard
+                                    title={graph.title}
+                                    count={graph.count}
+                                    icon={graph.icon}
+                                    showDollar={graph.showDollar}
+                                    className="bg-white rounded"
+                                />
+                            ) : (
+                                renderGeneratedGraph(graph)
+                            )}
+                        </div>
                     ) : (
                         <ShimmerPlaceholder />
                     )}
@@ -216,15 +251,42 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
         <>
             <style>{shimmerStyles}</style>
             <div className="m-2">
+                <button
+                    className="fixed right-6 bottom-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
+                    onClick={() => {
+                        if (isEditMode) {
+                            handleSaveChanges(); // Save changes and log payload
+                        } else {
+                            setIsEditMode(true); // Enter edit mode
+                        }
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        {isEditMode ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        )}
+                    </svg>
+                    {isEditMode ? "Save Changes" : "Enter Edit Mode"}
+                </button>
                 <ResponsiveReactGridLayout
                     {...props}
-                    layouts={{ lg: layouts.lg }} // Use only `lg` layout
-                    onLayoutChange={handleLayoutChange} // Update layout on drag
-                    isDroppable
-                    isDraggable
-                    isResizable
+                    layouts={{ lg: layouts?.lg || [] }}
+                    onLayoutChange={handleLayoutChange}
+                    isDroppable={isEditMode}
+                    isDraggable={isEditMode}
+                    isResizable={isEditMode}
                     rowHeight={40}
                     compactType="vertical"
+                    preventCollision={true}
                 >
                     {generateDOM()}
                 </ResponsiveReactGridLayout>
@@ -249,6 +311,34 @@ AgaahiDashboard.defaultProps = {
     breakpoints: { lg: 1600 }, // Only `lg` is defined
     containerPadding: [0, 0],
 };
+
+export const useUpdateLayout = ({ onSuccess }: any) => {
+    return useMutation(
+        async (payload: any) => {
+            const response = await updateLayout(payload); // Await the API call
+            return response; // Return the response
+        },
+        {
+            onSuccess: ({ ok, response, data }: any) => {
+                if (ok) {
+                    onSuccess(data); // Corrected the typo here
+                }
+            },
+            onError: (err: any) => {
+                console.error("Error in sendPrompt:", err);
+                throw err;
+            },
+        }
+    );
+};
+
+async function updateLayout(payload: any) {
+    const response = await ApiService.put(
+        `${API_CONFIG_URLS.DASHBOARD.UPDATE_LAYOUT}`, payload
+    );
+
+    return response;
+}
 
 export default AgaahiDashboard;
 

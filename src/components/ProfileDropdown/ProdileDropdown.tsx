@@ -58,28 +58,28 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
     ];
 
     return (
-            <Dropdown
-                menu={{ items }}
-                placement="bottomRight"
-                arrow
-                overlayClassName="top-[60px]"
-            >
-                <Flex align="center" gap={8}>
-                    {false ? (
-                        <Avatar alt="User Image" src={Logo} />
-                    ) : (
-                        <CustomAvatar
-                            name={name}
-                            textSize={"text-6xl"}
-                            className="rounded-full "
-                            imageUrl={image}
-                            size={32}
-                        />
-                    )}
-                    <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
-                    <DropdownIcon />
-                </Flex>
-            </Dropdown>
+                <Dropdown
+                    menu={{ items }}
+                    placement="bottomRight"
+                    arrow
+                    overlayClassName="top-[60px]"
+                >
+                    <Flex align="center" gap={8}>
+                        {false ? (
+                            <Avatar alt="User Image" src={Logo} />
+                        ) : (
+                            <CustomAvatar
+                                name={name}
+                                textSize={"text-6xl"}
+                                className="rounded-full "
+                                imageUrl={image}
+                                size={32}
+                            />
+                        )}
+                        <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
+                        <DropdownIcon />
+                    </Flex>
+                </Dropdown>
     );
 };
 
