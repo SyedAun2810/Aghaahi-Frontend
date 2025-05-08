@@ -148,7 +148,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const handleSaveChanges = () => {
         const payload = mapLayoutsToApiFormat(layouts);
         console.log("Payload to be sent to API:", payload);
-        updateLayout({laoyouts:payload}) // Log the payload
+        updateLayout({layouts:payload}) // Log the payload
         setIsEditMode(false); // Exit edit mode
     };
 
