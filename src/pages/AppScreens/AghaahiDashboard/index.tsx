@@ -135,6 +135,8 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
             setLayouts((prevLayouts) => ({
                 lg: prevLayouts.lg.filter((item) => item.i !== id),
             }));
+
+            handleSaveChanges();
         }
     };
 
@@ -245,7 +247,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                     )}
                 </div>
             );
-        });
+        });  
 
     return (
         <>

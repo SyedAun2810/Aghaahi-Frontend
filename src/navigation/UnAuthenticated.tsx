@@ -13,6 +13,8 @@ import ContactUsPage from "@Pages/AuthScreens/ContactUs";
 import PrivacyPolicy from "@Pages/AuthScreens/PrivacyPolicy";
 import Pricing from "@Pages/AuthScreens/Pricing";
 import ConnectionString from "@Pages/AuthScreens/ConnectionString";
+import AboutUs from "@Pages/AuthScreens/AboutUs";
+import FAQ from "@Pages/AuthScreens/FAQ";
 
 const RouteList = [
     {
@@ -55,6 +57,14 @@ const RouteList = [
         path: NavigationRoutes.AUTH_ROUTES.PRICING,
         component: Pricing
     },
+    {
+        path: NavigationRoutes.AUTH_ROUTES.ABOUT_US,
+        component: AboutUs
+    },
+    {
+        path: NavigationRoutes.AUTH_ROUTES.FAQ,
+        component: FAQ
+    },
 ];
 
 const UnAuthenticated = () => {
@@ -63,13 +73,13 @@ const UnAuthenticated = () => {
             <Route path={NavigationRoutes.AUTH_ROUTES.INDEX} element={<AuthLayout />}>
                 <Route
                     path={NavigationRoutes.AUTH_ROUTES.INDEX}
-                    element={<Navigate to={NavigationRoutes.AUTH_ROUTES.LANDING_PAGE} />}
+                    element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />}
                 />
                 {RouteList.map(({ path, component: Component }, index) => (
                     <Route key={index} path={path} element={<Component />} />
                 ))}
             </Route>
-            <Route path="*" element={<Navigate to={NavigationRoutes.AUTH_ROUTES.LANDING_PAGE} />} />
+            <Route path="*" element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />} />
         </Routes>
     );
 };

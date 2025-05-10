@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Select, Button, Form } from 'antd';
 import ApiService from '@Services/ApiService';
 import { API_CONFIG_URLS } from '@Constants/config';
 import { CustomButton } from '@Components/Button';
 import logo from '@Assets/images/logo.png'; // Import the logo
 import FullPageLoader from '@Components/FullPageLoader/FullPageLoader';
+import NotificationService from "@Services/NotificationService";
+
+interface RolePayload {
+    role_id: number;
+    table_permission: string[];
+}
 
 const RoleManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
@@ -30,6 +36,7 @@ const RoleManagement = () => {
     });
 
     console.log('tables', tables);
+    const { mutate: updateRole, isLoading } = useUpdateEmployeeRole();
 
     const handleRoleChange = (value) => {
         setSelectedUser(value);
@@ -41,9 +48,11 @@ const RoleManagement = () => {
     const handleSubmit = () => {
         console.log('Selected Role:', selectedUser);
         console.log('Selected Tables:', selectedTables);
+        const payload = {role_id: selectedUser,table_permission : selectedTables }
+        updateRole(payload);
     };
-
-    if (rolesLoading || tablesLoading) return <FullPageLoader/>;
+    
+    if (rolesLoading || tablesLoading) return <FullPageLoader />;
 
     return (
         <div className='relative m-4 p-6 px-10 bg-white shadow-md rounded-lg h-[96%]'>
@@ -83,3 +92,23 @@ const RoleManagement = () => {
 };
 
 export default RoleManagement;
+
+const updateEmployeeRole = (payload: RolePayload) => {
+    return ApiService.post(API_CONFIG_URLS.EMPLOYEE.ROLES, payload);
+};
+
+const useUpdateEmployeeRole = () => {
+    return useMutation(updateEmployeeRole, {
+        onSuccess: ({ ok, response, data }) => {
+            if (ok) {
+                NotificationService.success("Role updated successfully");
+                return;
+            }
+            NotificationService.error(data?.data?.metadata?.message);
+            throw response.message;
+        },
+        onError: (err) => {
+            throw err;
+        }
+    });
+};

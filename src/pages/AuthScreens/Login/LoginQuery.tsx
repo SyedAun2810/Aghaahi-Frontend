@@ -20,7 +20,7 @@ export const useLogin = ({ onSuccess, onVerificationFail }: any) => {
                 onSuccess(data) 
                 return;
             }
-            NotificationService.error(data?.data?.metadata?.message);
+            NotificationService.error(data?.data?.message);
             throw response.message;
         },
         onError: (err: any) => {

@@ -7,7 +7,7 @@ import styles from "./index.module.scss";
 export default function AuthLayout() {
     const location = useLocation();
 
-    if (location.pathname === "/home" ||  location.pathname === "/contact-us" || location.pathname === "/privacy-policy" || location.pathname === "/pricing") {
+    if (location.pathname === "/home" ||  location.pathname === "/contact-us" || location.pathname === "/privacy-policy" || location.pathname === "/pricing" || location.pathname === "/privacy-policy" || location.pathname === "/about-us" || location.pathname === "/faq") {
         return <Outlet />;
     }
 
