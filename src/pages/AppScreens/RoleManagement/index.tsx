@@ -13,6 +13,14 @@ interface RolePayload {
     table_permission: string[];
 }
 
+interface Role {
+    id: number;
+    name: string;
+    company_role: Array<{
+        table_permission: string[];
+    }>;
+}
+
 const RoleManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedTables, setSelectedTables] = useState([]);
@@ -26,7 +34,7 @@ const RoleManagement = () => {
 
     let permissionsAssigned = roles?.data[0]?.company_role[0]?.table_permission;
 
-    console.log('roles', permissionsAssigned);
+    console.log('roles', roles);
 
     // Fetch tables
     const { data: tables, isLoading: tablesLoading } = useQuery(['tables'], async () => {
@@ -40,7 +48,7 @@ const RoleManagement = () => {
 
     const handleRoleChange = (value) => {
         setSelectedUser(value);
-        const selectedRole = roles?.data.find((role) => role.id === value);
+        const selectedRole = roles?.data.find((role: Role) => role.id === value);
         const permissions = selectedRole?.company_role[0]?.table_permission || [];
         setSelectedTables(permissions);
     };
@@ -55,7 +63,7 @@ const RoleManagement = () => {
     if (rolesLoading || tablesLoading) return <FullPageLoader />;
 
     return (
-        <div className='relative m-4 p-6 px-10 bg-white shadow-md rounded-lg h-[96%]'>
+        <div className='relative m-4 p-6 px-10 bg-white shadow-md rounded-lg h-[56%]'>
             <img
                 src={logo}
                 alt="Watermark Logo"
@@ -66,21 +74,31 @@ const RoleManagement = () => {
                 <Form.Item>
                     <h2>Role</h2>
                     <Select
-                        options={roles?.data.map((role) => ({ value: role.id, label: role.name }))}
+                        options={roles?.data
+                            .filter((role: Role) => role.name.toLowerCase() !== 'owner')
+                            .map((role: Role) => ({ value: role.id, label: role.name }))}
                         onChange={handleRoleChange}
                         placeholder="Select a role"
                         className='h-14'
+                        dropdownMatchSelectWidth={false}
+                        listHeight={256}
+                        style={{ width: '100%' }}
+                        dropdownStyle={{ minWidth: '300px' }}
                     />
                 </Form.Item>
                 <Form.Item>
                     <h2>Permissions</h2>
                     <Select
                         mode="multiple"
-                        options={tables?.data.map((table) => ({ value: table, label: table }))}
+                        options={tables?.data.map((table: string) => ({ value: table, label: table }))}
                         value={selectedTables}
                         onChange={(values) => setSelectedTables(values)}
                         placeholder="Select tables"
-                        className='h-14'
+                        className='h-14 pl-2'
+                        maxTagCount={5}
+                        style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}
+                        dropdownStyle={{ minWidth: '300px' }}
+                        
                     />
                 </Form.Item>
                 <Form.Item>

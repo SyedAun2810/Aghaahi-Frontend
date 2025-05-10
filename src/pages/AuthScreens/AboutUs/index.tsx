@@ -98,8 +98,10 @@ const AboutUs = () => {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-16">
             Our intelligent pipeline converts unstructured information into actionable insights through a seamless seven-stage process:
           </p>
-          <div className="relative hover-tilt">
-            <img src={Workflow} alt="Data Flow Process" className="mx-auto rounded-2xl shadow-lg" />
+          <div className="relative hover-tilt flex justify-center">
+            <div className="bg-white rounded-2xl shadow-lg p-4">
+              <img src={Workflow} alt="Data Flow Process" className="mx-auto " />
+            </div>
           </div>
         </div>
       </section>

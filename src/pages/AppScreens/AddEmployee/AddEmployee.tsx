@@ -9,7 +9,7 @@ import { VALIDATE } from "@Constants/validationConstants";
 import ApiService from "@Services/ApiService";
 import NotificationService from "@Services/NotificationService";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Checkbox, Col, Flex, Form, Row } from "antd";
+import { Checkbox, Col, Flex, Form, Row, Button } from "antd";
 import styles from "./AddEmployee.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
@@ -22,6 +22,12 @@ const GENDER_OPTIONS = [
     { label: "Other", value: "other" }
 ];
 
+interface ApiResponse {
+    ok: boolean;
+    message?: string;
+    data?: any;
+}
+
 const AddEmployee = () => {
     const [form] = Form.useForm();
     const { id } = useParams(); // Get employee ID from URL for update mode
@@ -31,12 +37,10 @@ const AddEmployee = () => {
     const { data: roles } = useEmployeeRoles();
     const { data: employeeDetails, isLoading: isEmployeeLoading } = useEmployeeDetail(id ? parseInt(id) : null);
 
-    const { mutate: submitMutate, isLoading: isSubmitting, isSuccess } = useMutation(
+    const { mutate: submitMutate, isLoading: isSubmitting, isSuccess } = useMutation<ApiResponse, Error, any>(
         isUpdateMode ? updateEmployee : registerEmployee
     );
 
-    if (isSuccess)
-        navigate(`${NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_DETAIL}/${id}`);
 
     // Set form values when in update mode and data is loaded
     React.useEffect(() => {
@@ -60,7 +64,23 @@ const AddEmployee = () => {
         if (isUpdateMode) {
             values.id = id; // Add ID to payload for update
         }
-        submitMutate(values);
+        submitMutate(values, {
+            onSuccess: (response) => {
+                console.log("API Response:", response);
+                if (response.ok) {
+                    NotificationService.success(
+                        isUpdateMode ? "Employee updated successfully" : "Employee created successfully"
+                    );
+                    navigate(-1); // Navigate back after success
+                } else {
+                    NotificationService.error(response.message || "Something went wrong");
+                }
+            },
+            onError: (error) => {
+                console.error("API Error:", error);
+                NotificationService.error("Failed to process request");
+            }
+        });
     };
 
     const roleOptions = roles?.data?.map((role: any) => ({
@@ -71,6 +91,15 @@ const AddEmployee = () => {
     return (
         <Wrapper>
             <Flex vertical justify="center" className="px-4 py-12 h-full">
+                <div className="w-full">
+                    <Button 
+                        onClick={() => navigate(-1)} 
+                        className="mb-4"
+                        type="link text-xl text-[#5950CB]"
+                    >
+                        ← Back
+                    </Button>
+                </div>
                 <AuthHeader
                     headerTitle={isUpdateMode ? "Update Employee" : "Add Employee"}
                     subTitle={
@@ -130,13 +159,6 @@ const AddEmployee = () => {
                                     placeholder="Select role"
                                     options={roleOptions}
                                 />
-                            </Form.Item>
-                        </Col>
-
-                        {/* Salary */}
-                        <Col xs={24} sm={24} md={12}>
-                            <Form.Item name="salary" rules={VALIDATE.SALARY as never}>
-                                <Input label="Salary" placeholder="Enter salary" type="number" />
                             </Form.Item>
                         </Col>
 

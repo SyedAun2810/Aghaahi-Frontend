@@ -159,7 +159,7 @@ const PromptChat = () => {
             <img
                 src={Logo}
                 alt="Watermark Logo"
-                className="absolute opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2"
+                className="absolute opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 pointer-events-none select-none"
             />
             {isFetching ? (
                 // Skeleton Loader
@@ -438,6 +438,9 @@ const useConversationListing = (id: any) => {
             enabled: !!id, // Only run the query if `id` is defined
             staleTime: 0, // Ensure the data is always fresh
             cacheTime: 0, // Disable caching to always fetch fresh data
+            refetchOnWindowFocus: false, // Disable refetching on window focus
+            refetchOnMount: false, // Disable refetching on component mount
+            refetchOnReconnect: false // Disable refetching on reconnection
         }
     );
 };

@@ -91,10 +91,6 @@ const SignUp = () => {
                     <Input isPassword label="Password" placeholder="Enter your password" />
                 </Form.Item>
 
-                <Form.Item name="user_language" rules={VALIDATE.STORE_NAME as never}>
-                    <CustomSelectInput label="Language" placeholder="Select language" options={LANGUAGE_OPTIONS}/>
-                </Form.Item>
-
                 <Form.Item name="gender" rules={VALIDATE.STORE_NAME as never}>
                     <CustomSelectInput label="Gender" placeholder="Select gender" options={GENDER_OPTIONS}/>
                 </Form.Item>

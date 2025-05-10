@@ -8,14 +8,19 @@ import ApiService from "@Services/ApiService";
 import { API_CONFIG_URLS } from "@Constants/config";
 import { queryKeys } from "@Constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
+import FullPageLoader from "@Components/FullPageLoader/FullPageLoader";
 
 
 export default function ViewEmployeeDetails() {
     const { id: employeeId } = useParams();
 
-    const { data: employeeDetails } = useEmployeeDetail(employeeId);
+    const { data: employeeDetails, isLoading: isEmployeeLoading } = useEmployeeDetail(employeeId);
 
     const data = employeeDetails?.data;
+
+    if (isEmployeeLoading) {
+        return <FullPageLoader />;
+    }
     //console.log(data);
     return (
         <>

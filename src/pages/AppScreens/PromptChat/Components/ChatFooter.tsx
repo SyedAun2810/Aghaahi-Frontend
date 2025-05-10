@@ -1,9 +1,9 @@
-
 import { Col, Flex, Form, Input, Row } from "antd";
 import React, { useEffect } from "react";
 
 import Logo from "@Assets/images/logo.png";
 import VoiceICon from "@Assets/images/mic.png";
+import SendIcon from "@Assets/images/send.png";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { useAuthLayoutContainer } from "@Layout/AuthLayout/useAuthLayoutContainer";
 
@@ -90,13 +90,19 @@ const ChatFooter: React.FC<{ form: any; localMessage: string; setLocalMessage: (
                                 </div>
                             </Col>
                             <Col xxl={3} xl={3} lg={3} md={4} sm={4} xs={4}>
-                                <div className="flex items-center justify-end pr-6">
+                                <div className="flex items-center justify-end pr-6 ">
                                     <button
                                         type="button"
                                         onClick={listening ? stopListening : startListening}
                                         className={`border-none rounded-full w-[46px] h-[46px] flex items-center justify-center p-0`}
                                     >
                                         <img src={VoiceICon} height={30} width={25} />
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="border-none rounded-full w-[46px] h-[46px] flex items-center justify-center p-0 pr-2 cursor-pointer"
+                                    >
+                                        <img src={SendIcon} height={30} width={25} />
                                     </button>
                                 </div>
                             </Col>

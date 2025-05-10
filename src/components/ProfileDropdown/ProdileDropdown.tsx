@@ -48,6 +48,60 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
             )
         },
         {
+            type: 'divider'
+        },
+        {
+            key: "4",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.AUTH_ROUTES.ABOUT_US);
+                    }}
+                >
+                    About Us
+                </h5>
+            )
+        },
+        {
+            key: "5",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY);
+                    }}
+                >
+                    Privacy Policy
+                </h5>
+            )
+        },
+        {
+            key: "6",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.AUTH_ROUTES.FAQ);
+                    }}
+                >
+                    FAQ
+                </h5>
+            )
+        },
+        {
+            key: "7",
+            label: (
+                <h5
+                    onClick={() => {
+                        navigate(NavigationRoutes.AUTH_ROUTES.CONTACT_US);
+                    }}
+                >
+                    Contact Us
+                </h5>
+            )
+        },
+        {
+            type: 'divider'
+        },
+        {
             key: "3",
             label: (
                 <div className="display-flex" onClick={logout}>

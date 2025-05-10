@@ -16,7 +16,9 @@ import {
 import { NavigationRoutes } from "./NavigationRoutes";
 import ViewEmployeeDetails from "@Pages/AppScreens/AddEmployee/EmployeeDetails/ViewEmployeeDetails";
 import RoleManagement from "@Pages/AppScreens/RoleManagement";
-
+import AboutUs from "@Pages/AuthScreens/AboutUs";
+import PrivacyPolicy from "@Pages/AuthScreens/PrivacyPolicy";
+import FAQ from "@Pages/AuthScreens/FAQ";
 const DashboardRoutes = [
     // {
     //     title: "Dashboard",
@@ -163,6 +165,21 @@ const DashboardRoutes = [
         title: "EditProfile",
         path: NavigationRoutes.DASHBOARD_ROUTES.EDIT_PROFILE,
         component: <EditProfile />
+    },
+    {
+        title: "AboutUs",
+        path: NavigationRoutes.AUTH_ROUTES.ABOUT_US,
+        component: <AboutUs />
+    },
+    {
+        title: "PrivacyPolicy",
+        path: NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY,
+        component: <PrivacyPolicy />
+    },
+    {
+        title: "FAQ",
+        path: NavigationRoutes.AUTH_ROUTES.FAQ,
+        component: <FAQ />
     }
 ];
 

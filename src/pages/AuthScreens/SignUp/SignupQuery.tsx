@@ -14,6 +14,7 @@ export const useRegister = (onSuccess: (data?: any) => void) => {
     return useMutation((payload: any) => AuthApiService.register(payload), {
         onSuccess: ({ ok, response, data }: any, payload: any) => {
             if (ok) {
+                NotificationService.success("Your business has been registered successfully");
                 onSuccess(data?.data);
                 return data;
             }

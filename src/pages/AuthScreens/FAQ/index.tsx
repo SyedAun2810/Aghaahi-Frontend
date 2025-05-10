@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
+import { NavigationRoutes } from '@Navigation/NavigationRoutes';
 
 interface FAQItem {
     question: string;
@@ -13,40 +14,36 @@ const FAQ = () => {
 
     const faqItems: FAQItem[] = [
         {
-            question: "What is no-code AI analytics?",
-            answer: "No-code AI analytics lets you explore, visualize, and derive insights from your data without writing a single line of code—Agaahi does the heavy lifting."
+            question: "What is Agaahi, and who is it for?",
+            answer: "Agaahi is an AI-powered data querying and insight-generation platform that allows users to interact with structured relational databases (like MySQL) using natural language. It also allows user to build custom dashboards without any technical knowledge. It's built for organizations seeking to democratize data access—empowering business users, analysts, and decision-makers to retrieve insights without needing technical skills or SQL knowledge."
         },
         {
-            question: "How do I connect my data sources?",
-            answer: "Agaahi integrates with databases, spreadsheets, and popular BI tools via a simple connector wizard—just authenticate and go."
+            question: "Do I need technical expertise to use Agaahi?",
+            answer: "Not at all. Agaahi was built with the non-technical user in mind. Anyone can type questions in everyday language, and the system will interpret, generate, and execute SQL queries automatically. There's no need to understand databases, write code, or learn new tools."
         },
         {
-            question: "Can I customize dashboards and charts?",
-            answer: "Yes—drag & drop widgets, pick from 20+ chart types, and tailor layouts with our visual editor. No code needed."
+            question: "Can I use Agaahi with different types of databases?",
+            answer: "The current version of Agaahi is optimized for relational databases like MySQL. However, its modular design makes it extensible to support other databases such as PostgreSQL and even NoSQL systems like MongoDB in future iterations."
         },
         {
-            question: "Do you offer a free trial?",
-            answer: "Absolutely! Sign up today and get a 14-day free trial—no credit card required."
+            question: "How can I create dashboards using Agaahi?",
+            answer: "Agaahi allows users to build dashboards effortlessly through natural language interactions. Users can select a chart type and enter prompt about the data that they wish to visualize ('Show me monthly sales for the last year') and Agaahi will add to the dashboard. Users can drag and adjust the positions of the charts being displayed and save changes for future reference. The dashboard interface supports multiple widgets—charts, tables, and summaries—allowing users to curate a live, interactive view of key business metrics. All dashboards are role-aware, meaning users only see data they're authorized to access. With no coding needed and fully customizable layouts, dashboards in Agaahi make monitoring insights simple, even for non-technical users."
         },
         {
-            question: "How secure is my data on Agaahi?",
-            answer: "We use enterprise-grade encryption at rest and in transit, SOC 2 compliance, and strict role-based access controls to protect your data."
+            question: "Can Agaahi generate reports and in chat-visualizations?",
+            answer: "Yes. Agaahi automatically transforms your query results into clear, structured reports. It also supports visualization of data using dynamic charts and graphs, user can say 'Show above results in a graph' and it will generate a graph within chat if the data is conceptually viable for a graph. It can be customized and downloaded, making communication of insights more effective."
         },
         {
-            question: "Which data sources does Agaahi support?",
-            answer: "Agaahi natively integrates with SQL databases (MySQL, PostgreSQL), NoSQL stores (MongoDB), cloud warehouses (BigQuery, Snowflake), CSV/Excel files, and can connect via REST APIs or webhooks."
+            question: "What are the pricing plans for Agaahi?",
+            answer: "We offer a 7-days free trial for businesses to get started and get an idea of how beneficial Agaahi is for their business. After that there are multiple subscription plans for users to choose from. You can view them on our pricing page."
         },
         {
-            question: "Can I invite team members and manage roles?",
-            answer: "Yes—Agaahi offers role-based access control (Admin, Editor, Viewer). You can invite users, assign roles, and restrict who can view or edit dashboards and data sources."
+            question: "Can multiple team members collaborate using Agaahi?",
+            answer: "Absolutely. Agaahi supports multi-user environments, allowing organizations to onboard different users—owners, admins, data analysts, and engineers—with specific permissions. The organization admin manages internal users, while a super-admin panel oversees company-wide onboarding."
         },
         {
-            question: "What SLA and uptime do you guarantee?",
-            answer: "For Premium and Enterprise plans, we guarantee 99.9% uptime backed by a formal SLA, including dedicated support and escalation protocols."
-        },
-        {
-            question: "How long is my data retained?",
-            answer: "We retain your data for 90 days by default. Enterprise clients can request custom retention policies up to 1 year, or opt for on-premise deployment for full control."
+            question: "How does Agaahi ensure the data shared is secure?",
+            answer: "Agaahi enforces Role-Based Access Control (RBAC), meaning users can only access data relevant to their role. Each organization defines custom roles and table-level permissions during setup, ensuring sensitive data is only accessible to authorized personnel. You can view our privacy policy for more details."
         }
     ];
 
@@ -71,7 +68,7 @@ const FAQ = () => {
                     </h1>
                     <div className="flex justify-center gap-4 mb-4">
                         <button
-                            onClick={() => navigate('/contact')}
+                            onClick={() => navigate(NavigationRoutes.AUTH_ROUTES.REGISTER)}
                             className="px-4 py-2 bg-[#A855F7] text-white rounded-full hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105"
                         >
                             Book a Demo
@@ -94,9 +91,9 @@ const FAQ = () => {
                         {faqItems.map((item, index) => (
                             <div
                                 key={index}
-                                className=" border-transparent  p-1 bg-gradient-to-r from-[#A855F7] to-[#FFD1A4] bg-clip-padding"
+                                className="border-transparent p-1 bg-gradient-to-r from-[#A855F7] to-[#FFD1A4] bg-clip-padding"
                             >
-                                <div className="bg-white  p-4">
+                                <div className="bg-white p-4">
                                     <button
                                         className="w-full text-left flex justify-between items-center bg-transparent border-none p-0 m-0 appearance-none focus:outline-none"
                                         onClick={() => toggleFaq(index)}
@@ -112,8 +109,7 @@ const FAQ = () => {
                                         </svg>
                                     </button>
                                     <div
-                                        className={`mt-2 text-[#4B5563] transition-all duration-300 overflow-hidden ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                                            }`}
+                                        className={`mt-2 text-[#4B5563] transition-all duration-300 overflow-hidden ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                                     >
                                         {item.answer}
                                     </div>

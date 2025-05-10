@@ -93,7 +93,7 @@ const graphData = [
 const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph();
 
-    const [layouts, setLayouts] = useState(); // Use layoutData or defaultLayouts
+    const [layouts, setLayouts] = useState<{ lg: any[] }>({ lg: [] }); // Use an object with lg as an array
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false); // Track edit mode3
@@ -101,7 +101,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { })
 
     useEffect(() => {
-        if (layoutData) {
+        if (layoutData && layoutData.lg && layoutData.lg.length > 0) {
             console.log("Original Layout Data:", layoutData); // Log the original layoutData
 
             // Transform layoutData to match the expected structure
@@ -115,6 +115,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                     static: item.is_static,
                     minW: 4, // Add minimum width
                     minH: 3, // Add minimum height
+                    chart_id: item.chart_id, // Keep chart_id for matching
                 })),
             };
 
@@ -126,16 +127,15 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
 
     const handleLayoutChange = (layout: any, allLayouts: any) => {
         if (isEditMode) {
-            setLayouts({ lg: allLayouts.lg }); // Update layouts state for `lg` only
+            setLayouts((prev) => ({ ...prev, lg: allLayouts.lg })); // Update layouts state for `lg` only
         }
     };
 
     const handleDelete = (id: string) => {
         if (isEditMode) {
             setLayouts((prevLayouts) => ({
-                lg: prevLayouts.lg.filter((item) => item.i !== id),
+                lg: prevLayouts.lg.filter((item: any) => item.i !== id),
             }));
-
             handleSaveChanges();
         }
     };
@@ -191,8 +191,8 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     };
 
     const generateDOM = () =>
-        (layoutData && graphDataFromBackend ? layoutData?.lg : defaultLayouts.lg).map((layoutItem) => {
-            const graph = graphDataFromBackend?.find((g) => g.chart_id === layoutItem.chart_id);
+        (layouts.lg || []).map((layoutItem: any) => {
+            const graph = graphDataFromBackend?.find((g: any) => g.chart_id === layoutItem.chart_id);
             const metaData = JSON.parse(graph?.chart?.meta_info || '{}');
             return (
                 <div
@@ -281,7 +281,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                 </button>
                 <ResponsiveReactGridLayout
                     {...props}
-                    layouts={{ lg: layouts?.lg || [] }}
+                    layouts={{ lg: layouts.lg }}
                     onLayoutChange={handleLayoutChange}
                     isDroppable={isEditMode}
                     isDraggable={isEditMode}
