@@ -112,6 +112,7 @@ export const API_CONFIG_URLS = {
     HISTORY: `${chat}/history`,
     EMPLOYEE_CHAT_HISTORY: `${chat}/employee-history`,
     CONVERSATION: `${chat}/conversation`,
+    PUBLIC_CHAT: `${chat}/public-chat`,
   },
   DatabaseValidator: {
     VERIFY: `${databaseValidator}/verify`,

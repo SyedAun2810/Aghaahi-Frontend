@@ -8,6 +8,7 @@ import Moiz from "../../../assets/images/Moiz.jpg";
 import Aun from "../../../assets/images/Aun.jpg";
 import Sarah from "../../../assets/images/sarah.jpg";
 import Khushbkaht from "../../../assets/images/khushbakht.jpg";
+import ChatBot from '../../../components/ChatBot';
 
 const AboutUs = () => {
   return (
@@ -399,6 +400,9 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+
+      {/* Add ChatBot component */}
+      <ChatBot />
     </div>
   );
 };
