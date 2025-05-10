@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import RoundedContainer from "@Components/RoundedContainer/RoundedContainer";
+import { queryClient } from "@Api/Client";
 
 const GENDER_OPTIONS = [
     { label: "Male", value: "male" },
@@ -71,6 +72,7 @@ const AddEmployee = () => {
                     NotificationService.success(
                         isUpdateMode ? "Employee updated successfully" : "Employee created successfully"
                     );
+                    queryClient.invalidateQueries([queryKeys.employee.getEmployee]);
                     navigate(-1); // Navigate back after success
                 } else {
                     NotificationService.error(response.message || "Something went wrong");
