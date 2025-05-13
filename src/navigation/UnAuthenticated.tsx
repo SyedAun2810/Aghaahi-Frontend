@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import useAuthStore from "@Store/authStore";
 
 import Otp from "@Pages/AuthScreens/Otp/Otp";
 import Login from "@Pages/AuthScreens/Login/Login";
@@ -68,19 +69,23 @@ const RouteList = [
 ];
 
 const UnAuthenticated = () => {
+    const { isDark } = useAuthStore();
+    
     return (
-        <Routes>
-            <Route path={NavigationRoutes.AUTH_ROUTES.INDEX} element={<AuthLayout />}>
-                <Route
-                    path={NavigationRoutes.AUTH_ROUTES.INDEX}
-                    element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />}
-                />
-                {RouteList.map(({ path, component: Component }, index) => (
-                    <Route key={index} path={path} element={<Component />} />
-                ))}
-            </Route>
-            <Route path="*" element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />} />
-        </Routes>
+        <div className={`min-h-screen ${isDark ? 'dark:bg-gray-900 dark:text-white' : 'bg-white text-gray-900'}`}>
+            <Routes>
+                <Route path={NavigationRoutes.AUTH_ROUTES.INDEX} element={<AuthLayout />}>
+                    <Route
+                        path={NavigationRoutes.AUTH_ROUTES.INDEX}
+                        element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />}
+                    />
+                    {RouteList.map(({ path, component: Component }, index) => (
+                        <Route key={index} path={path} element={<Component />} />
+                    ))}
+                </Route>
+                <Route path="*" element={<Navigate to={NavigationRoutes.AUTH_ROUTES.ABOUT_US} />} />
+            </Routes>
+        </div>
     );
 };
 

@@ -25,8 +25,9 @@ const SideBar = () => {
     const location = useLocation(); // Get the current URL
     const modalRef = useRef<ModalMethodsTypes | null>(null);
     const id = parseInt(route[route.length - 1]) || null; // Extract the ID from the URL
-
-
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const [visibleChatsCount, setVisibleChatsCount] = useState(10);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
     // State to track the list of chats
     const [historyChats, setHistoryChats] = useState<string[]>([
@@ -43,8 +44,7 @@ const SideBar = () => {
         employeeId = route[1];
         isEmployeeChat = true;
     }
-    //console.log("route", employeeId);
-    let isDashboard = CheckRoute(route);
+
 
     const [selectedChat, setSelectedChat] = useState<string | null>(historyChats[0]);
 
@@ -146,7 +146,7 @@ const SideBar = () => {
 
     async function handleNewChat() {
         queryClient.invalidateQueries([queryKeys.chat.conversation]);
-        navigate(`${NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT}`);
+        navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT);
     }
 
     // Categorize chats into "Today" and "Last 7 Days"
@@ -173,42 +173,54 @@ const SideBar = () => {
         }
     }, [location.pathname]);
 
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+        // Load more when user scrolls to bottom (with 20px threshold)
+        if (scrollHeight - scrollTop - clientHeight < 20 && !isLoadingMore) {
+            setIsLoadingMore(true);
+            // Simulate loading delay
+            setTimeout(() => {
+                setVisibleChatsCount(prev => prev + 10);
+                setIsLoadingMore(false);
+            }, 500);
+        }
+    };
+
     return (
         <div>
-            {
-                !isDashboard &&
                 <Sider
                     width={220}
                     breakpoint="lg"
                     collapsedWidth="0"
                     collapsible
                     theme="light"
-                    className={`bg-white ${customSiderClass} h-[100vh]`}
+                    className={`bg-white dark:bg-[#181818] ${customSiderClass} h-[100vh] flex flex-col`}
                     onCollapse={(collapsed) => setIsCollapsed(collapsed)}
                     trigger={
                         <div
-                            onMouseEnter={() => setIsHovered(true)} // Show hover state
-                            onMouseLeave={() => setIsHovered(false)} // Hide hover state
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
                             style={{
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 height: "100%",
                                 cursor: "pointer",
-                                backgroundColor: isHovered ? "#f0f0f0" : "transparent", // Change background on hover
+                                backgroundColor: isHovered ? "#f0f0f0" : "transparent",
                                 transition: "background-color 0.3s",
                             }}
+                            className="dark:bg-[#181818]"
                         >
                             {isCollapsed ? (
-                                <MenuUnfoldOutlined style={{ fontSize: "18px" }} />
+                                <MenuUnfoldOutlined style={{ fontSize: "18px" }} className="dark:text-white" />
                             ) : (
-                                <MenuFoldOutlined style={{ fontSize: "18px" }} />
+                                <MenuFoldOutlined style={{ fontSize: "18px" }} className="dark:text-white" />
                             )}
                         </div>
                     }
                 >
                     {!isCollapsed && (
-                        <>
+                        <div className="flex flex-col h-full">
                             <Flex className="cursor-pointer" justify="center">
                                 <img
                                     src={Logo}
@@ -218,51 +230,57 @@ const SideBar = () => {
                             </Flex>
 
                             <div className="flex items-center justify-center">
-                                <button className="border-none flex items-center justify-center bg-white cursor-pointer" onClick={() => {
-                                    handleNewChat()
-
-                                }}>
+                                <button className="border-none flex items-center justify-center bg-white dark:bg-[#212121] cursor-pointer p-2 px-6 rounded-full" onClick={handleNewChat}>
                                     <Flex justify="center" align="center">
-                                        <PlusIcon height={28} width={28} />
-                                        <p className="ml-2">New Chat</p>
+                                        <div className="dark:brightness-0 dark:invert">
+                                            <PlusIcon height={28} width={28} />
+                                        </div>
+                                        <p className="ml-2 dark:text-white">New Chat</p>
                                     </Flex>
                                 </button>
                             </div>
-                            <div className="mt-6 h-[75%] overflow-y-auto">
+                            <div 
+                                ref={chatContainerRef}
+                                className="mt-6 flex-1 overflow-y-auto min-h-0"
+                                onScroll={handleScroll}
+                            >
                                 {isFetching ? (
                                     // Skeleton Loader
                                     <div className="px-4">
                                         {[...Array(8)].map((_, index) => (
                                             <div
                                                 key={index}
-                                                className="p-4 bg-gray-200 animate-pulse rounded-lg my-4"
+                                                className="p-4 bg-gray-200 dark:bg-[#212121] animate-pulse rounded-lg my-4"
                                             >
-                                                <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                                                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <>
+                                    <div className="px-2">
                                         {/* Render "Today" Chats */}
                                         {categorizedChats.today.length > 0 && (
                                             <>
-                                                <p className="ml-3 text-md font-bold  text-[#5950CB]">Today</p>
-                                                {categorizedChats.today.map((chat, index) => (
+                                                <p className="ml-3 text-md font-bold text-[#5950CB] dark:text-purple-400">Today</p>
+                                                {categorizedChats.today.slice(0, visibleChatsCount).map((chat: any, index: number) => (
                                                     <Flex
                                                         key={index}
                                                         align="center"
-                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${selectedChat === chat.id.toString() ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2" : "bg-transparent ml-2 my-2"
-                                                            }`}
-                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())} // Set hovered chat
-                                                        onMouseLeave={() => setHoveredChat(null)} // Clear hovered chat
+                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${
+                                                            selectedChat === chat.id.toString()
+                                                                ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2"
+                                                                : "bg-transparent ml-2 my-2 hover:bg-gray-100 dark:hover:bg-[#212121]"
+                                                        }`}
+                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())}
+                                                        onMouseLeave={() => setHoveredChat(null)}
                                                         onClick={() => handleChatSelect(chat.id)}
                                                         style={{ position: "relative" }}
                                                     >
-                                                        <p className="ml-2 text-md">
+                                                        <p className="ml-2 text-md dark:text-gray-200">
                                                             {chat.name || "User Prompt"}
                                                         </p>
-                                                        {hoveredChat === chat.id.toString() && ( // Show dots on hover
+                                                        {hoveredChat === chat.id.toString() && (
                                                             <div className="ml-auto mr-2">
                                                                 <Dropdown
                                                                     overlay={menu(chat.id)}
@@ -274,6 +292,7 @@ const SideBar = () => {
                                                                             fontSize: "18px",
                                                                             cursor: "pointer",
                                                                         }}
+                                                                        className="dark:text-gray-200"
                                                                     />
                                                                 </Dropdown>
                                                             </div>
@@ -286,22 +305,25 @@ const SideBar = () => {
                                         {/* Render "Last 7 Days" Chats */}
                                         {categorizedChats.last7Days.length > 0 && (
                                             <>
-                                                <p className="ml-3 text-md font-bold  text-[#5950CB]">Last 7 Days</p>
-                                                {categorizedChats.last7Days.map((chat, index) => (
+                                                <p className="ml-3 text-md font-bold text-[#5950CB] dark:text-purple-400">Last 7 Days</p>
+                                                {categorizedChats.last7Days.slice(0, visibleChatsCount).map((chat: any, index: number) => (
                                                     <Flex
                                                         key={index}
                                                         align="center"
-                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${selectedChat === chat.id.toString() ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2" : "bg-transparent ml-2 my-2"
-                                                            }`}
-                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())} // Set hovered chat
-                                                        onMouseLeave={() => setHoveredChat(null)} // Clear hovered chat
+                                                        className={`cursor-pointer px-2 py-2 rounded-lg ${
+                                                            selectedChat === chat.id.toString()
+                                                                ? "bg-[#7C5EF2] text-white mx-1 pr-2 my-2"
+                                                                : "bg-transparent ml-2 my-2 hover:bg-gray-100 dark:hover:bg-[#212121]"
+                                                        }`}
+                                                        onMouseEnter={() => setHoveredChat(chat.id.toString())}
+                                                        onMouseLeave={() => setHoveredChat(null)}
                                                         onClick={() => handleChatSelect(chat.id)}
                                                         style={{ position: "relative" }}
                                                     >
-                                                        <p className="ml-2 text-md">
+                                                        <p className="ml-2 text-md dark:text-gray-200">
                                                             {chat.name || "User Prompt"}
                                                         </p>
-                                                        {hoveredChat === chat.id.toString() && ( // Show dots on hover
+                                                        {hoveredChat === chat.id.toString() && (
                                                             <div className="ml-auto mr-2">
                                                                 <Dropdown
                                                                     overlay={menu(chat.id)}
@@ -313,6 +335,7 @@ const SideBar = () => {
                                                                             fontSize: "18px",
                                                                             cursor: "pointer",
                                                                         }}
+                                                                        className="dark:text-gray-200"
                                                                     />
                                                                 </Dropdown>
                                                             </div>
@@ -322,29 +345,37 @@ const SideBar = () => {
                                             </>
                                         )}
 
+                                        {/* Loading indicator */}
+                                        {isLoadingMore && (
+                                            <div className="flex justify-center py-2">
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#5950CB] dark:border-purple-400"></div>
+                                            </div>
+                                        )}
+
                                         {/* No Chats */}
                                         {categorizedChats.today.length === 0 &&
                                             categorizedChats.last7Days.length === 0 && (
-                                                <p className="ml-4">No Recent Chats</p>
+                                                <p className="ml-4 dark:text-gray-200">No Recent Chats</p>
                                             )}
-                                    </>
+                                    </div>
                                 )}
                             </div>
-                        </>
+                        </div>
                     )}
                 </Sider>
-            }
 
             <Modal
                 visible={!!renamingChat}
                 title="Rename Chat"
                 onCancel={() => setRenamingChat(null)}
                 onOk={handleRenameSubmit}
+                className="dark:bg-[#212121]"
             >
                 <Input
                     value={renameValue}
                     onChange={(e) => setRenameValue(e.target.value)}
                     placeholder="Enter new chat name"
+                    className="dark:bg-[#212121] dark:text-white"
                 />
             </Modal>
 
@@ -353,8 +384,9 @@ const SideBar = () => {
                 title="Delete Chat"
                 onCancel={() => setDeleteChat(false)}
                 onOk={handleDeleteChat}
+                className="dark:bg-[#212121]"
             >
-                <p>Are you sure you want to delete this chat?</p>
+                <p className="dark:text-white">Are you sure you want to delete this chat?</p>
             </Modal>
         </div>
     );
@@ -362,7 +394,7 @@ const SideBar = () => {
 
 const useChatHistoryListing = (employeeId: any) => {
     return useQuery(
-        [queryKeys.chat.history, employeeId], // Include employeeId in the query key
+        [queryKeys.chat.history, employeeId],
         async () => {
             const { ok, data } = await GetChatHistoryListing(employeeId);
             if (ok) {
@@ -371,7 +403,9 @@ const useChatHistoryListing = (employeeId: any) => {
             throw new Error("Failed to fetch chat history");
         },
         {
-            enabled: !!employeeId || employeeId === null, // Ensure the query runs only when employeeId is defined or null
+            enabled: !!employeeId || employeeId === null,
+            refetchOnWindowFocus: false, // Prevent refetching on window focus
+            staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
         }
     );
 };

@@ -32,7 +32,7 @@ export default function AuthLayout() {
                         </div>
                     </div>
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white">
+                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white ">
                     <Outlet />
                 </Col>
             </Row>

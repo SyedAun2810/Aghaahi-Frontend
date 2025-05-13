@@ -1,4 +1,5 @@
-export const arrayOfDashboardItems = ["dashboard", "add-new-graph", "add-new-employee","employee-listing", "employee-detail", "employee", "edit-profile","role-management" ,"faq", "about-us", "privacy-policy"];
+export const arrayOfDashboardItems = ["dashboard", "add-new-graph", "add-new-employee","employee-listing", 
+    "employee-detail", "employee", "edit-profile","role-management" ,"faq", "about-us", "privacy-policy", "contact-us"];
 
 export const hideHeaderRoutes = ["faq", "about-us", "contact-us", "privacy-policy"];
 

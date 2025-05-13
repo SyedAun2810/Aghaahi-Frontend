@@ -19,6 +19,7 @@ import RoleManagement from "@Pages/AppScreens/RoleManagement";
 import AboutUs from "@Pages/AuthScreens/AboutUs";
 import PrivacyPolicy from "@Pages/AuthScreens/PrivacyPolicy";
 import FAQ from "@Pages/AuthScreens/FAQ";
+import ContactUs from "@Pages/AuthScreens/ContactUs";
 const DashboardRoutes = [
     // {
     //     title: "Dashboard",
@@ -180,6 +181,11 @@ const DashboardRoutes = [
         title: "FAQ",
         path: NavigationRoutes.AUTH_ROUTES.FAQ,
         component: <FAQ />
+    },
+    {
+        title: "ContactUs",
+        path: NavigationRoutes.AUTH_ROUTES.CONTACT_US,
+        component: <ContactUs />
     }
 ];
 

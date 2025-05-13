@@ -7,8 +7,7 @@ import CustomAvatar from "@Components/CustomAvatar";
 import DropdownIcon from "@Assets/icons/dropdownIcon.svg";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import Logo from "@Assets/images/logo.png";
-
-
+import { MoonOutlined, SunOutlined } from '@ant-design/icons';
 
 interface propParams {
     logout: () => void;
@@ -17,7 +16,7 @@ interface propParams {
 
 const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
     const navigate = useNavigate();
-    const { userData } = useAuthStore();
+    const { userData, isDark, toggleTheme } = useAuthStore();
 
     const image = userData?.store?.image?.url || "";
     const name = userData?.name || "";
@@ -49,6 +48,19 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
         },
         {
             type: 'divider'
+        },
+        {
+            key: "theme",
+            label: (
+                <div className="flex items-center justify-between" onClick={toggleTheme}>
+                    <h5>Theme</h5>
+                    {isDark ? (
+                        <SunOutlined className="text-yellow-500 text-xl" />
+                    ) : (
+                        <MoonOutlined className="text-gray-700 text-xl" />
+                    )}
+                </div>
+            )
         },
         {
             key: "4",
@@ -130,7 +142,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                                 size={32}
                             />
                         )}
-                        <h4 className="hr-mr-12 hr-mr-6">{name}</h4>
+                        <h4 className="hr-mr-12 hr-mr-6 dark:text-white">{name}</h4>
                         <DropdownIcon />
                     </Flex>
                 </Dropdown>

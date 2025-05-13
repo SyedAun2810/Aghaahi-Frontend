@@ -10,7 +10,6 @@ import { queryKeys } from "@Constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import FullPageLoader from "@Components/FullPageLoader/FullPageLoader";
 
-
 export default function ViewEmployeeDetails() {
     const { id: employeeId } = useParams();
 
@@ -24,7 +23,7 @@ export default function ViewEmployeeDetails() {
     //console.log(data);
     return (
         <>
-            <Flex className="" vertical gap={"large"}>
+            <Flex className="min-h-screen bg-light-bg dark:bg-[#212121]" vertical gap={"large"}>
                 <RoundedContainer className="mx-4 my-4 p-8" >
                     <CouponDetailsHeader
                         status={0}
@@ -49,11 +48,12 @@ export default function ViewEmployeeDetails() {
         </>
     );
 }
-const useEmployeeDetail = (id: number) => {
+const useEmployeeDetail = (id: string | undefined) => {
     return useQuery(
         [queryKeys.employee.getEmployeeDetail], // Unique query key with employee ID
         async () => {
-            const { ok, data } = await GetEmployeeDetail(id);
+            if (!id) throw new Error("Employee ID is required");
+            const { ok, data } = await GetEmployeeDetail(Number(id));
             if (ok) {
                 return data;
             }

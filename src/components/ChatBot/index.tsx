@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import robot_contact_us from '@Assets/images/robot_contact_us.jpg';
 import { ChatApiService } from '../../Api/chat-services';
@@ -7,6 +7,7 @@ import NotificationService from '@Services/NotificationService';
 interface Message {
   type: 'user' | 'bot';
   text: string;
+  isLoading?: boolean;
 }
 
 interface ApiResponse {
@@ -30,23 +31,41 @@ const ChatBot: React.FC = () => {
     ];
   });
   const [inputMessage, setInputMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Save messages to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
 
-  const { mutate: sendMessage } = useMutation<ApiResponse, Error, string>(
+  // Auto scroll to bottom when messages change
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const { mutate: sendMessage, isLoading } = useMutation<ApiResponse, Error, string>(
     (message: string) => ChatApiService.sendMessage({ message }),
     {
       onSuccess: ({ ok, response, data }) => {
         if (ok) {
-          setMessages(prev => [...prev, { type: 'bot', text: data?.data?.response || 'I apologize, but I couldn\'t process your request.' }]);
+          // Remove loading message and add the actual response
+          setMessages(prev => {
+            const newMessages = prev.filter(msg => !msg.isLoading);
+            return [...newMessages, { type: 'bot', text: data?.data?.response || 'I apologize, but I couldn\'t process your request.' }];
+          });
         } else {
+          // Remove loading message and show error
+          setMessages(prev => prev.filter(msg => !msg.isLoading));
           NotificationService.error(response?.message || 'Failed to get response');
         }
       },
       onError: (error) => {
+        // Remove loading message and show error
+        setMessages(prev => prev.filter(msg => !msg.isLoading));
         NotificationService.error('Failed to send message');
         console.error('Error sending message:', error);
       }
@@ -58,6 +77,9 @@ const ChatBot: React.FC = () => {
 
     // Add user message
     setMessages(prev => [...prev, { type: 'user', text: inputMessage }]);
+
+    // Add loading message
+    setMessages(prev => [...prev, { type: 'bot', text: '', isLoading: true }]);
 
     // Send message to API
     sendMessage(inputMessage);
@@ -79,13 +101,13 @@ const ChatBot: React.FC = () => {
 
       {/* Chat Container */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-6 w-96 h-[500px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden">
+        <div className="fixed bottom-24 right-16 w-96 h-[500px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden">
           {/* Background Image Container */}
           <div className="absolute inset-0">
             <img 
               src={robot_contact_us} 
               alt="Robot Background" 
-              className="w-full h-full object-cover opacity-10"
+              className="w-full h-full object-cover opacity-30"
             />
           </div>
       
@@ -118,10 +140,19 @@ const ChatBot: React.FC = () => {
                         : 'bg-white/90 backdrop-blur-sm text-gray-800 shadow-sm'
                     }`}
                   >
-                    {message.text}
+                    {message.isLoading ? (
+                      <div className="flex space-x-2">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      </div>
+                    ) : (
+                      message.text
+                    )}
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Chat Input - Fixed at bottom */}
@@ -134,10 +165,12 @@ const ChatBot: React.FC = () => {
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Type your message..."
                   className="flex-1 p-2 border rounded-lg focus:outline-none focus:border-[#A855F7] bg-white"
+                  disabled={isLoading}
                 />
                 <button
                   onClick={handleSendMessage}
-                  className="bg-[#0B0D18] text-white p-2 rounded-lg hover:bg-[#9333EA] transition-colors"
+                  className="bg-[#0B0D18] text-white p-2 rounded-lg hover:bg-[#9333EA] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

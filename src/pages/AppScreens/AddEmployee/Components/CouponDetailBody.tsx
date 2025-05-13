@@ -44,7 +44,7 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                 {/* Personal Information Section */}
                 <Col span={24}>
                     <motion.h3
-                        className="text-lg font-semibold mb-2"
+                        className="text-lg font-semibold mb-2 text-dark-main dark:text-white"
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
@@ -74,9 +74,9 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                 </Col>
 
                 {/* Employment Details Section */}
-                <Col span={24} className="mt-4">
+                <Col span={24}>
                     <motion.h3
-                        className="text-lg font-semibold mb-2"
+                        className="text-lg font-semibold mb-2 text-dark-main dark:text-white"
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
@@ -117,7 +117,7 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
                     <>
                         <Col span={24} className="mt-4">
                             <motion.h3
-                                className="text-lg font-semibold mb-2"
+                                className="text-lg font-semibold mb-2 text-dark-main dark:text-white"
                                 variants={containerVariants}
                                 initial="hidden"
                                 animate="visible"
@@ -167,19 +167,19 @@ export default function EmployeeDetailBody({ data = null }: { data: any }) {
 }
 
 const Label = ({ title }: { title: string }) => {
-    return <p className="text-#717171 text-xs font-[400] mb-2">{title}</p>;
+    return <p className="text-[#717171] dark:text-gray-400 text-xs font-[400] mb-2">{title}</p>;
 };
 
 const Value = ({ value }: { value: string }) => {
-    return <p className="text-dark-main text-[14px] font-[400] break-words">{value}</p>;
+    return <p className="text-dark-main dark:text-white text-[14px] font-[400] break-words">{value}</p>;
 };
 
 const StatusPill = ({ verified, text }: { verified: boolean, text: string }) => {
     return (
         <span className={`px-2 py-1 rounded text-xs ${
             verified 
-                ? "bg-green-100 text-green-800" 
-                : "bg-gray-100 text-gray-800"
+                ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200" 
+                : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
         }`}>
             {text}: {verified ? "Verified" : "Not Verified"}
         </span>

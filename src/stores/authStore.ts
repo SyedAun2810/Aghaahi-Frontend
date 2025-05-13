@@ -25,9 +25,11 @@ type StoreState = {
 };
 
 type StoreAction = {
-  setUserAuthentication: (data: any) => void;
+  setUserAuthentication: (payload: any) => void;
   removeUserAuthentication: () => void;
-  updateUserData: (data: any) => void;
+  updateUserData: (payload: any) => void;
+  toggleSidebar: () => void;
+  toggleTheme: () => void;
 }; 
 
 const initialState: any = {
@@ -55,9 +57,7 @@ const useAuthStore = create<StoreState & StoreAction>()(
           isOwner: payload?.employee?.role.name === 'Owner',
           userData: payload?.employee,
           company: payload?.company,
-          // chatToken: payload?.chatToken,
-          // refreshToken: payload?.refreshToken,
-          // userData: payload.user,
+          isDark: payload?.isDark ?? false,
         })),
       removeUserAuthentication: () =>
         set(() => ({
@@ -66,6 +66,18 @@ const useAuthStore = create<StoreState & StoreAction>()(
       updateUserData: (payload: any) => set(() => ({ userData: payload })),
       toggleSidebar: () =>
         set((state) => ({ showSidebar: !state.showSidebar })),
+      toggleTheme: () => {
+        set((state) => {
+          const newIsDark = !state.isDark;
+          // Update the DOM class
+          if (newIsDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          return { isDark: newIsDark };
+        });
+      },
     }),
     {
       name: PERSIST_STORE,

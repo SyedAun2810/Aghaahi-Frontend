@@ -30,7 +30,7 @@ const EmployeeView = () => {
                 selectedPage={1}
                 reactFiltersRender={() => (
                     <div>
-                        <h1 className="font-[500] text-xxl text-dark-main border-bottom h-[56px]">
+                        <h1 className="font-[500] text-xxl text-dark-main border-bottom h-[56px] dark:text-white">
                             Company Employees
                         </h1>
                     </div>

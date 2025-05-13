@@ -187,7 +187,7 @@ const AddEmployee = () => {
                         {/* Status */}
                         <Col xs={24} sm={24} md={24}>
                             <Form.Item name="status" valuePropName="checked">
-                                <Checkbox>Employee Status Active?</Checkbox>
+                                <Checkbox className=" dark:text-white">Employee Status Active?</Checkbox>
                             </Form.Item>
                         </Col>
 

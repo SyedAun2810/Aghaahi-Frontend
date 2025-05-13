@@ -119,6 +119,8 @@ export const API_CONFIG_URLS = {
     SCHEMA: `${databaseValidator}/schema`,
     TABLES: `${databaseValidator}/tables`,
     CONVERSATION: `${chat}/conversation`,
+    VERIFY_DB_CONNECTION: `${databaseValidator}/verify-connection`,
+    ADD_DB_CONNECTION: `${databaseValidator}/add-connection`,
   },
 };
 
