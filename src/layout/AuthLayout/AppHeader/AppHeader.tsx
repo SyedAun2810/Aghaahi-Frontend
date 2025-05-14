@@ -33,6 +33,11 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
             key: 'graphLibrary',
             label: 'Graph Library',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_GRAPH)
+        },
+        {
+            key: 'dataGrid',
+            label: 'Query Tables',
+            onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.DATA_GRID)
         }
     ];
 

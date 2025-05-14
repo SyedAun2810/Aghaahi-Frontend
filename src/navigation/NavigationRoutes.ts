@@ -46,5 +46,6 @@ export const NavigationRoutes = {
     UPDATE_EMPLOYEE:"/employee",
     EMPLOYEE: "/employee",
     ROLE_MANAGEMENT:"/role-management",
+    DATA_GRID: "/data-grid",
   },
 };

@@ -118,9 +118,14 @@ export const API_CONFIG_URLS = {
     VERIFY: `${databaseValidator}/verify`,
     SCHEMA: `${databaseValidator}/schema`,
     TABLES: `${databaseValidator}/tables`,
+    TABLES_WITH_COLUMNS: `${databaseValidator}/tables-with-columns`,
     CONVERSATION: `${chat}/conversation`,
     VERIFY_DB_CONNECTION: `${databaseValidator}/verify-connection`,
     ADD_DB_CONNECTION: `${databaseValidator}/add-connection`,
+    HISTORY: `${databaseValidator}/editor/history`,
+    SQL_QUERY: `${databaseValidator}/editor/sql-query`,
+    DATA: `${databaseValidator}/editor/data`,
+    DATA_AND_SQL_QUERY: `${databaseValidator}/editor/data-and-sql-query`,
   },
 };
 

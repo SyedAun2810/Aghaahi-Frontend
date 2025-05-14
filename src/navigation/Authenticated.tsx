@@ -5,6 +5,7 @@ import AgaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
 import EmployeeView from "@Pages/AppScreens/EmployeeListing";
 import PromptChat from "@Pages/AppScreens/PromptChat";
 import RequestManagement from "@Pages/AppScreens/RequestManagement";
+import DataGridView from "@Pages/AppScreens/DataGrid";
 import useAuthStore from "@Store/authStore";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -186,6 +187,11 @@ const DashboardRoutes = [
         title: "ContactUs",
         path: NavigationRoutes.AUTH_ROUTES.CONTACT_US,
         component: <ContactUs />
+    },
+    {
+        title: "DataGrid",
+        path: NavigationRoutes.DASHBOARD_ROUTES.DATA_GRID,
+        component: <DataGridView />
     }
 ];
 

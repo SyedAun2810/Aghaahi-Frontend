@@ -43,9 +43,14 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
         return () => clearInterval(interval); // Cleanup on unmount
     }, [count]);
 
+    // Format the display count
+    const formattedCount = Number.isInteger(displayCount) 
+        ? displayCount 
+        : displayCount.toFixed(2);
+
     return (
         <motion.div
-            className={`bg-white dark:bg-[#2D2D2D] rounded-[8px] px-[20px] ${fromLibrary ? "h-[200px] w-[400px]" : ""} ${className} transition-all duration-300 hover:scale-105`} // Add hover animation
+            className={`bg-white dark:bg-[#2D2D2D] rounded-[8px] px-[20px] ${fromLibrary ? "h-[200px] w-[400px]" : ""} ${className} transition-all duration-300`} // Remove hover animation
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }} 
@@ -57,7 +62,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
                         {title}
                     </p>
                     <h1 className="text-[#202224] dark:text-[#E0E0E0] font-[500]">
-                        {showDollar && "$"}{displayCount} {/* Conditionally show dollar */}
+                        {(!Number.isInteger(displayCount) || showDollar) && "$"}{formattedCount}
                     </h1>
                 </Space>
                 <div className="dark:text-[#E0E0E0]">{icon && icon}</div>

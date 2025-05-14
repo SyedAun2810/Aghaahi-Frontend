@@ -16,7 +16,7 @@ interface ChatFooterProps {
     isEmptyChat: boolean;
 }
 
-const useTypingEffect = (text: string, speed: number) => {
+export const useTypingEffect = (text: string, speed: number) => {
     const [displayText, setDisplayText] = useState("");
     const [isTypingComplete, setIsTypingComplete] = useState(false);
 
@@ -89,7 +89,7 @@ const ChatFooter: React.FC<ChatFooterProps> = ({ form, localMessage, setLocalMes
 
     return (
         <>
-            <div className={`w-full bg-white dark:bg-[#212121] flex items-center justify-center px-52 ${isEmptyChat ? "h-[100%] pb-64" : "h-[100px] pt-10"}`}>
+            <div className={`w-full bg-white dark:bg-[#212121] flex items-center justify-center px-52 ${isEmptyChat ? "h-[100%] pb-20" : "h-[100px] pt-10"}`}>
                 <Form
                     onFinish={(values) => {
                         handleFormSubmit(values);

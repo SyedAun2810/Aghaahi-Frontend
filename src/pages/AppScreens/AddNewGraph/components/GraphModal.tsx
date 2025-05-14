@@ -14,6 +14,7 @@ import { Console } from "console";
 import { dummyChartConfig } from "@Components/Graphs/LineChart";
 import { s } from "framer-motion/dist/types.d-DDSxwf0n";
 import { queryKeys } from "@Constants/queryKeys";
+import { queryClient } from "@Api/Client";
 
 
 interface GraphModalProps {
@@ -66,6 +67,7 @@ const GraphModal: React.FC<GraphModalProps> = ({
     const { mutate: generateGraph, isLoading: isGeneratingGraph } = useGenerateGraph((data: any) => {
 
         //console.log("Graph Data:", data); // Log the
+        queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getLayout] });
         setGeneratedGraphData(data); // Save backend data
         setIsGraphGenerated(true); // Set graph as generated
     });
