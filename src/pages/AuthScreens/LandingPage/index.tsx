@@ -19,11 +19,46 @@ import { NavigationRoutes } from "@Navigation/NavigationRoutes";
 import Header from "../Header";
 
 const faqs = [
-    { id: 1, question: 'What is Agaahi?', answer: 'Wonderchat is a chatbot platform designed to simplify customer interactions.' },
-    { id: 2, question: 'Does it support all languages?', answer: 'Yes, Agaahi supports multiple languages to help global users.' },
-    { id: 3, question: 'Do I need to know code to use Agaahi?', answer: 'No coding skills are required to set up and use Agaahi.' },
-    { id: 4, question: 'Will I be able to embed the chatbot into my website?', answer: 'Yes, you can easily embed the chatbot into any website.' },
-    { id: 5, question: 'Can multiple team members in my organization manage my chatbots?', answer: 'Yes, you can invite team members to collaborate.' },
+    { 
+        id: 1, 
+        question: 'What is Agaahi, and who is it for?', 
+        answer: 'Agaahi is an AI-powered data querying and insight-generation platform that allows users to interact with structured relational databases (like MySQL) using natural language. It also allows user to build custom dashboards without any technical knowledge. It\'s built for organizations seeking to democratize data access—empowering business users, analysts, and decision-makers to retrieve insights without needing technical skills or SQL knowledge.' 
+    },
+    { 
+        id: 2, 
+        question: 'Do I need technical expertise to use Agaahi?', 
+        answer: 'Not at all. Agaahi was built with the non-technical user in mind. Anyone can type questions in everyday language, and the system will interpret, generate, and execute SQL queries automatically. There\'s no need to understand databases, write code, or learn new tools.' 
+    },
+    { 
+        id: 3, 
+        question: 'Can I use Agaahi with different types of databases?', 
+        answer: 'The current version of Agaahi is optimized for relational databases like MySQL. However, its modular design makes it extensible to support other databases such as PostgreSQL and even NoSQL systems like MongoDB in future iterations.' 
+    },
+    { 
+        id: 4, 
+        question: 'How can I create dashboards using Agaahi?', 
+        answer: 'Agaahi allows users to build dashboards effortlessly through natural language interactions. Users can select a chart type and enter prompt about the data that they wish to visualize ("Show me monthly sales for the last year") and Agaahi will add to the dashboard. Users can drag and adjust the positions of the charts being displayed and save changes for future reference. The dashboard interface supports multiple widgets—charts, tables, and summaries—allowing users to curate a live, interactive view of key business metrics. All dashboards are role-aware, meaning users only see data they\'re authorized to access. With no coding needed and fully customizable layouts, dashboards in Agaahi make monitoring insights simple, even for non-technical users.' 
+    },
+    { 
+        id: 5, 
+        question: 'Can Agaahi generate reports and in chat-visualizations?', 
+        answer: 'Yes. Agaahi automatically transforms your query results into clear, structured reports. It also supports visualization of data using dynamic charts and graphs, user can say "Show above results in a graph" and it will generate a graph within chat if the data is conceptually viable for a graph. It can be customized and downloaded, making communication of insights more effective.' 
+    },
+    { 
+        id: 6, 
+        question: 'What are the pricing plans for Agaahi?', 
+        answer: 'Yes we offer a 7-days free trail for businesses to get started and get an idea of how beneficial Agaahi is for their business. After that there are multiple subscription plans for users to choose from, you can view them here.' 
+    },
+    { 
+        id: 7, 
+        question: 'Can multiple team members collaborate using Agaahi?', 
+        answer: 'Absolutely. Agaahi supports multi-user environments, allowing organizations to onboard different users—owners, admins, data analysts, and engineers—with specific permissions. The organization admin manages internal users, while a super-admin panel oversees company-wide onboarding.' 
+    },
+    { 
+        id: 8, 
+        question: 'How does Agaahi ensure the data shared is secure?', 
+        answer: 'Agaahi enforces Role-Based Access Control (RBAC), meaning users can only access data relevant to their role. Each organization defines custom roles and table-level permissions during setup, ensuring sensitive data is only accessible to authorized personnel. Other than that you can view our privacy policy here.' 
+    }
 ];
 
 const LandingPage = () => {

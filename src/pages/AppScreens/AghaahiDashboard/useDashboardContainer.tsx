@@ -5,28 +5,24 @@ import { API_CONFIG_URLS } from "@Constants/config";
 import { queryKeys } from "@Constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 
-export const useRenderGeneratedGraph = (generatedGraphData: any) => {
-
-    generatedGraphData = {};
-    // graphs = [];
+export const useRenderGeneratedGraph = () => {
     const { data: layoutData, isFetching: isFetchingLayout } = useLayout();
     const { data: graphDataFromBackend, isFetching: isFetchingGraphData } = useDashboardGraphData();
     const { graphs } = GraphConst();
 
-    const renderGeneratedGraph = (generatedGraphData: any) => {
+    const renderGeneratedGraph = React.useCallback((generatedGraphData: any) => {
+        if (!generatedGraphData) return null;
+        
         let graphId = parseInt(generatedGraphData?.chart?.chart_id);
         const yAxisRaw = generatedGraphData?.chart?.y_axis;
         const metaData = JSON.parse(generatedGraphData?.chart?.meta_info || '{}');
 
-       const yAxisKeys = yAxisRaw ? JSON.parse(yAxisRaw) : [];
-        // return null;
-        if (!generatedGraphData) return null;
-        //console.log("Generated Graph Data:", generatedGraphData);
-        const graphEntry = graphs.find((g) => g.id === graphId); // Find the graph by ID
-        if (!graphEntry) return <p>Graph not found</p>; // Handle invalid ID
+        const yAxisKeys = yAxisRaw ? JSON.parse(yAxisRaw) : [];
+        
+        const graphEntry = graphs.find((g) => g.id === graphId);
+        if (!graphEntry) return <p>Graph not found</p>;
 
         const GraphComponent = graphEntry?.Component;
-        //console.log(GraphComponent);
         let title = metaData?.meta_info?.title;
         let props: any = {};
 
@@ -42,29 +38,13 @@ export const useRenderGeneratedGraph = (generatedGraphData: any) => {
 
             let config = yAxisKeys.map((item) => ({
                 dataKey: item,
-                stroke: strokeColors[Math.floor(Math.random() * strokeColors.length)], // Select a random color for each item
+                stroke: strokeColors[Math.floor(Math.random() * strokeColors.length)],
             }));
             chartConfig.data = generatedGraphData?.data.map((item) => ({
                 ...item,
-                name: !isNaN(Date.parse(item[xaxisKey])) // Check if the string can be parsed as a valid date
-                    ? new Date(item[xaxisKey]).toISOString().split("T")[0] // Extract only the date part
-                    : item[xaxisKey], // Keep it as is if not a valid date string
-            }));
-
-            chartConfig.config = config;
-            props.chartConfig = chartConfig;
-        } else if (graphId === 2) {
-            const chartConfig: any = {};
-            let xaxisKey = generatedGraphData?.xAxisKey;
-
-            let config = yAxisKeys.map((item) => ({
-                dataKey: item,
-            }));
-            chartConfig.data = generatedGraphData?.data.map((item) => ({
-                ...item,
-                name: !isNaN(Date.parse(item[xaxisKey])) // Check if the string can be parsed as a valid date
-                    ? new Date(item[xaxisKey]).toISOString().split("T")[0] // Extract only the date part
-                    : item[xaxisKey], // Keep it as is if not a valid date string
+                name: !isNaN(Date.parse(item[xaxisKey]))
+                    ? new Date(item[xaxisKey]).toISOString().split("T")[0]
+                    : item[xaxisKey],
             }));
 
             chartConfig.config = config;
@@ -76,18 +56,17 @@ export const useRenderGeneratedGraph = (generatedGraphData: any) => {
             let config = { dataKey: yAxisKeys[0] };
             chartConfig.data = generatedGraphData?.data.map((item) => ({
                 ...item,
-                name: !isNaN(Date.parse(item[xaxisKey])) // Check if the string can be parsed as a valid date
-                    ? new Date(item[xaxisKey]).toISOString().split("T")[0] // Extract only the date part
-                    : item[xaxisKey], // Keep it as is if not a valid date string
+                name: !isNaN(Date.parse(item[xaxisKey]))
+                    ? new Date(item[xaxisKey]).toISOString().split("T")[0]
+                    : item[xaxisKey],
             }));
 
             chartConfig.config = config;
             props.chartConfig = chartConfig;
         }
 
-        //console.log(props);
-        return React.cloneElement(GraphComponent, { ...props }); // Pass backend data as props
-    };
+        return React.cloneElement(GraphComponent, { ...props });
+    }, [graphs]);
 
     return {
         renderGeneratedGraph,
@@ -97,48 +76,6 @@ export const useRenderGeneratedGraph = (generatedGraphData: any) => {
         isFetchingGraphData
     };
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const useLayout = () => {
     return useQuery([queryKeys.dashboard.getLayout], async () => {
@@ -178,6 +115,9 @@ export const useDashboardGraphData = () => {
             return data?.data;
         }
         throw new Error("Failed to fetch dashboard graph data");
+    }, {
+        staleTime: 30000, // Keep data fresh for 30 seconds
+        cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 };
 

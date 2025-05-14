@@ -7,7 +7,7 @@ import styles from "./index.module.scss";
 export default function AuthLayout() {
     const location = useLocation();
 
-    if (location.pathname === "/home" ||  location.pathname === "/contact-us" || location.pathname === "/privacy-policy" || location.pathname === "/pricing") {
+    if (location.pathname === "/home" ||  location.pathname === "/contact-us" || location.pathname === "/privacy-policy" || location.pathname === "/pricing" || location.pathname === "/privacy-policy" || location.pathname === "/about-us" || location.pathname === "/faq") {
         return <Outlet />;
     }
 
@@ -32,7 +32,7 @@ export default function AuthLayout() {
                         </div>
                     </div>
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white">
+                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white ">
                     <Outlet />
                 </Col>
             </Row>

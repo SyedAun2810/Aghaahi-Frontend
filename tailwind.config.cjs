@@ -1,5 +1,6 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -44,11 +45,9 @@ module.exports = {
         xl: '1.25rem',
         xxl: '1.5rem',
         heading: '2rem',
-         
-    },
+      },
     },
   },
- 
   plugins: [],
   corePlugins: {
     preflight: false,

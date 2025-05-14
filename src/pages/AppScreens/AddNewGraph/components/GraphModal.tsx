@@ -14,6 +14,7 @@ import { Console } from "console";
 import { dummyChartConfig } from "@Components/Graphs/LineChart";
 import { s } from "framer-motion/dist/types.d-DDSxwf0n";
 import { queryKeys } from "@Constants/queryKeys";
+import { queryClient } from "@Api/Client";
 
 
 interface GraphModalProps {
@@ -66,6 +67,7 @@ const GraphModal: React.FC<GraphModalProps> = ({
     const { mutate: generateGraph, isLoading: isGeneratingGraph } = useGenerateGraph((data: any) => {
 
         //console.log("Graph Data:", data); // Log the
+        queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getLayout] });
         setGeneratedGraphData(data); // Save backend data
         setIsGraphGenerated(true); // Set graph as generated
     });
@@ -235,23 +237,23 @@ const GraphModal: React.FC<GraphModalProps> = ({
 
     return (
         <Modal
-            title={graph ? `${graph.name} ` : ""}
+            title={graph ? <span className="text-gray-900 dark:text-white text-2xl font-bold ">{graph.name}</span> : ""}
             open={isOpen}
-            onCancel={handleClose} // Use the updated handleClose function
+            onCancel={handleClose}
             footer={null}
-            width={2000}
+            width={1000}
         >
             {isGraphGenerated ? (
                 <div className="text-center">
-                    <div className="h-[800px] mb-4 flex justify-center items-center mt-12">
-                        {renderGeneratedGraph()} {/* Render the dynamic graph */}
+                    <div className="h-[400px] mb-4 flex justify-center items-center mt-12">
+                        {renderGeneratedGraph()}
                     </div>
                     <div className="flex gap-4 mt-8 justify-center">
                         <CustomButton
                             title="Yes, Add to Dashboard"
                             onClick={handleAddToDashboard}
                             className="text-base w-[45%]"
-                            isLoading={isSavingChart} // Show loading state
+                            isLoading={isSavingChart}
                         />
                         <CustomButton
                             title="Cancel"
@@ -262,15 +264,12 @@ const GraphModal: React.FC<GraphModalProps> = ({
                     </div>
                 </div>
             ) : (
-                // Default modal content
                 graph && (
                     <>
-                        <h3 className="mb-4 text-center">{graph.category}</h3>
-                        <img
-                            src={graph.image}
-                            alt={graph.name}
-                            className="w-full h-72 object-contain mb-4"
-                        />
+                        <h2 className="mb-4 text-center text-gray-900 dark:text-white mt-6">{graph.category}</h2>
+                        <div className="h-[400px] mb-4 flex justify-center items-center">
+                            {graph.Component}
+                        </div>
 
                         <Input
                             label="Prompt"

@@ -1,10 +1,11 @@
 import _ from "lodash";
-import { Dropdown, Menu } from "antd";
+import { Dropdown, Menu, message } from "antd";
 import "react-resizable/css/styles.css";
 import "react-grid-layout/css/styles.css";
-import { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState, useEffect, useCallback } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import AnalyticsCard from "@Components/AnalyticsCard/AnalyticsCard";
 import ThreeDotsIcon from "@Assets/icons/threedots.svg";
 import GraphModal from "../AddNewGraph/components/GraphModal";
@@ -24,6 +25,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import ApiService from "@Services/ApiService";
 import { API_CONFIG_URLS } from "@Constants/config";
 import { useDashboardGraphData, useRenderGeneratedGraph } from "./useDashboardContainer";
+import { queryClient } from "@Api/Client";
+import { queryKeys } from "@Constants/queryKeys";
 
 interface Props {
     domElements: any[];
@@ -72,6 +75,32 @@ const defaultLayouts = {
     ],
 };
 
+interface GraphData {
+    chart_id: number;
+    type: string;
+    title?: string;
+    count?: number;
+    icon?: React.ReactNode;
+    showDollar?: boolean;
+    chart?: {
+        meta_info?: string;
+        y_axis?: string;
+    };
+    data?: any[];
+}
+
+interface LayoutItem {
+    w: number;
+    h: number;
+    x: number;
+    y: number;
+    i: string;
+    static: boolean;
+    minW: number;
+    minH: number;
+    chart_id: number;
+}
+
 const graphData = [
     { id: "0", type: "analyticsCard", title: "Completed Orders", count: 20000, icon: <CompleteOrderIcon /> },
     { id: "1", type: "analyticsCard", title: "Pending Orders", count: 5000, icon: <PendingOrdersIcon /> },
@@ -92,49 +121,79 @@ const graphData = [
 
 const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph();
+    const location = useLocation();
 
-    const [layouts, setLayouts] = useState(); // Use layoutData or defaultLayouts
+    const [layouts, setLayouts] = useState<{ lg: LayoutItem[] }>({ lg: [] });
+    const [latestLayoutChanges, setLatestLayoutChanges] = useState<{ lg: LayoutItem[] } | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedGraph, setSelectedGraph] = useState(null);
-    const [isEditMode, setIsEditMode] = useState(false); // Track edit mode3
+    const [selectedGraph, setSelectedGraph] = useState<GraphData | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isLayoutChanging, setIsLayoutChanging] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { })
+    const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { });
 
     useEffect(() => {
-        if (layoutData) {
-            console.log("Original Layout Data:", layoutData); // Log the original layoutData
+        if (location.pathname === '/dashboard') {
+            queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getLayout] });
+            queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getGraphData] });
+        }
+    }, [location.pathname]);
 
-            // Transform layoutData to match the expected structure
+    useEffect(() => {
+        if (layoutData && layoutData.lg && layoutData.lg.length > 0) {
             const transformedLayouts = {
-                lg: layoutData.lg.map((item: any) => ({
+                lg: layoutData.lg.map((item: any, index: number) => ({
                     w: item.width,
                     h: item.height,
                     x: item.position_x,
                     y: item.position_y,
-                    i: item.grid_i.toString(), // Ensure `i` is a string
+                    i: index.toString(),
                     static: item.is_static,
-                    minW: 4, // Add minimum width
-                    minH: 3, // Add minimum height
+                    minW: 4,
+                    minH: 3,
+                    chart_id: item.chart_id,
                 })),
             };
-
-            console.log("Transformed Layouts:", transformedLayouts); // Log the transformed layouts
-
-            setLayouts(transformedLayouts); // Set the transformed layouts
+            setLayouts(transformedLayouts);
         }
     }, [layoutData]);
 
-    const handleLayoutChange = (layout: any, allLayouts: any) => {
+    const handleLayoutChange = useCallback((layout: any, allLayouts: any) => {
         if (isEditMode) {
-            setLayouts({ lg: allLayouts.lg }); // Update layouts state for `lg` only
+            setIsLayoutChanging(true);
+
+            // Create a new layout that preserves chart_id
+            const updatedLayouts = {
+                lg: layout.map((item: any) => {
+                    // Find the original layout item to get the chart_id
+                    const originalItem = layouts.lg.find((orig: LayoutItem) => orig.i === item.i);
+                    return {
+                        ...item,
+                        chart_id: originalItem?.chart_id || 0,
+                        minW: 4,
+                        minH: 3,
+                        static: false
+                    };
+                })
+            };
+
+            setLatestLayoutChanges(updatedLayouts);
+            setLayouts(updatedLayouts);
         }
-    };
+    }, [isEditMode, layouts]);
 
     const handleDelete = (id: string) => {
         if (isEditMode) {
-            setLayouts((prevLayouts) => ({
-                lg: prevLayouts.lg.filter((item) => item.i !== id),
-            }));
+            const updatedLayouts = {
+                lg: layouts.lg.filter((item: LayoutItem) => item.i !== id),
+            };
+            setLayouts(updatedLayouts);
+            handleSaveChanges(updatedLayouts);
+            // Wait for state update to complete before saving changes
+            // setTimeout(() => {
+            //     handleSaveChanges();
+            // }, 1000);
         }
     };
 
@@ -145,12 +204,22 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
         }
     };
 
-    const handleSaveChanges = () => {
-        const payload = mapLayoutsToApiFormat(layouts);
-        console.log("Payload to be sent to API:", payload);
-        updateLayout({laoyouts:payload}) // Log the payload
-        setIsEditMode(false); // Exit edit mode
-    };
+    const handleSaveChanges = useCallback((updatedLayouts: any) => {
+        let payload = null;
+        if (updatedLayouts) {
+            payload = mapLayoutsToApiFormat(updatedLayouts);
+        } else {
+            payload = mapLayoutsToApiFormat(layouts);
+        }
+
+        if (payload) {
+            updateLayout({ layouts: payload });
+        }
+
+        setIsEditMode(false);
+        setIsLayoutChanging(false);
+        setLatestLayoutChanges(null);
+    }, [latestLayoutChanges, layouts, updateLayout]);
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
@@ -158,40 +227,57 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
             window.removeEventListener("keydown", handleKeyPress);
         };
     }, [layouts, isEditMode]);
-
+    console.log("main layouts", layouts);
     const mapLayoutsToApiFormat = (layouts: any) => {
-        if (layouts?.lg?.length > 0 && layoutData?.lg?.length > 0 && layouts?.lg[0].i != 200) {
-            console.log({ layouts });
-            return layouts.lg.map((layoutItem: any) => {
-                const matchingLayout = layoutData?.lg.find((dataItem: any) => dataItem.grid_i == layoutItem.i);
-                return {
-                    id: matchingLayout?.id,
-                    breakpoint: "lg",
-                    width: layoutItem.w,
-                    height: layoutItem.h,
-                    position_x: layoutItem.x,
-                    position_y: layoutItem.y,
-                    is_static: layoutItem.static,
-                    grid_i: matchingLayout.grid_i,
-                    employee_id: matchingLayout?.employee_id || 0,
-                    chart_id: matchingLayout?.chart_id || 0,
-                    chart: {
-                        id: matchingLayout?.chart?.id || 0,
-                        x_axis: matchingLayout?.chart?.x_axis || "",
-                        y_axis: matchingLayout?.chart?.y_axis || "",
-                        sql_query: matchingLayout?.chart?.sql_query || "",
-                        meta_info: matchingLayout?.chart?.meta_info || "",
-                        chart_id: matchingLayout?.chart?.chart_id || 0,
-                    },
-                };
-            });
+
+        console.log("layouts", layouts);
+        if (!layouts?.lg?.length) {
+            return []
         }
+
+        if (!layoutData?.lg?.length || layouts?.lg[0].i === 200) {
+            return null;
+        }
+
+        // Create a map for faster lookups
+        const layoutDataMap = new Map(
+            layoutData.lg.map((item: any) => [item.chart_id, item])
+        );
+
+        return layouts.lg.map((layoutItem: LayoutItem) => {
+            const matchingLayout = layoutDataMap.get(layoutItem.chart_id);
+            if (!matchingLayout) {
+                return null;
+            }
+
+            return {
+                id: matchingLayout.id,
+                breakpoint: "lg",
+                width: layoutItem.w,
+                height: layoutItem.h,
+                position_x: layoutItem.x,
+                position_y: layoutItem.y,
+                is_static: layoutItem.static,
+                grid_i: matchingLayout.grid_i,
+                employee_id: matchingLayout.employee_id || 0,
+                chart_id: matchingLayout.chart_id || 0,
+                chart: {
+                    id: matchingLayout.chart?.id || 0,
+                    x_axis: matchingLayout.chart?.x_axis || "",
+                    y_axis: matchingLayout.chart?.y_axis || "",
+                    sql_query: matchingLayout.chart?.sql_query || "",
+                    meta_info: matchingLayout.chart?.meta_info || "",
+                    chart_id: matchingLayout.chart?.chart_id || 0,
+                },
+            };
+        }).filter(Boolean); // Remove null entries
     };
 
-    const generateDOM = () =>
-        (layoutData && graphDataFromBackend ? layoutData?.lg : defaultLayouts.lg).map((layoutItem) => {
-            const graph = graphDataFromBackend?.find((g) => g.chart_id === layoutItem.chart_id);
+    const generateDOM = useCallback(() => {
+        return (layouts.lg || []).map((layoutItem: LayoutItem) => {
+            const graph = graphDataFromBackend?.find((g: GraphData) => g.chart_id === layoutItem.chart_id);
             const metaData = JSON.parse(graph?.chart?.meta_info || '{}');
+
             return (
                 <div
                     key={layoutItem.i}
@@ -199,7 +285,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                         gridColumn: `span ${layoutItem.w}`,
                         gridRow: `span ${layoutItem.h}`,
                     }}
-                    className="rounded-lg shadow-md "
+                    className="rounded-lg shadow-md"
                 >
                     {isEditMode && (
                         <Dropdown
@@ -208,7 +294,10 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                                     <Menu.Item key="delete" onClick={() => handleDelete(layoutItem.i)}>
                                         Delete Graph
                                     </Menu.Item>
-                                    <Menu.Item key="edit" onClick={() => setSelectedGraph(graph)}>
+                                    <Menu.Item key="edit" onClick={() => {
+                                        message.info('Edit Graph feature is under development');
+                                        setSelectedGraph(graph || null);
+                                    }}>
                                         Edit Graph
                                     </Menu.Item>
                                 </Menu>
@@ -230,8 +319,8 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                         <div className={`dragMe h-full bg-white ${metaData.chart_id === 11 ? "" : "py-12"}`}>
                             {graph.type === "analyticsCard" ? (
                                 <AnalyticsCard
-                                    title={graph.title}
-                                    count={graph.count}
+                                    title={graph.title || ""}
+                                    count={graph.count || 0}
                                     icon={graph.icon}
                                     showDollar={graph.showDollar}
                                     className="bg-white rounded"
@@ -246,6 +335,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                 </div>
             );
         });
+    }, [layouts, graphDataFromBackend, isEditMode, renderGeneratedGraph]);
 
     return (
         <>
@@ -279,7 +369,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                 </button>
                 <ResponsiveReactGridLayout
                     {...props}
-                    layouts={{ lg: layouts?.lg || [] }}
+                    layouts={{ lg: layouts.lg }}
                     onLayoutChange={handleLayoutChange}
                     isDroppable={isEditMode}
                     isDraggable={isEditMode}

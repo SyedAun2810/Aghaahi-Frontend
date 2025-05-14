@@ -13,6 +13,8 @@ export const NavigationRoutes = {
     CONTACT_US : "/contact-us",
     PRIVACY_POLICY : "/privacy-policy",
     PRICING : "/pricing",
+    ABOUT_US: "/about-us",
+    FAQ: "/faq",
   },
   DASHBOARD_ROUTES: {
     DASHBOARD: "/dashboard",
@@ -44,5 +46,6 @@ export const NavigationRoutes = {
     UPDATE_EMPLOYEE:"/employee",
     EMPLOYEE: "/employee",
     ROLE_MANAGEMENT:"/role-management",
+    DATA_GRID: "/data-grid",
   },
 };

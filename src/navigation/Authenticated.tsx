@@ -5,6 +5,7 @@ import AgaahiDashboard from "@Pages/AppScreens/AghaahiDashboard";
 import EmployeeView from "@Pages/AppScreens/EmployeeListing";
 import PromptChat from "@Pages/AppScreens/PromptChat";
 import RequestManagement from "@Pages/AppScreens/RequestManagement";
+import DataGridView from "@Pages/AppScreens/DataGrid";
 import useAuthStore from "@Store/authStore";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -16,7 +17,10 @@ import {
 import { NavigationRoutes } from "./NavigationRoutes";
 import ViewEmployeeDetails from "@Pages/AppScreens/AddEmployee/EmployeeDetails/ViewEmployeeDetails";
 import RoleManagement from "@Pages/AppScreens/RoleManagement";
-
+import AboutUs from "@Pages/AuthScreens/AboutUs";
+import PrivacyPolicy from "@Pages/AuthScreens/PrivacyPolicy";
+import FAQ from "@Pages/AuthScreens/FAQ";
+import ContactUs from "@Pages/AuthScreens/ContactUs";
 const DashboardRoutes = [
     // {
     //     title: "Dashboard",
@@ -163,6 +167,31 @@ const DashboardRoutes = [
         title: "EditProfile",
         path: NavigationRoutes.DASHBOARD_ROUTES.EDIT_PROFILE,
         component: <EditProfile />
+    },
+    {
+        title: "AboutUs",
+        path: NavigationRoutes.AUTH_ROUTES.ABOUT_US,
+        component: <AboutUs />
+    },
+    {
+        title: "PrivacyPolicy",
+        path: NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY,
+        component: <PrivacyPolicy />
+    },
+    {
+        title: "FAQ",
+        path: NavigationRoutes.AUTH_ROUTES.FAQ,
+        component: <FAQ />
+    },
+    {
+        title: "ContactUs",
+        path: NavigationRoutes.AUTH_ROUTES.CONTACT_US,
+        component: <ContactUs />
+    },
+    {
+        title: "DataGrid",
+        path: NavigationRoutes.DASHBOARD_ROUTES.DATA_GRID,
+        component: <DataGridView />
     }
 ];
 
