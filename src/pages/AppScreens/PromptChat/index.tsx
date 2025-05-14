@@ -20,14 +20,14 @@ const PromptChat = () => {
     const [listingData, setListingData] = useState<any[]>([]); // Create state for listingData
     const [lastCnoversationId, setLastConversationId] = useState<any>(); // Create state for listingData
     const [paramId, setParamId] = useState<any>(); // Create state for listingData
-    console.log("The route is here", route);
+    //console.log("The route is here", route);
 
     const last = route[route.length - 1];
 
     // const {id} = /^\d+$/.test(last) ? parseInt(last) : null;
-    const {id} = useParams();
+    const { id } = useParams();
 
-    console.log(id);     // let { id } = useParams();
+    //console.log(id);     // let { id } = useParams();
     const [isEmptyChat, setIsEmptyChat] = useState<boolean>();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,7 +50,7 @@ const PromptChat = () => {
             // If id is null, update it with the conversation ID from the response
             if (!id && data.data.response.conversation_id) {
                 const newId = data.data.response.conversation_id;
-                console.log("Setting new conversation ID:", newId);
+                //console.log("Setting new conversation ID:", newId);
                 window.history.replaceState(null, "", `/prompt-chat/${newId}`);
                 setParamId(newId); // Update the paramId state
             }
@@ -61,6 +61,7 @@ const PromptChat = () => {
                 ...listingData[listingData.length - 1], // Get the last item
                 response: data.data.response.response,
                 format: data.data.response.format,
+                base64_image: data.data.response.base64_image,
                 // conversation_id : data?.data?.response?.conversation_id, // Replace loader with actual response
                 isLoading: false, // Remove the loader
                 isTyping: true
@@ -94,7 +95,7 @@ const PromptChat = () => {
 
         // Add a temporary ChatContent with a loader    
         const tempId = listingData.length;
-        console.log(" The id is here ", tempId);
+        //console.log(" The id is here ", tempId);
         const tempObject = {
             id: tempId,
             conversation_id: id,
@@ -102,13 +103,13 @@ const PromptChat = () => {
             response: null, // No response yet
             isLoading: true, // Show loader
         };
-        console.log(" The temp is here ", tempObject);
+        //console.log(" The temp is here ", tempObject);
 
         setListingData((prev) => [...prev, tempObject]); // Add temporary ChatContent
         scrollToBottom(); // Scroll to the bottom
 
         setPayload(payload.message);
-        console.log("Payload", payload);
+        //console.log("Payload", payload);
         sendPromptMutate(payload); // Trigger the mutation
     }
 
@@ -117,7 +118,7 @@ const PromptChat = () => {
     const { data: conversationListing, isFetching } = useConversationListing(id);
 
     useEffect(() => {
-        console.log("Conversation Listing:", conversationListing);
+        //console.log("Conversation Listing:", conversationListing);
         if (conversationListing) {
             setListingData(conversationListing?.data?.chat_history || []);
         }
@@ -155,23 +156,25 @@ const PromptChat = () => {
     }, [id]);
 
     return (
-        <div className="h-[100%] bg-white rounded-[12px] overflow-hidden pt-2">
+        <div className="relative h-[100%] bg-white dark:bg-[#212121] rounded-[12px] overflow-hidden pt-2">
+            <img
+                src={Logo}
+                alt="Watermark Logo"
+                className="absolute opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 pointer-events-none select-none"
+            />
             {isFetching ? (
                 // Skeleton Loader
-                <div className="h-[85%] bg-white overflow-y-auto  pl-48 pr-60 ">
+                <div className="h-[85%] bg-white dark:bg-[#212121] overflow-y-auto pl-48 pr-60">
                     {[...Array(6)].map((_, index) => (
                         <div
                             key={index}
-                            className={`p-4 animate-pulse rounded-lg my-8 ${index % 2 === 0 ? "text-left" : "text-right"
-                                }`}
+                            className={`p-4 animate-pulse rounded-lg my-8 ${index % 2 === 0 ? "text-left" : "text-right"}`}
                         >
                             <div
-                                className={`h-8 bg-gray-300 rounded ${index % 2 === 0 ? "w-3/4 ml-0" : "w-3/4 ml-auto"
-                                    } mb-2`}
+                                className={`h-8 bg-gray-300 dark:bg-gray-700 rounded ${index % 2 === 0 ? "w-3/4 ml-0" : "w-3/4 ml-auto"} mb-2`}
                             ></div>
                             <div
-                                className={`h-8 bg-gray-300 rounded ${index % 2 === 0 ? "w-1/2 ml-0" : "w-1/2 ml-auto"
-                                    }`}
+                                className={`h-8 bg-gray-300 dark:bg-gray-700 rounded ${index % 2 === 0 ? "w-1/2 ml-0" : "w-1/2 ml-auto"}`}
                             ></div>
                         </div>
                     ))}
@@ -179,7 +182,7 @@ const PromptChat = () => {
             ) : (
                 // Chat Listing
                 listingData?.length > 0 && (
-                    <div className="h-[82%] bg-white overflow-y-auto" ref={containerRef}>
+                    <div className="h-[82%] bg-white dark:bg-[#212121] overflow-y-auto" ref={containerRef}>
                         {listingData.map((item: any, index: number) => (
                             <ChatContent
                                 key={index}
@@ -190,7 +193,6 @@ const PromptChat = () => {
                     </div>
                 )
             )}
-
             <ChatFooter
                 form={form}
                 setLocalMessage={setLocalMessage}
@@ -246,26 +248,34 @@ function ChatContent({
         }
     }, [chatData.response, chatData.isTyping, typingComplete]);
 
+    const sanitizeHTML = (html: string) => {
+        // Remove JSX comments
+        return html.replace(/{\/\*[\s\S]*?\*\/}/g, '');
+    };
+
+    console.log("chatData", chatData);
+
     return (
-        <div className="p-4 bg-white px-48 my-2">
+        <div className="p-4 bg-white dark:bg-[#212121] px-48 my-2">
             <UserPrompt
                 isExpanded={isExpanded}
                 toggleExpand={toggleExpand}
                 content={chatData.user_prompt}
+                response={chatData.response}
             />
 
             {isLoading ? (
                 <div className="p-4 animate-pulse rounded-lg my-8 text-left">
-                    <div className="h-8 bg-gray-300 rounded w-3/4 ml-0 mb-2"></div>
-                    <div className="h-8 bg-gray-300 rounded w-1/2 ml-0"></div>
+                    <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-3/4 ml-0 mb-2"></div>
+                    <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/2 ml-0"></div>
                 </div>
             ) : chatData.format === "graph" ? (
-                <div className="flex " >
+                <div className="flex">
                     <div className="mt-2">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
-                    <div className="bg-gray-100 p-8 rounded-xl shadow-md">
-                        <   div className="text-lg" dangerouslySetInnerHTML={{ __html: typedResponse }} />
+                    <div className="bg-gray-100 dark:bg-[#303030] p-8 rounded-xl shadow-md">
+                        <div className="text-lg dark:text-white" dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
                         <img
                             className="h-[400px] w-auto"
                             src={`data:image/jpeg;base64,${chatData.base64_image}`}
@@ -278,17 +288,17 @@ function ChatContent({
                     <div className="mt-2">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
-                    <div className="">
+                    <div className="dark:text-white">
                         {typingComplete ? (
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: chatData.response
-                                        ? convertClassNameToClass(chatData.response)
+                                        ? sanitizeHTML(convertClassNameToClass(chatData.response))
                                         : "<p>No response available</p>",
                                 }}
                             />
                         ) : (
-                            <div dangerouslySetInnerHTML={{ __html: typedResponse }} />
+                            <div dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
                         )}
                     </div>
                 </div>
@@ -298,11 +308,10 @@ function ChatContent({
                 <div className="pl-16 flex mt-2 space-x-4">
                     <LikeOutlined
                         className="text-green-500 text-xl cursor-pointer hover:text-green-600"
-                        onClick={() => console.log("Liked response:", chatData.response)}
+                        onClick={() => {}}
                     />
                     <DislikeOutlined
                         className="text-red-500 text-xl cursor-pointer hover:text-red-600"
-                        onClick={() => console.log("Disliked response:", chatData.response)}
                     />
                     <CopyOutlined
                         className="text-blue-500 text-xl cursor-pointer hover:text-blue-600"
@@ -311,9 +320,8 @@ function ChatContent({
                                 console.error("No response available to copy.");
                                 return;
                             }
-                            const textContent = extractTextFromHTML(chatData.response); // Extract plain text
-                            navigator.clipboard.writeText(textContent); // Copy plain text
-                            console.log("Copied response:", textContent);
+                            const textContent = extractTextFromHTML(chatData.response);
+                            navigator.clipboard.writeText(textContent);
                         }}
                     />
                     <SoundOutlined
@@ -328,7 +336,6 @@ function ChatContent({
                             }
                             const utterance = new SpeechSynthesisUtterance(textContent);
                             window.speechSynthesis.speak(utterance);
-                            console.log("Reading aloud:", textContent);
                         }}
                     />
                 </div>
@@ -349,18 +356,18 @@ function UserPrompt({
     isExpanded,
     toggleExpand,
     content,
-    response, // Add response as a prop
+    response,
 }: {
     isExpanded: boolean;
     toggleExpand: () => void;
     content: string;
-    response: string; // Add response type
+    response: string;
 }) {
     return (
         <div className="mb-2">
             <div className="flex justify-end">
-                <Flex className="mb-8 bg-gray-100 py-4 px-6 rounded-3xl max-w-3xl">
-                    <div className="whitespace-pre-wrap break-words break-all">
+                <Flex className="mb-8 bg-gray-100 dark:bg-gray-800 py-4 px-6 rounded-3xl max-w-3xl">
+                    <div className="whitespace-pre-wrap break-words break-all dark:text-white">
                         {content}
                     </div>
                 </Flex>
@@ -372,9 +379,7 @@ function UserPrompt({
                                 console.error("No response available to copy.");
                                 return;
                             }
-                            const textContent = extractTextFromHTML(response); // Extract plain text
-                            navigator.clipboard.writeText(textContent); // Copy plain text
-                            console.log("Copied response:", textContent);
+                            navigator.clipboard.writeText(content);
                         }}
                     />
                 </div>
@@ -386,7 +391,7 @@ function UserPrompt({
 export const useSendPrompt = ({ onSuccess, onVerificationFail }: any) => {
     return useMutation(
         async (payload: any) => {
-            console.log(payload, "Payload in useSendPrompt function");
+            //console.log(payload, "Payload in useSendPrompt function");
             const response = await sendPrompt(payload); // Await the API call
             return response; // Return the response
         },
@@ -409,7 +414,7 @@ function convertClassNameToClass(htmlString: string): string {
 }
 
 async function sendPrompt(payload: any) {
-    console.log(payload, "Payload in sendPrompt function");
+    //console.log(payload, "Payload in sendPrompt function");
     const response = await ApiService.post(
         `${API_CONFIG_URLS.Chatbot.ASK}`, payload
     );
@@ -421,7 +426,7 @@ const useConversationListing = (id: any) => {
     return useQuery(
         [queryKeys.chat.conversation, id],
         async () => {
-            console.log("Fetching conversation listing for ID:", id);
+            //console.log("Fetching conversation listing for ID:", id);
             const { ok, data } = await GetConversationListing(id);
             if (ok) {
                 return data;
@@ -432,13 +437,16 @@ const useConversationListing = (id: any) => {
             enabled: !!id, // Only run the query if `id` is defined
             staleTime: 0, // Ensure the data is always fresh
             cacheTime: 0, // Disable caching to always fetch fresh data
+            refetchOnWindowFocus: false, // Disable refetching on window focus
+            refetchOnMount: false, // Disable refetching on component mount
+            refetchOnReconnect: false // Disable refetching on reconnection
         }
     );
 };
 
 async function GetConversationListing(id: any) {
     if (!id) {
-        console.log("GetConversationListing: ID is undefined, returning default response.");
+        //console.log("GetConversationListing: ID is undefined, returning default response.");
         return { ok: true, data: { chat_history: [] } }; // Return an empty chat history
     }
     const response = await ApiService.get(`${API_CONFIG_URLS.Chatbot.HISTORY}/${id}`);

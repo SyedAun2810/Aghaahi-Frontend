@@ -20,15 +20,15 @@ const ConnectionString = () => {
     const location = useLocation();
     const { companyId } = location.state || {};
 
-    console.log("companyId", companyId);
-    console.log("companyId", companyId);
-    console.log("companyId", companyId);
-    console.log("companyId", companyId);
-    console.log("companyId", companyId);
-    console.log("companyId", companyId);
+    //console.log("companyId", companyId);
+    //console.log("companyId", companyId);
+    //console.log("companyId", companyId);
+    //console.log("companyId", companyId);
+    //console.log("companyId", companyId);
+    //console.log("companyId", companyId);
     
     const verifyConnection = useVerifyConnection(() => {
-        console.log("companyId", companyId);
+        //console.log("companyId", companyId);
         setIsVerified(true);
         setLoading(false);
     });

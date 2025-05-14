@@ -33,7 +33,7 @@ const usePlaceHandler = (form: any) => {
         if (place?.address_components?.length) {
             const address_cmp = place.address_components;
             const streetStateCountry = {};
-            console.log(address_cmp, "addresss");
+            //console.log(address_cmp, "addresss");
             const completeAddress: CompleteAddressTypes = {
                 city: "",
                 state: "",

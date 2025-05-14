@@ -37,7 +37,8 @@ const OrderListing = () => {
                 pagination={{
                     total: orderListingData?.pagination?.totalCount
                 }}
-                onChange={() => console.log("OnChange")}
+                onChange={() => {}}
+                    //console.log("OnChange")}
                 totalCount={orderListingData?.pagination?.totalCount}
                 onPaginate={(page) => {
                     pageClickHandler(page);

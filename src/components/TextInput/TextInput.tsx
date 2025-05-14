@@ -8,8 +8,8 @@ type TextInputProps = {
     placeholder?: string;
     disabled?: boolean;
     value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: React.FocusEventHandler<HTMLInputElement>;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     name?: string;
     isPassword?: boolean;
     rightIcon?: ReactNode;
@@ -34,7 +34,7 @@ const Input: React.FC<TextInputProps> = ({
     ...rest
 }) => {
     const [focus, setFocus] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClick = () => {
@@ -43,7 +43,7 @@ const Input: React.FC<TextInputProps> = ({
         }
     };
 
-    const togglePasswordVisibility = useCallback((e) => {
+    const togglePasswordVisibility = useCallback(() => {
         setShowPassword((prevState) => !prevState);
     }, []);
 
@@ -60,32 +60,31 @@ const Input: React.FC<TextInputProps> = ({
             <div className="flex flex-col flex-grow mr-4 max-w-full">
                 <label className={`${styles["custom-label"]} `}>{label}</label>
                 {type === "textarea" ? (
-    <textarea
-        disabled={disabled}
-        onChange={onChange}
-        placeholder={placeholder}
-        value={value}
-        className={`${styles["custom-input"]}`} // Add new styles for textarea
-        ref={inputRef}
-        name={name}
-        maxLength={maxLength}
-        {...rest}
-    />
-) : (
-    <input
-        disabled={disabled}
-        onChange={onChange}
-        placeholder={placeholder}
-        value={value}
-        className={`${styles["custom-input"]}`}
-        ref={inputRef}
-        name={name}
-        type={isPassword && !showPassword ? "password" : type}
-        maxLength={maxLength}
-        {...rest}
-    />
-)}
-
+                    <textarea
+                        disabled={disabled}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        value={value}
+                        className={`${styles["custom-input"]}`}
+                        ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+                        name={name}
+                        maxLength={maxLength}
+                        {...rest}
+                    />
+                ) : (
+                    <input
+                        disabled={disabled}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        value={value}
+                        className={`${styles["custom-input"]}`}
+                        ref={inputRef as React.RefObject<HTMLInputElement>}
+                        name={name}
+                        type={isPassword && !showPassword ? "password" : type}
+                        maxLength={maxLength}
+                        {...rest}
+                    />
+                )}
             </div>
             {isPassword && (
                 <div

@@ -1,5 +1,5 @@
-import { AxiosRequestConfig } from "axios";
-import { CancelToken, create } from "apisauce";
+import axios, { AxiosRequestConfig } from "axios";
+import * as Apisauce from "apisauce"; // ✅ Fix: namespace import
 
 import useAuthStore from "@Store/authStore";
 import NotificationService from "@Services/NotificationService";
@@ -8,10 +8,12 @@ import LocalStorageService from "./LocalStorageService";
 import { AuthApiService } from "@Api/auth-service";
 
 const UNAUTHORIZED_MSG = "You are unauthorized.";
-export let requestCancelOngoing = CancelToken.source();
+export let requestCancelOngoing = Apisauce.CancelToken.source(); // ✅ Updated usage
+
+const LOGIN_URL = "login";
 
 export const apiService = {
-  apiSauceInstance: create({
+  apiSauceInstance: Apisauce.create({
     baseURL: import.meta.env.VITE_APP_API_URL,
   }),
   post,
@@ -19,19 +21,19 @@ export const apiService = {
   put,
   patch,
   remove,
-  handleResponse: handleResponse,
+  postWithoutHandleResponse,
+  handleResponse,
 };
 
 const apiServiceUnAuthorized = {
-  apiSauceInstance: create({
+  apiSauceInstance: Apisauce.create({
     baseURL: import.meta.env.VITE_APP_API_URL,
+    axiosInstance: axios,
   }),
   getUnAuthorized,
   postUnAuthorized,
-  handleResponse: handleResponse,
+  handleResponse,
 };
-
-const LOGIN_URL = "login";
 
 async function get(
   url: string,
@@ -67,6 +69,15 @@ async function post(url: string, data?: any, config?: AxiosRequestConfig) {
   return apiService.handleResponse(response);
 }
 
+async function postWithoutHandleResponse(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+) {
+  const response = await apiService.apiSauceInstance.post(url, data, config);
+  return response;
+}
+
 async function put(url: string, data?: any, config?: any) {
   const response = await apiService.apiSauceInstance.put(url, data, config);
   return apiService.handleResponse(response);
@@ -93,27 +104,29 @@ async function handleResponse(response: any) {
       errorCode: response.data?.code,
     },
   };
+
   const data = {
     data: response?.data?.data ?? response?.data,
     pagination: response?.data?.metadata ?? response?.metadata,
-    // pagination: response?.data?.pagination ?? response?.pagination,
   };
 
   if (response.status === 401) {
-    // Refresh access token
     const { refreshToken, setUserAuthentication, removeUserAuthentication } =
       useAuthStore.getState();
+
     try {
       const response = await AuthApiService.refreshAccessToken({
         refreshToken,
       });
-      if(response.status === 400){
+
+      if (response.status === 400) {
         NotificationService.error(UNAUTHORIZED_MSG);
         setTimeout(() => {
           removeUserAuthentication();
           utilService.redirectTo(LOGIN_URL);
-        }, 1000)
+        }, 1000);
       }
+
       setUserAuthentication(response?.data?.data);
     } catch (error) {
       console.error(error);
@@ -121,7 +134,6 @@ async function handleResponse(response: any) {
       utilService.redirectTo(LOGIN_URL);
     }
 
-    // Clear local storage
     LocalStorageService.clear();
 
     return {
@@ -129,12 +141,14 @@ async function handleResponse(response: any) {
       data: !utilService.isEmpty(data) ? data : null,
     };
   }
+
   if (response.status === 500) {
     return {
       ...mutatedResponse,
       data: !utilService.isEmpty(data) ? data : null,
     };
   }
+
   if (response.ok) {
     return { ...mutatedResponse, data };
   } else {
@@ -148,12 +162,13 @@ async function handleResponse(response: any) {
 apiService.apiSauceInstance.addRequestTransform(
   (request: AxiosRequestConfig) => {
     const { accessToken } = useAuthStore.getState();
-
     request.headers = request.headers ?? {};
     request.headers["Authorization"] = `Bearer ${accessToken}`;
 
-    if (Boolean(requestCancelOngoing.token.reason))
-      requestCancelOngoing = CancelToken.source();
+    if (Boolean(requestCancelOngoing.token.reason)) {
+      requestCancelOngoing = Apisauce.CancelToken.source(); // ✅ Fixed
+    }
+
     request.cancelToken = requestCancelOngoing.token;
   }
 );
@@ -166,6 +181,7 @@ const ApiService: any = {
   remove: apiService.remove,
   getUnAuthorized: apiServiceUnAuthorized.getUnAuthorized,
   postUnAuthorized: apiServiceUnAuthorized.postUnAuthorized,
+  postWithoutHandleResponse: apiService.postWithoutHandleResponse,
 };
 
 export default ApiService;

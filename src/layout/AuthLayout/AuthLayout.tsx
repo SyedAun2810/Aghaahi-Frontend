@@ -10,6 +10,8 @@ import SideBar from "./SideBar";
 import { useUserDetail } from "./UpdateUserQuery";
 // import { makeSocketConnection } from "@Services/socket-service";
 import FullPageLoader from "@Components/FullPageLoader/FullPageLoader";
+import { useAuthLayoutContainer } from "./useAuthLayoutContainer";
+import { CheckRoute, shouldHideHeader } from "@Constants/dashboard.constants";
 
 const { Header, Content } = Layout;
 const AppLayout = () => {
@@ -18,27 +20,27 @@ const AppLayout = () => {
     const onUserDetailsSuccess = (data: any) => {
         updateUserData(data?.data);
     };
-
+    const { route } = useAuthLayoutContainer();
+    let isStatic =shouldHideHeader(route);
     // const { data: userData, isLoading: userDetailsLoading } = useUserDetail(onUserDetailsSuccess);
-
+    let isDashboard = CheckRoute(route);
     return (
         <>
-            <Layout hasSider className={`m-0 min-h-screen h-full`}>
-                <SideBar />
-                <Layout className="body-bg h-[100vh]">
+            <Layout hasSider className={`m-0 min-h-screen h-[100vh] bg-white dark:bg-[#212121]`}>
+                {!isDashboard && <SideBar />}
+                <Layout className="body-bg h-[100vh] bg-white dark:bg-[#212121]">
+                  {!isStatic && (
                     <Header
-                        className="cus-header bg-white flex justify-end h-[8vh]"
+                        className="cus-header bg-white dark:bg-[#212121] flex justify-end h-[8vh] transition-colors duration-200"
                         style={{
                             padding: 0
                         }}
                     >
                         <AppHeader chatUnreadMessagesCount={0} />
                     </Header>
-                    <Content
-                        // style={{
-                        //     padding: "2vh 20px 20px 2vh"
-                        // }}
-                        className="cus-main-content overflow-y-auto h-[85vh] bg-light-bg p-2 "
+                  )}
+                    <Content 
+                        className={`${isStatic ? "" : "p-2"} h-[92vh]  dark:bg-[#212121] transition-colors duration-200 bg-light-bg `}
                     >
                         <React.Suspense fallback={<FullPageLoader />}>
                             <Outlet />

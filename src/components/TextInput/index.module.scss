@@ -9,33 +9,74 @@
   border: 1px solid #E2E2E2;
   opacity: 0px;
   border-radius: 12px;
+  transition: all 0.3s ease;
+
+  :global(.dark) & {
+    background-color: #2D2D2D;
+    border-color: #3D3D3D;
+  }
+}
+
+:global(.dark) {
+  .custom-input {
+    background-color: transparent !important;
+    color: #E0E0E0 !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
 }
 
 .custom-input {
-  background-color: transparent;
+  background-color: transparent !important;
   border: none;
   color: $dark-main;
   font-size: 14px;
+  transition: color 0.3s ease;
+  width: 100%;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+
+  &::placeholder {
+    color: #717171;
+    :global(.dark) & {
+      color: #A0A0A0;
+    }
+  }
 }
+
 .custom-input:focus {
   outline: none;
   border-color: transparent;
+  background-color: transparent !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
+
 .custom-label {
   font-size: em(12);
   color: #717171;
   font-weight: 400;
+  transition: color 0.3s ease;
+
+  :global(.dark) & {
+    color: #A0A0A0;
+  }
 }
 
-.active-input{
-    border-color: $input-border-color;
-    border-width: 3px;
+.active-input {
+  border-color: $input-border-color;
+  border-width: 3px;
+
+  :global(.dark) & {
+    border-color: #5950CB;
+  }
 }
  
 @media (max-width: 1400px) {
   .container {
-    
     padding: 8px 16px 8px 16px;
-    
   }
- }
+}

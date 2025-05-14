@@ -151,7 +151,7 @@ const UserManagement = () => {
                 pagination={{
                     total: 89
                 }}
-                onChange={() => console.log("OnChange")}
+                onChange={() =>{}}
                 totalCount={98}
                 onPaginate={(page) => {
                     

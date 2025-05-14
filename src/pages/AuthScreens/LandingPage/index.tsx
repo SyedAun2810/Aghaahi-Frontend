@@ -10,18 +10,55 @@ import Moiz from "../../../assets/images/Moiz.jpg";
 import Aun from "../../../assets/images/Aun.jpg";
 import Sarah from "../../../assets/images/sarah.jpg";
 import Khushbkaht from "../../../assets/images/khushbakht.jpg";
+import Siraj from "@Assets/images/siraj.png";
 import Stars from "@Assets/icons/stars.svg";
 import Logo from "@Assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import UnAuthenticated from "@Navigation/UnAuthenticated";
 import { NavigationRoutes } from "@Navigation/NavigationRoutes";
+import Header from "../Header";
 
 const faqs = [
-    { id: 1, question: 'What is Agaahi?', answer: 'Wonderchat is a chatbot platform designed to simplify customer interactions.' },
-    { id: 2, question: 'Does it support all languages?', answer: 'Yes, Agaahi supports multiple languages to help global users.' },
-    { id: 3, question: 'Do I need to know code to use Agaahi?', answer: 'No coding skills are required to set up and use Agaahi.' },
-    { id: 4, question: 'Will I be able to embed the chatbot into my website?', answer: 'Yes, you can easily embed the chatbot into any website.' },
-    { id: 5, question: 'Can multiple team members in my organization manage my chatbots?', answer: 'Yes, you can invite team members to collaborate.' },
+    { 
+        id: 1, 
+        question: 'What is Agaahi, and who is it for?', 
+        answer: 'Agaahi is an AI-powered data querying and insight-generation platform that allows users to interact with structured relational databases (like MySQL) using natural language. It also allows user to build custom dashboards without any technical knowledge. It\'s built for organizations seeking to democratize data access—empowering business users, analysts, and decision-makers to retrieve insights without needing technical skills or SQL knowledge.' 
+    },
+    { 
+        id: 2, 
+        question: 'Do I need technical expertise to use Agaahi?', 
+        answer: 'Not at all. Agaahi was built with the non-technical user in mind. Anyone can type questions in everyday language, and the system will interpret, generate, and execute SQL queries automatically. There\'s no need to understand databases, write code, or learn new tools.' 
+    },
+    { 
+        id: 3, 
+        question: 'Can I use Agaahi with different types of databases?', 
+        answer: 'The current version of Agaahi is optimized for relational databases like MySQL. However, its modular design makes it extensible to support other databases such as PostgreSQL and even NoSQL systems like MongoDB in future iterations.' 
+    },
+    { 
+        id: 4, 
+        question: 'How can I create dashboards using Agaahi?', 
+        answer: 'Agaahi allows users to build dashboards effortlessly through natural language interactions. Users can select a chart type and enter prompt about the data that they wish to visualize ("Show me monthly sales for the last year") and Agaahi will add to the dashboard. Users can drag and adjust the positions of the charts being displayed and save changes for future reference. The dashboard interface supports multiple widgets—charts, tables, and summaries—allowing users to curate a live, interactive view of key business metrics. All dashboards are role-aware, meaning users only see data they\'re authorized to access. With no coding needed and fully customizable layouts, dashboards in Agaahi make monitoring insights simple, even for non-technical users.' 
+    },
+    { 
+        id: 5, 
+        question: 'Can Agaahi generate reports and in chat-visualizations?', 
+        answer: 'Yes. Agaahi automatically transforms your query results into clear, structured reports. It also supports visualization of data using dynamic charts and graphs, user can say "Show above results in a graph" and it will generate a graph within chat if the data is conceptually viable for a graph. It can be customized and downloaded, making communication of insights more effective.' 
+    },
+    { 
+        id: 6, 
+        question: 'What are the pricing plans for Agaahi?', 
+        answer: 'Yes we offer a 7-days free trail for businesses to get started and get an idea of how beneficial Agaahi is for their business. After that there are multiple subscription plans for users to choose from, you can view them here.' 
+    },
+    { 
+        id: 7, 
+        question: 'Can multiple team members collaborate using Agaahi?', 
+        answer: 'Absolutely. Agaahi supports multi-user environments, allowing organizations to onboard different users—owners, admins, data analysts, and engineers—with specific permissions. The organization admin manages internal users, while a super-admin panel oversees company-wide onboarding.' 
+    },
+    { 
+        id: 8, 
+        question: 'How does Agaahi ensure the data shared is secure?', 
+        answer: 'Agaahi enforces Role-Based Access Control (RBAC), meaning users can only access data relevant to their role. Each organization defines custom roles and table-level permissions during setup, ensuring sensitive data is only accessible to authorized personnel. Other than that you can view our privacy policy here.' 
+    }
 ];
 
 const LandingPage = () => {
@@ -36,32 +73,8 @@ const LandingPage = () => {
     return (
         <div className="min-h-screen bg-[#0B0D18] text-white">
             {/* Header */}
-            <header className="container mx-auto flex justify-between items-center py-6 px-8">
-                <div className="flex items-center space-x-2">
-                    <img src={Logo} alt=" Agaahi Logo" className="h-16 w-16" />
-                    <div className="text-3xl font-bold tracking-wide"> Agaahi</div> {/* Increased font size and added letter spacing */}
-                </div>
-                <nav className="flex space-x-8">
-                    <a href="#features" className="hover:underline text-[#77798F]" onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRICING) }>Pricing</a>
-                    <a href="#pricing" className="hover:underline text-[#77798F]" onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY) }>Privacy Policy</a>
-                    <a href="#contact" className="hover:underline text-[#77798F]"  onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.CONTACT_US) }>Contact</a>
-                </nav>
-                <div className="flex space-x-4">
-                    <button
-                        className="px-8 py-3 rounded-full text-white bg-[#0B0D18] border-2 border-[#77798F] hover:border-[#ffffff] transition-all duration-300"
-                        onClick={() => window.location.href = "/login"} // Navigate user
-                    >
-                        Sign In
-                    </button>
-                    <button
-                        className="px-8 py-3 rounded-full text-white bg-[#0B0D18] border-2 border-[#6C63FF] shadow-[0_0_10px_2px_rgba(108,99,255,0.8)] hover:shadow-[0_0_15px_4px_rgba(108,99,255,1)] transition-all duration-300"
-                        onClick={() => window.location.href = "/register"} // Navigate user
-                    >
-                        Sign Up
-                    </button>
-                </div>
-            </header>
-
+    
+            <Header/>
             {/* Hero Section */}
             <main
                 className="flex flex-col items-center justify-center text-center py-32 px-8 bg-cover bg-center"
@@ -77,10 +90,10 @@ const LandingPage = () => {
                     Welcome to Agaahi
                 </h2>
                 <h1 className="text-5xl font-bold mb-6">
-                    Instantly build an AI chatbot <br /> with your knowledge base
+                    Transform the way you <br /> analyze your data
                 </h1>
                 <p className="text-lg text-gray-400 mb-8">
-                    Share your site link or upload any PDF file to create a ChatGPT-powered custom chatbot in 5 minutes.
+                    Chat with your database, generate insights, and build dashboards — all in one place.
                 </p>
                 <div className="flex justify-center">
                     <button
@@ -112,15 +125,16 @@ const LandingPage = () => {
                     <div className="relative w-full h-full">
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8">
                             <div className="flex-1">
-                                <h2 className="text-3xl font-bold mb-4">Self-Serve Customer Support</h2>
+                                <h2 className="text-3xl font-bold mb-4">Intelligence That Drives Results</h2>
+
                                 <p className="text-gray-400 mb-6">
-                                    Ever since implementing Agaahi on our site, I've seen up to a 70% reduction of customer support queries in my inbox.
+                                    Agaahi is a game-changer for businesses. By turning complex data into simple conversations, it eliminates bottlenecks and empowers teams to act faster and smarter.
                                 </p>
                                 <div className="flex items-center space-x-4">
-                                    <img src={CustomerImage} alt="Customer Avatar" className="h-20 w-20 rounded-full" />
+                                    <img src={Siraj} alt="Customer Avatar" className="h-20 w-20 rounded-full" />
                                     <div>
-                                        <p className="font-bold">BRYCE CONWAY</p>
-                                        <p className="text-gray-400 text-sm">Founder and CEO of 10xTravel</p>
+                                        <p className="font-bold">Siraj-ul-Haq</p>
+                                        <p className="text-gray-400 text-sm">CEO @ IoMechs</p>
                                     </div>
                                 </div>
                             </div>
@@ -223,101 +237,14 @@ const LandingPage = () => {
             </section>
 
             {/* Team Section */}
-            <section
-                className="py-16 px-4 bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${ColoredImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                }}
-            >
-                <h2 className="text-center text-3xl font-bold text-white mb-12">Meet Our Team</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
-                    {/* Card 1 */}
-                    <div
-                        className="text-white rounded-2xl shadow-lg p-8 relative h-[550px] w-[350px] mx-auto"
-                        style={{
-                            backgroundImage: `url(${cardBg})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            borderTop: "3px solid rgba(108, 99, 255, 0.5)",
-                            borderBottom: "3px solid rgba(108, 99, 255, 0.5)",
-                            boxShadow: "0 0 15px rgba(108, 99, 255, 0.8)",
-                        }}
-                    >
-                        <img src={Sarah} alt="Sarah Sami - Manager & AI Expert" className="h-[350px] w-[300px] rounded-lg mb-4 object-cover" />
-                        <h3 className="text-xl font-bold">Sarah Sami</h3>
-                        <p className="text-gray-400 text-sm">Manager & AI Expert</p>
-                        <p className="text-[#77798F] text-center mt-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-                        </p>
-                    </div>
-                    {/* Card 2 */}
-                    <div
-                        className="text-white rounded-2xl shadow-lg p-8 relative h-[550px] w-[350px] mx-auto"
-                        style={{
-                            backgroundImage: `url(${cardBg})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            borderTop: "3px solid rgba(108, 99, 255, 0.5)",
-                            borderBottom: "3px solid rgba(108, 99, 255, 0.5)",
-                            boxShadow: "0 0 15px rgba(108, 99, 255, 0.8)",
-                        }}
-                    >
-                        <img src={Moiz} alt="Moiz Naveed - Backend Engineer" className="h-[350px] w-[300px] rounded-lg mb-4 object-cover" />
-                        <h3 className="text-xl font-bold">Moiz Naveed</h3>
-                        <p className="text-gray-400 text-sm">Backend Engineer</p>
-                        <p className="text-[#77798F] text-center mt-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-                        </p>
-                    </div>
-                    {/* Card 3 */}
-                    <div
-                        className="text-white rounded-2xl shadow-lg p-8 relative h-[550px] w-[350px] mx-auto"
-                        style={{
-                            backgroundImage: `url(${cardBg})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            borderTop: "3px solid rgba(108, 99, 255, 0.5)",
-                            borderBottom: "3px solid rgba(108, 99, 255, 0.5)",
-                            boxShadow: "0 0 15px rgba(108, 99, 255, 0.8)",
-                        }}
-                    >
-                        <img src={Khushbkaht} alt="Khushbakht Khan - Prompt Engineer & Content Writer" className="h-[350px] w-[300px] rounded-lg mb-4 object-cover" />
-                        <h3 className="text-xl font-bold">Khushbakht Khan</h3>
-                        <p className="text-gray-400 text-sm">Prompt Engineer & Content Writer</p>
-                        <p className="text-[#77798F] text-center mt-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-                        </p>
-                    </div>
-                    {/* Card 4 */}
-                    <div
-                        className="text-white rounded-2xl shadow-lg p-8 relative h-[550px] w-[350px] mx-auto"
-                        style={{
-                            backgroundImage: `url(${cardBg})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            borderTop: "3px solid rgba(108, 99, 255, 0.5)",
-                            borderBottom: "3px solid rgba(108, 99, 255, 0.5)",
-                            boxShadow: "0 0 15px rgba(108, 99, 255, 0.8)",
-                        }}
-                    >
-                        <img src={Aun} alt="Aun Muhammad - Full Stack Engineer" className="h-[350px] w-[300px] rounded-lg mb-4 object-cover" />
-                        <h3 className="text-xl font-bold">Aun Muhammad</h3>
-                        <p className="text-gray-400 text-sm">Full Stack Engineer</p>
-                        <p className="text-[#77798F] text-center mt-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-                        </p>
-                    </div>
-                </div>
-            </section>
+       
 
             <footer style={{ backgroundColor: '#0c0c1d', padding: '1rem 2rem', color: '#999', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                     <div>© 2023  Agaahi Inc. All rights reserved.</div>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
                         <a href="/terms" style={{ color: '#999', textDecoration: 'none' }}>Terms of Service</a>
-                        <a href="/privacy" style={{ color: '#999', textDecoration: 'none' }}  onClick={() =>navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY) }>Privacy Policy</a>
+                        <a href="/privacy" style={{ color: '#999', textDecoration: 'none' }} onClick={() => navigate(NavigationRoutes.AUTH_ROUTES.PRIVACY_POLICY)}>Privacy Policy</a>
                         <a href="/cookies" style={{ color: '#999', textDecoration: 'none' }}>Cookies</a>
                     </div>
                 </div>
@@ -327,3 +254,5 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
+

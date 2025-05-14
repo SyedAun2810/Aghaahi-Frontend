@@ -1,0 +1,19 @@
+@import "../../styles/utils.scss";
+
+.custom-search {
+  .ant-input {
+    &::placeholder {
+      color: #717171;
+    }
+  }
+}
+
+:global(.dark) {
+  .custom-search {
+    .ant-input {
+      &::placeholder {
+        color: white;
+      }
+    }
+  }
+} 

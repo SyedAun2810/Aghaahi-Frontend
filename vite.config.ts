@@ -5,6 +5,7 @@ import svgr from "vite-plugin-svgr";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
+
   return {
     define: {
       __APP_ENV__: env.APP_ENV,
@@ -17,18 +18,20 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       outDir: "build",
-      chunkSizeWarningLimit: 2000, // Increase the chunk size limit to 1500 kB
+      chunkSizeWarningLimit: 2000,
+      sourcemap: true,          // ✅ Enable source maps
+      minify: false,            // ✅ Disable minification for debugging
       rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
-              return "vendor"; // Moves dependencies to a separate chunk
+              return "vendor";
             }
           },
         },
       },
-    }, // ✅ Correctly closed `build` section
-    resolve: { // ✅ Now properly placed outside `build`
+    },
+    resolve: {
       alias: {
         "./runtimeConfig": "./runtimeConfig.browser",
         "@Services": path.resolve(__dirname, "src/services"),

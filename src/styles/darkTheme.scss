@@ -1,0 +1,261 @@
+@import "./utils.scss";
+
+// Dark theme variables
+$dark-bg: #1E1E1E;
+$dark-surface: #2D2D2D;
+$dark-border: #3D3D3D;
+$dark-text: #E0E0E0;
+$dark-text-secondary: #A0A0A0;
+
+// Dark theme styles
+.dark {
+  // Global styles
+  background-color: $dark-bg;
+  color: $dark-text;
+
+  // Rounded Container styles
+  .rounded-container {
+    background-color: $dark-surface !important;
+    border: 1px solid $dark-border !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+
+    .rounded-header {
+      border-bottom: 1px solid $dark-border !important;
+      color: $dark-text !important;
+    }
+
+    .rounded-content {
+      color: $dark-text !important;
+    }
+
+    .rounded-footer {
+      border-top: 1px solid $dark-border !important;
+      color: $dark-text !important;
+    }
+  }
+
+  // Layout components
+  .ant-layout {
+    background-color: $dark-bg;
+  }
+
+  .ant-layout-header {
+    background-color: $dark-surface;
+    border-bottom: 1px solid $dark-border;
+  }
+
+  .ant-layout-sider {
+    background-color: $dark-surface;
+    border-right: 1px solid $dark-border;
+  }
+
+  // Table styles
+  .ant-table {
+    background-color: $dark-bg !important;
+    color: $dark-text !important;
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: $dark-surface !important;
+    color: $dark-text !important;
+    border-bottom: 1px solid $dark-border !important;
+  }
+
+  .ant-table-tbody > tr > td {
+    background-color: $dark-bg !important;
+    color: $dark-text !important;
+    border-bottom: 1px solid $dark-border !important;
+  }
+
+  .ant-table-tbody > tr:hover > td {
+    background-color: $dark-surface !important;
+  }
+
+  // Form elements
+  .ant-input,
+  .ant-input-affix-wrapper {
+    background-color: $dark-surface !important;
+    border-color: $dark-border !important;
+    color: $dark-text !important;
+
+    &:hover,
+    &:focus {
+      border-color: $primary-color !important;
+    }
+  }
+
+  .ant-select-selector {
+    background-color: $dark-surface !important;
+    border-color: $dark-border !important;
+    color: $dark-text !important;
+  }
+
+  .ant-select-dropdown {
+    background-color: $dark-surface !important;
+    border: 1px solid $dark-border !important;
+  }
+
+  .ant-select-item {
+    color: $dark-text !important;
+    &:hover {
+      background-color: $dark-bg !important;
+    }
+  }
+
+  // Buttons
+  .ant-btn {
+    &.ant-btn-default {
+      background-color: $dark-surface !important;
+      border-color: $dark-border !important;
+      color: $dark-text !important;
+
+      &:hover {
+        background-color: darken($dark-surface, 5%) !important;
+        border-color: darken($dark-border, 5%) !important;
+      }
+    }
+  }
+
+  // Cards
+  .ant-card {
+    background-color: $dark-surface !important;
+    border-color: $dark-border !important;
+    color: $dark-text !important;
+  }
+
+  // Modal
+  .ant-modal-content {
+    background-color: $dark-surface !important;
+    border: 1px solid $dark-border !important;
+  }
+
+  .ant-modal-header {
+    background-color: $dark-surface !important;
+    border-bottom: 1px solid $dark-border !important;
+  }
+
+  .ant-modal-title {
+    color: $dark-text !important;
+  }
+
+  // Table pagination
+  .ant-pagination {
+    .ant-pagination-item {
+      background-color: $dark-surface !important;
+      border-color: $dark-border !important;
+      a {
+        color: $dark-text !important;
+      }
+    }
+
+    .ant-pagination-item-active {
+      background-color: $primary-color !important;
+      border-color: $primary-color !important;
+      a {
+        color: white !important;
+      }
+    }
+
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      background-color: $dark-surface !important;
+      border-color: $dark-border !important;
+      .ant-pagination-item-link {
+        color: $dark-text !important;
+      }
+    }
+  }
+
+  // Table selection
+  .ant-table-selection {
+    background-color: $dark-surface !important;
+  }
+
+  // Table filters
+  .ant-table-filter-dropdown {
+    background-color: $dark-surface !important;
+    border: 1px solid $dark-border !important;
+    
+    .ant-dropdown-menu {
+      background-color: $dark-surface !important;
+    }
+
+    .ant-dropdown-menu-item {
+      color: $dark-text !important;
+      &:hover {
+        background-color: $dark-bg !important;
+      }
+    }
+  }
+
+  // Menu items
+  .ant-menu {
+    background-color: $dark-surface !important;
+    color: $dark-text !important;
+
+    .ant-menu-item {
+      color: $dark-text !important;
+      &:hover {
+        background-color: $dark-bg !important;
+      }
+    }
+
+    .ant-menu-item-selected {
+      background-color: $primary-color !important;
+      color: white !important;
+    }
+  }
+
+  // Dropdowns
+  .ant-dropdown-menu {
+    background-color: $dark-surface !important;
+    border: 1px solid $dark-border !important;
+
+    .ant-dropdown-menu-item {
+      color: $dark-text !important;
+      &:hover {
+        background-color: $dark-bg !important;
+      }
+    }
+  }
+
+  // Make dropdown and select arrows white in dark theme
+  .ant-select-arrow,
+  .ant-select-suffix,
+  .ant-select-clear,
+  .ant-select-selection-item-remove,
+  .ant-select-dropdown-arrow,
+  .ant-dropdown-arrow,
+  .ant-select-arrow-icon,
+  .ant-dropdown-trigger,
+  .ant-select-clear-icon,
+  .ant-select-selection-item-remove-icon {
+    color: white !important;
+    svg {
+      color: white !important;
+      path {
+        fill: white !important;
+        stroke: white !important;
+      }
+    }
+  }
+
+  // Scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: $dark-surface;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: $dark-border;
+    border-radius: 4px;
+    
+    &:hover {
+      background: darken($dark-border, 10%);
+    }
+  }
+} 

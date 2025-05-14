@@ -10,7 +10,7 @@ const defaultChartConfig = {
     { name: 'Category 2', uv: 400, pv: 200, amt: 300 },
     { name: 'Category 3', uv: 300, pv: 400, amt: 100 },
   ],
-  bars: [
+  config: [
     { dataKey: 'uv' },
     { dataKey: 'pv' },
   ],
@@ -21,10 +21,10 @@ const BarChartComponent = ({
 }: {
   chartConfig: {
     data: { name: string; [key: string]: number | string }[];
-    bars: { dataKey: string }[];
+    config: { dataKey: string }[];
   };
 }) => {
-  const { data, bars } = chartConfig;
+  const { data, config } = chartConfig;
 
   return (
     <ResponsiveContainer width="100%" height={"100%"}>
@@ -37,7 +37,7 @@ const BarChartComponent = ({
         <YAxis />
         <Tooltip />
         <Legend />
-        {bars.map((barConfig, index) => (
+        {config.map((barConfig, index) => (
           <Bar
             key={index}
             dataKey={barConfig.dataKey}

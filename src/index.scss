@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import "../src/styles/utils.scss";
+@import "../src/styles/darkTheme.scss";
+
 :root {
     --font-family-sans: "Inter", sans-serif;
 }
@@ -324,4 +326,16 @@ body {
 
 .wrapper-container:hover .ant-layout-sider-zero-width-trigger {
     opacity: 1; /* Show on hover */
+}
+
+.ant-btn-primary:disabled {
+  background-color: $primary-color !important;
+  padding: em(8) em(24);
+  height:em(52);
+  border: 1px solid $primary-color;
+  span {
+    color: $secondary-body-color;
+    font-weight: 600;
+  }
+
 }

@@ -9,6 +9,7 @@ const company = "company";
 const employee = "employee";
 const chat = "chat";
 const databaseValidator = "database-validator";
+const dashboard = "dashboard";
 
 export const API_CONFIG_URLS = {
   AUTH: {
@@ -35,9 +36,11 @@ export const API_CONFIG_URLS = {
       UPLOAD_DOCUMENTS:`${documentController}`
   },
   DASHBOARD: {
-    ANALYTICAL_BOX: "/sellers/dashboard/metrics",
-    RECENT_EARNINGS: "/sellers/dashboard/new-orders",
-    RECENT_PAYOUTS: "/sellers/dashboard/recent-payouts"
+    GENERATE_GRAPH: `${dashboard}/generate-chart`,
+    SAVE_GRAPH: `${dashboard}/save-chart`,
+    LAYOUT: `${dashboard}/dashboard-layout`,
+    DASHBOARD_DATA: `${dashboard}/dashboard-data`,
+    UPDATE_LAYOUT: `${dashboard}/dashboard-layout`,
   },
   PRODUCT: {
     ADD_PRODUCT: `/products`,
@@ -109,11 +112,20 @@ export const API_CONFIG_URLS = {
     HISTORY: `${chat}/history`,
     EMPLOYEE_CHAT_HISTORY: `${chat}/employee-history`,
     CONVERSATION: `${chat}/conversation`,
+    PUBLIC_CHAT: `${chat}/public-chat`,
   },
   DatabaseValidator: {
     VERIFY: `${databaseValidator}/verify`,
     SCHEMA: `${databaseValidator}/schema`,
+    TABLES: `${databaseValidator}/tables`,
+    TABLES_WITH_COLUMNS: `${databaseValidator}/tables-with-columns`,
     CONVERSATION: `${chat}/conversation`,
+    VERIFY_DB_CONNECTION: `${databaseValidator}/verify-connection`,
+    ADD_DB_CONNECTION: `${databaseValidator}/add-connection`,
+    HISTORY: `${databaseValidator}/editor/history`,
+    SQL_QUERY: `${databaseValidator}/editor/sql-query`,
+    DATA: `${databaseValidator}/editor/data`,
+    DATA_AND_SQL_QUERY: `${databaseValidator}/editor/data-and-sql-query`,
   },
 };
 
