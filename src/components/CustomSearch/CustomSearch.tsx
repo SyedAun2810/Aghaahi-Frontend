@@ -2,6 +2,7 @@ import { Input } from "antd";
 import React, { ChangeEvent, useState } from "react";
 
 import SearchIcon from "@Assets/icons/searchIcon.svg";
+import "./CustomSearch.scss";
 
 interface CustomSearchProps {
     debounceSearch: (value: string) => void;
@@ -9,7 +10,7 @@ interface CustomSearchProps {
     placeholder?: string;
 }
 
-let timeoutId: number;
+let timeoutId: NodeJS.Timeout;
 const CustomSearch: React.FC<CustomSearchProps> = ({
     debounceSearch,
     className,

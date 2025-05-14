@@ -26,17 +26,26 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
     const dashboardItems: MenuProps['items'] = [
         {
             key: 'dashboard',
-            label: 'Dashboard',
+            label: 'My Dashboard',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.DASHBOARD)
         },
         {
             key: 'graphLibrary',
             label: 'Graph Library',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_GRAPH)
+        }
+    ];
+    
+
+    const chatItems: MenuProps['items'] = [
+        {
+            key: 'promptChat',
+            label: 'Insight Chat',
+            onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT)
         },
         {
             key: 'dataGrid',
-            label: 'Query Tables',
+            label: 'Query Lens',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.DATA_GRID)
         }
     ];
@@ -44,7 +53,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
     const userManagementItems: MenuProps['items'] = [
         {
             key: 'users',
-            label: 'Users',
+            label: 'User List',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.EMPLOYEE_LISTING)
         },
         {
@@ -54,10 +63,11 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
         },
         {
             key: 'roleManagement',
-            label: 'Role Management',
+            label: 'Role & Permissions',
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.ROLE_MANAGEMENT)
         }
     ];
+    
 
     return (
         <Flex align="center" className="w-full justify-between pr-8 bg-white dark:bg-[#212121]">
@@ -73,7 +83,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                         <div className="flex items-center justify-center dark:brightness-0 dark:invert">
                             <DashboardIcon />
                         </div>
-                        <p className="ml-2 mr-4 text-md dark:text-gray-200">Customize Dashboard</p>
+                        <p className="ml-2 mr-4 text-md dark:text-gray-200">Visual Workspace</p>
                     </div>
                 </Dropdown>
 
@@ -81,12 +91,11 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                     <div className="flex items-center justify-center dark:brightness-0 dark:invert">
                         <ChatIcon />
                     </div>
-                    <p
-                        className="mr-4 text-md dark:text-gray-200 ml-2"
-                        onClick={() => navigate(NavigationRoutes.DASHBOARD_ROUTES.PROMPT_CHAT)}
-                    >
-                        Agaahi Chat
-                    </p>
+                    <Dropdown menu={{ items: chatItems }} placement="bottom" arrow overlayClassName="top-[60px] dark:bg-[#212121] dark:text-white [&_.ant-dropdown-arrow]:dark:border-t-[#212121] [&_.ant-dropdown-arrow]:dark:border-l-[#212121]">
+                        <p className="mr-4 text-md dark:text-gray-200 ml-2">
+                            Insight Tools
+                        </p>
+                    </Dropdown>
                 </div>
 
                 <Dropdown menu={{ items: userManagementItems }} placement="bottom" arrow overlayClassName="top-[60px] dark:bg-[#212121] dark:text-white [&_.ant-dropdown-arrow]:dark:border-t-[#212121] [&_.ant-dropdown-arrow]:dark:border-l-[#212121]">
@@ -94,7 +103,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                         <div className="flex items-center justify-center dark:brightness-0 dark:invert">
                             <UserIcon />
                         </div>
-                        <p className="ml-2 mr-4 text-md dark:text-gray-200">Manage Users</p>
+                        <p className="ml-2 mr-4 text-md dark:text-gray-200">Access Control</p>
                     </div>
                 </Dropdown>
 
