@@ -1,6 +1,7 @@
 import React from 'react';
 import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
 import { fillColors } from './graphConst'; // Import color pool
+import utilService from '@Utils/utils.service';
 
 export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
@@ -47,20 +48,18 @@ const RadialBarChartComponent = ({
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={"100%"}>
+    <ResponsiveContainer width="100%" height={"100%"} className={"bg-white dark:bg-[#2D2D2D]"}>
       <RadialBarChart cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={processedData}>
         <RadialBar
-          minAngle={barConfig.minAngle}
-          label={barConfig.label}
           background={barConfig.background}
-          clockWise={barConfig.clockWise}
           dataKey={dataKey}
         />
         <Legend
           iconSize={legendConfig.iconSize}
-          layout={legendConfig.layout}
-          verticalAlign={legendConfig.verticalAlign}
+          layout={legendConfig.layout as any}
+          verticalAlign={legendConfig.verticalAlign as any}
           wrapperStyle={legendConfig.wrapperStyle}
+          formatter={(value) => utilService.formatAndCapitalizeString(value)}
         />
       </RadialBarChart>
     </ResponsiveContainer>

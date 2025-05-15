@@ -1,6 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { fillColors } from './graphConst'; // Import color pool
+import utilService from '@Utils/utils.service';
 
 export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
@@ -41,7 +42,7 @@ const CustomizeLineChart = ({
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend formatter={(value) => utilService.formatAndCapitalizeString(value)} />
         {config.map((lineConfig, index) => (
           <Line
             key={index}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import robot_contact_us from '@Assets/images/robot_contact_us.jpg';
+import Logo from "@Assets/images/logo.png";
 import { ChatApiService } from '../../Api/chat-services';
 import NotificationService from '@Services/NotificationService';
 
@@ -99,23 +99,31 @@ const ChatBot: React.FC = () => {
         </svg>
       </button>
 
+      {/* Connecting Arrow */}
+      {isChatOpen && (
+        <div className="fixed bottom-[72px] right-[72px] w-8 h-16 z-50">
+          <div className="w-0.5 h-full bg-[#0B0D18] mx-auto"></div>
+          <div className="w-4 h-4 border-r-2 border-b-2 border-[#0B0D18] transform rotate-45 translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+      )}
+
       {/* Chat Container */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-16 w-96 h-[500px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden">
+        <div className="fixed bottom-24 right-16 w-96 h-[450px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden bg-white">
           {/* Background Image Container */}
           <div className="absolute inset-0">
             <img 
-              src={robot_contact_us} 
-              alt="Robot Background" 
-              className="w-full h-full object-cover opacity-30"
+              src={Logo} 
+              alt="Agaahi Logo Background" 
+              className="w-full h-full object-contain opacity-40"
             />
           </div>
       
           {/* Content Container */}
-          <div className="relative z-10 flex flex-col h-full">
+          <div className="relative z-10 flex flex-col h-full bg-white/10">
             {/* Chat Header */}
             <div className="bg-[#0B0D18] text-white p-4 rounded-t-lg flex justify-between items-center">
-              <h3 className="font-semibold">Chat with Agaahi Bot</h3>
+              <h3 className="font-semibold">Agaahi Bot</h3>
               <button 
                 onClick={() => setIsChatOpen(false)} 
                 className="p-0 m-0 border-0 bg-transparent hover:opacity-80 transition-opacity"

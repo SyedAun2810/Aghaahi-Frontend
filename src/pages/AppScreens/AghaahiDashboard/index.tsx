@@ -227,7 +227,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
             window.removeEventListener("keydown", handleKeyPress);
         };
     }, [layouts, isEditMode]);
-    console.log("main layouts", layouts);
+
     const mapLayoutsToApiFormat = (layouts: any) => {
 
         console.log("layouts", layouts);
@@ -277,6 +277,11 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
         return (layouts.lg || []).map((layoutItem: LayoutItem) => {
             const graph = graphDataFromBackend?.find((g: GraphData) => g.chart_id === layoutItem.chart_id);
             const metaData = JSON.parse(graph?.chart?.meta_info || '{}');
+            let graphId = parseInt(graph?.chart?.chart_id);
+
+            const metaInfo = metaData?.meta_info;
+            const graphTitle = metaInfo?.title;
+            const graphDescription = metaInfo?.description;
 
             return (
                 <div
@@ -285,7 +290,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                         gridColumn: `span ${layoutItem.w}`,
                         gridRow: `span ${layoutItem.h}`,
                     }}
-                    className="rounded-lg shadow-md"
+                    className="rounded-lg shadow-md bg-white dark:bg-[#2D2D2D]"
                 >
                     {isEditMode && (
                         <Dropdown
@@ -305,29 +310,32 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                             trigger={["hover"]}
                         >
                             <button
-                                className="absolute top-2 right-2 bg-transparent border-none cursor-pointer"
+                                className="absolute top-2 right-2 z-10 bg-transparent border-none cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full p-1"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <ThreeDotsIcon
-                                    height={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
-                                    width={`${Math.min(layoutItem.w, layoutItem.h) * 2}px`}
+                                    height={`${Math.min(layoutItem.w, layoutItem.h) * (graphId == 11 ? 4 : 2)}px`}
+                                    width={`${Math.min(layoutItem.w, layoutItem.h) * (graphId == 11 ? 4 : 2)}px`}
                                 />
                             </button>
                         </Dropdown>
                     )}
+
                     {graph ? (
-                        <div className={`dragMe h-full bg-white ${metaData.chart_id === 11 ? "" : "py-12"}`}>
-                            {graph.type === "analyticsCard" ? (
-                                <AnalyticsCard
-                                    title={graph.title || ""}
-                                    count={graph.count || 0}
-                                    icon={graph.icon}
-                                    showDollar={graph.showDollar}
-                                    className="bg-white rounded"
-                                />
-                            ) : (
-                                renderGeneratedGraph(graph)
+                        <div className={`dragMe h-full bg-white dark:bg-[#2D2D2D] ${metaData.chart_id === 11 ? "" : "pt-12 pb-16"} relative`}>
+                            {graphDescription && metaData.chart_id !== 11 && (
+                                <div className="absolute left-2 top-2">
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 cursor-help border border-gray-300 dark:border-gray-600 rounded px-2 py-0.5 hover:bg-gray-50 dark:hover:bg-gray-700" title={graphDescription}>
+                                        description
+                                    </span>
+                                </div>
                             )}
+                            {graphTitle && graph.type !== "analyticsCard" && metaData.chart_id !== 11 && (
+                                <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-center">
+                                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{graphTitle}</h3>
+                                </div>
+                            )}
+                            {renderGeneratedGraph(graph)}
                         </div>
                     ) : (
                         <ShimmerPlaceholder />
@@ -342,30 +350,35 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
             <style>{shimmerStyles}</style>
             <div className="m-2">
                 <button
-                    className="fixed right-6 bottom-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
+                    className="fixed right-6 bottom-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => {
                         if (isEditMode) {
-                            handleSaveChanges(); // Save changes and log payload
+                            handleSaveChanges(layouts); // Save changes and log payload
                         } else {
                             setIsEditMode(true); // Enter edit mode
                         }
                     }}
+                    disabled={isUpdatingLayout}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
+                        className={`h-6 w-6 ${isUpdatingLayout ? 'animate-spin' : ''}`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                         strokeWidth={2}
                     >
                         {isEditMode ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            isUpdatingLayout ? (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            ) : (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            )
                         ) : (
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                         )}
                     </svg>
-                    {isEditMode ? "Save Changes" : "Enter Edit Mode"}
+                    {isEditMode ? (isUpdatingLayout ? "Saving..." : "Save Changes") : "Enter Edit Mode"}
                 </button>
                 <ResponsiveReactGridLayout
                     {...props}

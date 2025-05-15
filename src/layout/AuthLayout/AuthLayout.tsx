@@ -40,7 +40,7 @@ const AppLayout = () => {
                     </Header>
                   )}
                     <Content 
-                        className={`${isStatic ? "" : "p-2"} h-[92vh]  dark:bg-[#212121] transition-colors duration-200 bg-light-bg `}
+                        className={`${isStatic ? "" : "p-2"} h-[92vh] overflow-y-auto  dark:bg-[#212121] transition-colors duration-200 bg-light-bg `}
                     >
                         <React.Suspense fallback={<FullPageLoader />}>
                             <Outlet />

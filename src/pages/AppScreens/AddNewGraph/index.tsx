@@ -46,13 +46,13 @@ const graphs = [
       ]
     }
   },
-  { 
-    id: 3, 
-    name: "Customize Line Chart", 
-    category: "Line Chart", 
-    Component: <CustomizeLineChart chartConfig={lineChartDefaults} />,
-    defaultData: lineChartDefaults
-  },
+  // { 
+  //   id: 3, 
+  //   name: "Customize Line Chart", 
+  //   category: "Line Chart", 
+  //   Component: <CustomizeLineChart chartConfig={lineChartDefaults} />,
+  //   defaultData: lineChartDefaults
+  // },
   { 
     id: 4, 
     name: "Simple Bar Chart", 

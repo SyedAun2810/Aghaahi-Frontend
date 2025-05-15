@@ -1,6 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { fillColors } from './graphConst'; // Import color pool
+import utilService from '@Utils/utils.service';
 
 export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
@@ -30,7 +31,7 @@ const SimplePieChartComponent = ({
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={"100%"}>
+    <ResponsiveContainer width="100%" height={"100%"} className={"bg-white dark:bg-[#2D2D2D]"}>
       <PieChart>
         <Pie
           data={processedData}
@@ -41,7 +42,7 @@ const SimplePieChartComponent = ({
           label={true} // Static value
         />
         <Tooltip />
-        <Legend />
+        <Legend  />
       </PieChart>
     </ResponsiveContainer>
   );

@@ -436,11 +436,6 @@ const DataGridView = () => {
                             </Col>
                         </Row>
                     </div>
-                    {isLoading && (
-                        <div className="flex justify-center items-center h-32">
-                            <Spin size="default" tip="Loading data..." />
-                        </div>
-                    )}
                     {queryType === "builder" && showQueryBuilder && (
                         <div className="w-full bg-transparent dark:bg-[#303030] rounded-lg shadow-lg p-4 mb-4">
                             <h3 className="text-lg font-semibold mb-2 dark:text-white">Generated Query</h3>
@@ -452,6 +447,11 @@ const DataGridView = () => {
                                 autoSize={{ minRows: 3, maxRows: 6 }}
                                 className="w-full bg-transparent dark:bg-[#303030] dark:text-white"
                             />
+                        </div>
+                    )}
+                    {isLoading && (
+                        <div className="flex justify-center items-center h-32 mt-4">
+                            <Spin size="default" tip="Loading data..." />
                         </div>
                     )}
                     {showTable && !isLoading  && (

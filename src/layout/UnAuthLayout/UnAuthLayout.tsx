@@ -13,7 +13,7 @@ export default function AuthLayout() {
 
     return (
         <div className={`${styles["wrapper-container"]} `}>
-            <Row>
+            <Row className="h-[100vh] overflow-y-auto"> 
                 <Col
                     xs={0}
                     sm={0}
@@ -32,7 +32,7 @@ export default function AuthLayout() {
                         </div>
                     </div>
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white ">
+                <Col xs={24} sm={24} md={12} lg={10} xl={10} xxl={9} className="bg-white h-[92vh] overflow-y-auto ">
                     <Outlet />
                 </Col>
             </Row>

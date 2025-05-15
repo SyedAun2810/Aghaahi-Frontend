@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { fillColors } from './graphConst'; // Import color pool
+import utilService from '@Utils/utils.service';
 
 export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
@@ -39,7 +40,7 @@ const ComposedChartComponent = ({
   scatterConfig?: { dataKey: string };
 }) => {
   return (
-    <ResponsiveContainer width="100%" height={"100%"}>
+    <ResponsiveContainer width="100%" height={"100%"} className={"bg-white dark:bg-[#2D2D2D]"}>
       <ComposedChart
         data={data}
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
@@ -48,7 +49,7 @@ const ComposedChartComponent = ({
         <XAxis dataKey="name" scale="band" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend formatter={(value) => utilService.formatAndCapitalizeString(value)} />
         <Area
           type="monotone"
           dataKey={areaConfig.dataKey}

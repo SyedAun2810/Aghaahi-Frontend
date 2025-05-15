@@ -1,6 +1,7 @@
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { fillColors } from './graphConst'; // Import color pool
+import utilService from '@Utils/utils.service';
 
 export const getRandomColor = (colors: string[]) => colors[Math.floor(Math.random() * colors.length)]; // Utility to get random color
 
@@ -29,7 +30,7 @@ const AreaChartComponent = ({
   //console.log("AreaChart data: ", data); // Log the data for debugging
   //console.log("AreaChart config: ", config); // Log the config for debugging
   return (
-    <ResponsiveContainer width="100%" height={"100%"}>
+    <ResponsiveContainer width="100%" height={"100%"} className={"bg-white dark:bg-[#2D2D2D]"}>
       <AreaChart
         data={data} // Use the passed data
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -38,6 +39,7 @@ const AreaChartComponent = ({
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
+        <Legend formatter={(value) => utilService.formatAndCapitalizeString(value)} />
         {config.map((areaConfig, index) => (
           <Area
             key={index}

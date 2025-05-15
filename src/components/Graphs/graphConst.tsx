@@ -7,6 +7,7 @@ import AreaChartComponent from "./AreaChartComponent";
 import CustomizeBarChartComponent from "./CustomizeShapeBarChart";
 import CustomizeLineChart from "./CustomizeLineChart";
 import SimplePieChartComponent from "./SimplePieChart";
+import RadarChartComponent from "./RadarCharts";
 
 // Centralized arrays of colors for stroke and fill
 export const strokeColors = ['#8884d8', '#82ca9d', '#ffc658', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -176,7 +177,8 @@ function  GraphConst() {
                     { "name": "Student A", "dataKey": "A" },
                     { "name": "Student B", "dataKey": "B" }
                 ]
-            }
+            },
+            Component: <RadarChartComponent  />
         },
         {
             id: 10,
@@ -201,7 +203,7 @@ function  GraphConst() {
             name: "Analytics Card",
             category: "Others",
             image: "graphImages().otherCharts.MetricsCard",
-            Component: <AnalyticsCard/>,
+            Component: <AnalyticsCard fromLibrary={true}/>,
             defaultData: [
                 { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
                 { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },

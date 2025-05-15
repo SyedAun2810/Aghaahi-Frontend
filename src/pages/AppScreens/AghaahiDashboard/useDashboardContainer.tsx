@@ -16,6 +16,7 @@ export const useRenderGeneratedGraph = () => {
         let graphId = parseInt(generatedGraphData?.chart?.chart_id);
         const yAxisRaw = generatedGraphData?.chart?.y_axis;
         const metaData = JSON.parse(generatedGraphData?.chart?.meta_info || '{}');
+        
 
         const yAxisKeys = yAxisRaw ? JSON.parse(yAxisRaw) : [];
         
@@ -32,10 +33,11 @@ export const useRenderGeneratedGraph = () => {
             props.title = title;
             props.count = count;
             props.key = key;
+            props.fromLibrary = false;
         } else if ([1, 3, 4, 5].includes(graphId)) {
             const chartConfig: any = {};
-            let xaxisKey = generatedGraphData?.x_axis?.xAxisKey;
-
+            let xaxisKey = generatedGraphData?.chart?.x_axis;            ;
+            console.log("xaxisKey", xaxisKey);
             let config = yAxisKeys.map((item) => ({
                 dataKey: item,
                 stroke: strokeColors[Math.floor(Math.random() * strokeColors.length)],

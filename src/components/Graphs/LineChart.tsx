@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { getRandomColor } from "./AreaChartComponent";
 import { strokeColors } from "./graphConst";
+import utilService from '@Utils/utils.service';
 
 // Define the LineConfig type
 interface LineConfig {
@@ -49,7 +50,7 @@ const SimpleLineChart = ({
   //console.log("LineChart data: ", data);  
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" className={"bg-white dark:bg-[#2D2D2D]"}>
       <LineChart
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
@@ -58,7 +59,7 @@ const SimpleLineChart = ({
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend formatter={(value) => utilService.formatAndCapitalizeString(value)} />
         {config.map((lineConfig: LineConfig, index: number) => (
           <Line
             key={index}

@@ -228,8 +228,27 @@ const GraphModal: React.FC<GraphModalProps> = ({
 
             chartConfig.config = config;
             props.chartConfig = chartConfig;
-            // console
-            // props = dummyChartConfig;
+        }
+        else if(graphEntry.id === 9) {
+            const chartConfig : any = {};
+            let xaxisKey = generatedGraphData?.xAxisKey;
+
+            // For radar chart, we need to transform the data to have a subject (category) and multiple measures
+            chartConfig.data = generatedGraphData?.data.map((item) => ({
+                subject: item[xaxisKey],
+                ...generatedGraphData.yAxisKeys.reduce((acc: any, key: string) => {
+                    acc[key] = item[key];
+                    return acc;
+                }, {})
+            }));
+
+            // Configure the radar chart with all y-axis keys
+            chartConfig.config = generatedGraphData.yAxisKeys.map((key: string) => ({
+                dataKey: key,
+                stroke: strokeColors[Math.floor(Math.random() * strokeColors.length)]
+            }));
+
+            props.chartConfig = chartConfig;
         }
         //console.log(props)
         return React.cloneElement(GraphComponent, {...props}); // Pass backend data as props
