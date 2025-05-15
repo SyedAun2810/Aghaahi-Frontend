@@ -274,7 +274,7 @@ function ChatContent({
                     <div className="mt-8">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
-                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl shadow-md">
+                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl ">
                         <div className="text-lg dark:text-white" dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
                         {typingComplete && <img
                             className="h-[400px] w-auto animate-fade-in"
@@ -288,7 +288,7 @@ function ChatContent({
                     <div className="mt-8">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
-                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl shadow-md">
+                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl ">
                         <div className="text-lg dark:text-white" dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
                         
                         {/* {typingComplete && (

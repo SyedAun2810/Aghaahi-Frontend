@@ -2,7 +2,7 @@ import { Flex } from "antd";
 
 import { SelectInput } from "@Components/SelectInput";
 import { REVIEWS_STARS_OPTIONS } from "@Constants/app";
-import { DataNotFound } from "@Components/DataNotFound";
+
 import useReviewManagementContainer from "./useReviewManagementContainer";
 
 import ReviewManagementListing from "../Components/ReviewManagementListing";

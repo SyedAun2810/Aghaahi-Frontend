@@ -101,6 +101,28 @@ const RoleManagement = () => {
                         maxTagCount={5}
                         style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}
                         dropdownStyle={{ minWidth: '300px' }}
+                        tagRender={(props) => (
+                            <span
+                                className="bg-[#2D2D2D] text-white border border-[#4D4D4D] px-2 py-1 rounded-md m-1 flex items-center"
+                            >
+                                {props.label}
+                                <span 
+                                    className="ml-2 cursor-pointer hover:text-red-400"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        props.onClose();
+                                    }}
+                                >
+                                    ×
+                                </span>
+                            </span>
+                        )}
+                        popupClassName="dark:bg-[#2D2D2D] [&_.ant-select-item-option-selected]:!bg-[#2D2D2D] [&_.ant-select-item-option-selected]:!text-white [&_.ant-select-item-option-active]:!bg-[#3D3D3D]"
+                        dropdownRender={(menu) => (
+                            <div className="dark:bg-[#2D2D2D] dark:text-white">
+                                {menu}
+                            </div>
+                        )}
                     />
                 </Form.Item>
                 <Form.Item className="flex justify-center mt-8">

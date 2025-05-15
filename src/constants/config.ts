@@ -41,6 +41,8 @@ export const API_CONFIG_URLS = {
     LAYOUT: `${dashboard}/dashboard-layout`,
     DASHBOARD_DATA: `${dashboard}/dashboard-data`,
     UPDATE_LAYOUT: `${dashboard}/dashboard-layout`,
+    DASHBOARD_SHARE: `${dashboard}/dashboard-share`,
+    EMPLOYEES_SHARED_WITH_ME: `${dashboard}/employees-shared-with-me`,
   },
   PRODUCT: {
     ADD_PRODUCT: `/products`,

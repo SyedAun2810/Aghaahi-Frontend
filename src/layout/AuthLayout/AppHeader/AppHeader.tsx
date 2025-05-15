@@ -16,6 +16,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
     const { removeUserAuthentication, isOwner, userData } = useAuthStore();
     const { route } = useAuthLayoutContainer();
     const role = userData?.role?.name;
+    console.log("userData", role);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -35,7 +36,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.ADD_NEW_GRAPH)
         }
     ];
-    
+
 
     const chatItems: MenuProps['items'] = [
         {
@@ -67,7 +68,7 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
             onClick: () => navigate(NavigationRoutes.DASHBOARD_ROUTES.ROLE_MANAGEMENT)
         }
     ];
-    
+
 
     return (
         <Flex align="center" className="w-full justify-between pr-8 bg-white dark:bg-[#212121]">
@@ -98,14 +99,18 @@ const AppHeader = ({ chatUnreadMessagesCount }: { chatUnreadMessagesCount: numbe
                     </Dropdown>
                 </div>
 
-                <Dropdown menu={{ items: userManagementItems }} placement="bottom" arrow overlayClassName="top-[60px] dark:bg-[#212121] dark:text-white [&_.ant-dropdown-arrow]:dark:border-t-[#212121] [&_.ant-dropdown-arrow]:dark:border-l-[#212121]">
-                    <div className="flex items-center justify-center cursor-pointer hover:text-[#5950CB] dark:hover:text-purple-400 transition-colors duration-200">
-                        <div className="flex items-center justify-center dark:brightness-0 dark:invert">
-                            <UserIcon />
-                        </div>
-                        <p className="ml-2 mr-4 text-md dark:text-gray-200">Access Control</p>
-                    </div>
-                </Dropdown>
+                {
+                    role === "Owner" && (
+                        <Dropdown menu={{ items: userManagementItems }} placement="bottom" arrow overlayClassName="top-[60px] dark:bg-[#212121] dark:text-white [&_.ant-dropdown-arrow]:dark:border-t-[#212121] [&_.ant-dropdown-arrow]:dark:border-l-[#212121]">
+                            <div className="flex items-center justify-center cursor-pointer hover:text-[#5950CB] dark:hover:text-purple-400 transition-colors duration-200">
+                                <div className="flex items-center justify-center dark:brightness-0 dark:invert">
+                                    <UserIcon />
+                                </div>
+                                <p className="ml-2 mr-4 text-md dark:text-gray-200">Access Control</p>
+                            </div>
+                        </Dropdown>
+                    )
+                }
 
                 <ProfileDropdown logout={handleLogout} />
             </div>

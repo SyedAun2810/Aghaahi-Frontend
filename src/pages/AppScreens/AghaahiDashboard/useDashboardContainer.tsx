@@ -5,10 +5,12 @@ import { API_CONFIG_URLS } from "@Constants/config";
 import { queryKeys } from "@Constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 
-export const useRenderGeneratedGraph = () => {
-    const { data: layoutData, isFetching: isFetchingLayout } = useLayout();
-    const { data: graphDataFromBackend, isFetching: isFetchingGraphData } = useDashboardGraphData();
+export const useRenderGeneratedGraph = (userId : any) => {
+    const { data: layoutData, isFetching: isFetchingLayout } = useLayout(userId);
+    const { data: graphDataFromBackend, isFetching: isFetchingGraphData } = useDashboardGraphData(userId);
     const { graphs } = GraphConst();
+
+    console.log("userId", userId);
 
     const renderGeneratedGraph = React.useCallback((generatedGraphData: any) => {
         if (!generatedGraphData) return null;
@@ -79,13 +81,10 @@ export const useRenderGeneratedGraph = () => {
     };
 };
 
-export const useLayout = () => {
-    return useQuery([queryKeys.dashboard.getLayout], async () => {
-        const { ok, data } = await getLayout();
+export const useLayout = (userId?: any) => {
+    return useQuery([queryKeys.dashboard.getLayout, userId], async () => {
+        const { ok, data } = await getLayout(userId);
         if (ok) {
-            // Transform the layout data keys
-
-            //console.log("From hook ", data.data)
             const transformedData = data?.data.map((item: any) => ({
                 w: item.width,
                 h: item.height,
@@ -93,11 +92,10 @@ export const useLayout = () => {
                 y: item.position_y,
                 i: item.grid_i.toString(),
                 static: item.is_static,
-                ...item, // Keep the rest of the object keys
+                ...item,
             }));
             const dataToReturn = {
                 lg: transformedData,
-
             }
             return dataToReturn;
         }
@@ -105,25 +103,31 @@ export const useLayout = () => {
     });
 };
 
-async function getLayout() {
-    const response = await ApiService.get(`${API_CONFIG_URLS.DASHBOARD.LAYOUT}`);
+async function getLayout(userId?: any) {
+    const url = userId 
+        ? `${API_CONFIG_URLS.DASHBOARD.LAYOUT}?dashboard_owner_id=${userId}`
+        : API_CONFIG_URLS.DASHBOARD.LAYOUT;
+    const response = await ApiService.get(url);
     return response;
 }
 
-export const useDashboardGraphData = () => {
-    return useQuery([queryKeys.dashboard.getGraphData], async () => {
-        const { ok, data } = await getDashboardGraphData();
+export const useDashboardGraphData = (userId?: any) => {
+    return useQuery([queryKeys.dashboard.getGraphData, userId], async () => {
+        const { ok, data } = await getDashboardGraphData(userId);
         if (ok) {
             return data?.data;
         }
         throw new Error("Failed to fetch dashboard graph data");
     }, {
-        staleTime: 30000, // Keep data fresh for 30 seconds
-        cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
+        staleTime: 30000,
+        cacheTime: 5 * 60 * 1000,
     });
 };
 
-async function getDashboardGraphData() {
-    const response = await ApiService.get(`${API_CONFIG_URLS.DASHBOARD.DASHBOARD_DATA}`);
+async function getDashboardGraphData(userId?: any) {
+    const url = userId 
+        ? `${API_CONFIG_URLS.DASHBOARD.DASHBOARD_DATA}?dashboard_owner_id=${userId}`
+        : API_CONFIG_URLS.DASHBOARD.DASHBOARD_DATA;
+    const response = await ApiService.get(url);
     return response;
 }

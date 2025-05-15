@@ -4,7 +4,7 @@ import { ReviewResponseType } from "@Utils/types";
 import { Avatar, Flex, Rate } from "antd";
 
 import UserAvatarTwo from "@Assets/images/user7.png";
-import { DataNotFound } from "@Components/DataNotFound";
+
 const RATING_STAR_COLOR = "#F38001";
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
@@ -28,7 +28,7 @@ export default function ReviewManagementListing({
     return (
         <>
             {isError || !data?.data?.length ? (
-                <DataNotFound />
+                <></>
             ) : (
                 data?.data?.map((review: ReviewResponseType) => (
                     <div className="mt-3">

@@ -152,7 +152,7 @@
 }
 
 :global(.dark) {
-  .ant-pagination {
+  .customized-ant-pagination {
     .ant-pagination-item {
       background: #2D2D2D !important;
       background-color: #2D2D2D !important;
@@ -196,55 +196,8 @@
       }
     }
 
-    .ant-pagination-disabled {
-      .ant-pagination-item-link {
-        background: #2D2D2D !important;
-        background-color: #2D2D2D !important;
-        background-image: none !important;
-        color: #A0A0A0 !important;
-      }
-    }
-  }
-}
-
-/* Additional overrides for the specific component with higher specificity */
-:global(.dark) .customized-ant-pagination {
-  .ant-pagination-item {
-    background: #2D2D2D !important;
-    background-color: #2D2D2D !important;
-    background-image: none !important;
-    border: 1px solid #3D3D3D !important;
-    
-    a {
-      background: #2D2D2D !important;
-      background-color: #2D2D2D !important;
-      background-image: none !important;
-      color: #E0E0E0 !important;
-    }
-  }
-
-  .ant-pagination-item-active {
-    background: $dark-orange !important;
-    background-color: $dark-orange !important;
-    background-image: none !important;
-    border: 1px solid $dark-orange !important;
-    
-    a {
-      background: $dark-orange !important;
-      background-color: $dark-orange !important;
-      background-image: none !important;
-      color: white !important;
-    }
-  }
-
-  .ant-pagination-prev,
-  .ant-pagination-next {
-    background: #2D2D2D !important;
-    background-color: #2D2D2D !important;
-    background-image: none !important;
-    border: 1px solid #3D3D3D !important;
-
-    .ant-pagination-item-link {
+    .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
+    .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
       background: #2D2D2D !important;
       background-color: #2D2D2D !important;
       background-image: none !important;
@@ -295,15 +248,6 @@
       background-color: #2D2D2D !important;
       background-image: none !important;
       color: #E0E0E0 !important;
-    }
-  }
-
-  .ant-pagination-disabled {
-    .ant-pagination-item-link {
-      background: #2D2D2D !important;
-      background-color: #2D2D2D !important;
-      background-image: none !important;
-      color: #A0A0A0 !important;
     }
   }
 

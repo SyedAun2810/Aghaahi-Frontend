@@ -1,4 +1,4 @@
-import { DataNotFound } from "@Components/DataNotFound";
+
 import ProgressLoader from "@Components/ProgressLoader/ProgressLoader";
 import { ComponentType, Fragment, ReactNode } from "react";
 
@@ -7,7 +7,7 @@ export default function ListRenderer<dataType = unknown, WrapperComponentType = 
     isLoading,
     isFetching,
     LoadingComponent = <ProgressLoader />,
-    NoDataComponent = <DataNotFound />,
+    NoDataComponent =  <></>,
     ItemWrapperComponent = Fragment,
     itemWrapperProps,
     renderItem

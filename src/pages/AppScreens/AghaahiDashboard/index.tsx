@@ -28,6 +28,8 @@ import { useDashboardGraphData, useRenderGeneratedGraph } from "./useDashboardCo
 import { queryClient } from "@Api/Client";
 import { queryKeys } from "@Constants/queryKeys";
 import { useEmployeeListing } from "../EmployeeListing";
+import ShareDashboardModal from "@Components/Modals/ShareDashboardModal";
+import SharedDashboardsModal from "@Components/Modals/SharedDashboardsModal";
 
 interface Props {
     domElements: any[];
@@ -121,7 +123,7 @@ const graphData = [
 ];
 
 const AgaahiDashboard: FunctionComponent<Props> = (props) => {
-    const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph();
+
     const location = useLocation();
     const { data: employeeResponse, isFetching: isFetchingEmployees } = useEmployeeListing();
 
@@ -129,42 +131,22 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const [latestLayoutChanges, setLatestLayoutChanges] = useState<{ lg: LayoutItem[] } | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isSharedDashboardsModalOpen, setIsSharedDashboardsModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState<GraphData | null>(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLayoutChanging, setIsLayoutChanging] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph(selectedUserId);
+
+    console.log("selectedUserId", selectedUserId);
 
     const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { });
 
-    console.log("employeeResponse", employeeResponse);
-
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Role',
-            dataIndex: 'role',
-            key: 'role',
-            render: (data: any) => (
-              <p>{data?.name || '--'}</p>
-            )
-        },
-    ];
-
-    const handleShare = () => {
-        console.log('Selected user IDs:', selectedUsers);
+    const handleShare = (selectedUserIds: number[]) => {
         message.success('Dashboard shared successfully!');
         setIsShareModalOpen(false);
-        setSelectedUsers([]);
     };
 
     const rowSelection = {
@@ -179,8 +161,6 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
         return employeeResponse?.data ? employeeResponse.data?.employees : [];
     }, [employeeResponse?.data]);
 
-
-    console.log("tableData", tableData);
     useEffect(() => {
         if (location.pathname === '/dashboard') {
             queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getLayout] });
@@ -247,8 +227,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
 
     const handleKeyPress = (event: KeyboardEvent) => {
         if (event.key === "Enter" && isEditMode) {
-            const payload = mapLayoutsToApiFormat(layouts);
-            console.log("Payload to be sent to API:", payload); // Log the payload
+            const payload = mapLayoutsToApiFormat(layouts);// Log the payload
         }
     };
 
@@ -277,8 +256,6 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     }, [layouts, isEditMode]);
 
     const mapLayoutsToApiFormat = (layouts: any) => {
-
-        console.log("layouts", layouts);
         if (!layouts?.lg?.length) {
             return []
         }
@@ -397,40 +374,60 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
         <>
             <style>{shimmerStyles}</style>
             <div className="m-2">
+                {!selectedUserId && (
+                    <>
+                        <button
+                            className="fixed right-6 bottom-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => {
+                                if (isEditMode) {
+                                    handleSaveChanges(layouts); // Save changes and log payload
+                                } else {
+                                    setIsEditMode(true); // Enter edit mode
+                                }
+                            }}
+                            disabled={isUpdatingLayout}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`h-6 w-6 ${isUpdatingLayout ? 'animate-spin' : ''}`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                            >
+                                {isEditMode ? (
+                                    isUpdatingLayout ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    )
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                )}
+                            </svg>
+                            {isEditMode ? (isUpdatingLayout ? "Saving..." : "Save Changes") : "Enter Edit Mode"}
+                        </button>
+                        <button
+                            className="fixed right-6 bottom-24 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
+                            onClick={() => setIsShareModalOpen(true)}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            Share Dashboard
+                        </button>
+                    </>
+                )}
                 <button
-                    className="fixed right-6 bottom-24 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={() => {
-                        if (isEditMode) {
-                            handleSaveChanges(layouts); // Save changes and log payload
-                        } else {
-                            setIsEditMode(true); // Enter edit mode
-                        }
-                    }}
-                    disabled={isUpdatingLayout}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-6 w-6 ${isUpdatingLayout ? 'animate-spin' : ''}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                    >
-                        {isEditMode ? (
-                            isUpdatingLayout ? (
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            ) : (
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )
-                        ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                        )}
-                    </svg>
-                    {isEditMode ? (isUpdatingLayout ? "Saving..." : "Save Changes") : "Enter Edit Mode"}
-                </button>
-                <button
-                    className="fixed right-6 bottom-8 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
-                    onClick={() => setIsShareModalOpen(true)}
+                    className="fixed right-6 bottom-8 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
+                    onClick={() => setIsSharedDashboardsModalOpen(true)}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -440,50 +437,25 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                         stroke="currentColor"
                         strokeWidth={2}
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
-                    Share Dashboard
+                    See What's Shared
                 </button>
-                <Modal
-                    title={<span className="text-2xl font-semibold ">Share Dashboard</span>}
-                    open={isShareModalOpen}
-                    onCancel={() => {
-                        setIsShareModalOpen(false);
-                        setSelectedUsers([]);
+                <ShareDashboardModal
+                    isOpen={isShareModalOpen}
+                    onClose={() => setIsShareModalOpen(false)}
+                    onShare={handleShare}
+                />
+                <SharedDashboardsModal
+                    isOpen={isSharedDashboardsModalOpen}
+                    onClose={() => setIsSharedDashboardsModalOpen(false)}
+                    onViewDashboard={(userId) => {
+                        setSelectedUserId(userId);
+                        console.log("selectedUserId coming from shared dashboards modal", selectedUserId);
+                        // You can add additional logic here to handle the selected user's dashboard
                     }}
-                    footer={[
-                        <button
-                            key="cancel"
-                            onClick={() => {
-                                setIsShareModalOpen(false);
-                                setSelectedUsers([]);
-                            }}
-                            className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                        >
-                            Cancel
-                        </button>,
-                        <button
-                            key="share"
-                            onClick={handleShare}
-                            disabled={selectedUsers.length === 0}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Share
-                        </button>
-                    ]}
-                >
-                    <Table
-                        rowSelection={{
-                            type: 'radio',
-                            ...rowSelection,
-                        }}
-                        columns={columns}
-                        dataSource={tableData}
-                        loading={isFetchingEmployees}
-                        pagination={false}
-                        rowKey="id"
-                    />
-                </Modal>
+                />
                 <ResponsiveReactGridLayout
                     {...props}
                     layouts={{ lg: layouts.lg }}
