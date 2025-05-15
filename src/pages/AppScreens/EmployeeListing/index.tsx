@@ -42,7 +42,7 @@ const EmployeeView = () => {
 
 export default EmployeeView;
 
-const useEmployeeListing = () => {
+export const useEmployeeListing = () => {
     return useQuery([queryKeys.employee.getEmployee], async () => {
         const { ok, data } = await GetEmployeeRoles();
         if (ok) {
@@ -52,7 +52,7 @@ const useEmployeeListing = () => {
     });
 };
 
-async function GetEmployeeRoles() {
+export async function GetEmployeeRoles() {
     const response = await ApiService.get(`${API_CONFIG_URLS.EMPLOYEE.LISTING}`);
     return response;
 }

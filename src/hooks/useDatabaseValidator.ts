@@ -1,8 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { DatabaseValidatorService } from "@Api/database-validator-service";
+import NotificationService from "@Services/NotificationService";
 
 export const useDatabaseValidator = () => {
-    const mutation = useMutation({
+    const { mutate, isLoading, isError, error, data } = useMutation({
         mutationFn: (query: string) => DatabaseValidatorService.getDataAndSqlQuery(query),
         onError: (error: any) => {
             console.error("Error executing query:", error);
@@ -10,10 +11,10 @@ export const useDatabaseValidator = () => {
     });
 
     return {
-        executeQuery: mutation.mutate,
-        isLoading: mutation.isLoading,
-        isError: mutation.isError,
-        error: mutation.error,
-        data: mutation.data?.data
+        executeQuery: mutate,
+        isLoading,
+        isError,
+        error,
+        data: data?.data
     };
 }; 

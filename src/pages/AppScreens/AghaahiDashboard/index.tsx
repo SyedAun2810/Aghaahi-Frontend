@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Dropdown, Menu, message } from "antd";
+import { Dropdown, Menu, message, Modal, Table } from "antd";
 import "react-resizable/css/styles.css";
 import "react-grid-layout/css/styles.css";
 import React, { FunctionComponent, useState, useEffect, useCallback } from "react";
@@ -27,6 +27,7 @@ import { API_CONFIG_URLS } from "@Constants/config";
 import { useDashboardGraphData, useRenderGeneratedGraph } from "./useDashboardContainer";
 import { queryClient } from "@Api/Client";
 import { queryKeys } from "@Constants/queryKeys";
+import { useEmployeeListing } from "../EmployeeListing";
 
 interface Props {
     domElements: any[];
@@ -122,17 +123,64 @@ const graphData = [
 const AgaahiDashboard: FunctionComponent<Props> = (props) => {
     const { renderGeneratedGraph, layoutData, isFetchingLayout, graphDataFromBackend, isFetchingGraphData } = useRenderGeneratedGraph();
     const location = useLocation();
+    const { data: employeeResponse, isFetching: isFetchingEmployees } = useEmployeeListing();
 
     const [layouts, setLayouts] = useState<{ lg: LayoutItem[] }>({ lg: [] });
     const [latestLayoutChanges, setLatestLayoutChanges] = useState<{ lg: LayoutItem[] } | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState<GraphData | null>(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLayoutChanging, setIsLayoutChanging] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
 
     const { mutate: updateLayout, isLoading: isUpdatingLayout } = useUpdateLayout((data: any) => { });
 
+    console.log("employeeResponse", employeeResponse);
+
+    const columns = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id',
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+            render: (data: any) => (
+              <p>{data?.name || '--'}</p>
+            )
+        },
+    ];
+
+    const handleShare = () => {
+        console.log('Selected user IDs:', selectedUsers);
+        message.success('Dashboard shared successfully!');
+        setIsShareModalOpen(false);
+        setSelectedUsers([]);
+    };
+
+    const rowSelection = {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+            setSelectedUsers(selectedRows.map(row => row.id));
+        },
+    };
+
+    // Ensure we have an array of data for the table
+    const tableData = React.useMemo(() => {
+        if (!employeeResponse?.data) return [];
+        return employeeResponse?.data ? employeeResponse.data?.employees : [];
+    }, [employeeResponse?.data]);
+
+
+    console.log("tableData", tableData);
     useEffect(() => {
         if (location.pathname === '/dashboard') {
             queryClient.invalidateQueries({ queryKey: [queryKeys.dashboard.getLayout] });
@@ -350,7 +398,7 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
             <style>{shimmerStyles}</style>
             <div className="m-2">
                 <button
-                    className="fixed right-6 bottom-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="fixed right-6 bottom-24 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => {
                         if (isEditMode) {
                             handleSaveChanges(layouts); // Save changes and log payload
@@ -380,6 +428,62 @@ const AgaahiDashboard: FunctionComponent<Props> = (props) => {
                     </svg>
                     {isEditMode ? (isUpdatingLayout ? "Saving..." : "Save Changes") : "Enter Edit Mode"}
                 </button>
+                <button
+                    className="fixed right-6 bottom-8 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out flex items-center gap-2 z-10"
+                    onClick={() => setIsShareModalOpen(true)}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                    Share Dashboard
+                </button>
+                <Modal
+                    title={<span className="text-2xl font-semibold ">Share Dashboard</span>}
+                    open={isShareModalOpen}
+                    onCancel={() => {
+                        setIsShareModalOpen(false);
+                        setSelectedUsers([]);
+                    }}
+                    footer={[
+                        <button
+                            key="cancel"
+                            onClick={() => {
+                                setIsShareModalOpen(false);
+                                setSelectedUsers([]);
+                            }}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                        >
+                            Cancel
+                        </button>,
+                        <button
+                            key="share"
+                            onClick={handleShare}
+                            disabled={selectedUsers.length === 0}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Share
+                        </button>
+                    ]}
+                >
+                    <Table
+                        rowSelection={{
+                            type: 'radio',
+                            ...rowSelection,
+                        }}
+                        columns={columns}
+                        dataSource={tableData}
+                        loading={isFetchingEmployees}
+                        pagination={false}
+                        rowKey="id"
+                    />
+                </Modal>
                 <ResponsiveReactGridLayout
                     {...props}
                     layouts={{ lg: layouts.lg }}

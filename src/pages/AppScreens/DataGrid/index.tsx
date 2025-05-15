@@ -12,13 +12,14 @@ import CustomSidebar from "@Components/CustomSidebar";
 import Logo from "@Assets/images/logo.png";
 import { useTypingEffect } from "../PromptChat/Components/ChatFooter";
 import useAuthStore from "@Store/authStore";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatabaseValidatorService } from "../../../apiService/database-validator-service";
 import { useGetDatabaseHistory } from "../../../layout/AuthLayout/Queries/useGetDatabaseHistory";
 import { API_CONFIG_URLS } from "@Constants/config";
 import axios from "axios";
 import { apiService } from "@Services/ApiService";
 import { useDatabaseValidator } from "@Hooks/useDatabaseValidator";
+import NotificationService from "@Services/NotificationService";
 
 
 const { Sider, Content } = Layout;
@@ -47,6 +48,7 @@ const DataGridView = () => {
     const introText = "Hi, I'm Agaahi! I specialize in helping you query data in natural language and visualize it in structured tables—making data insights effortless and accessible.";
     const { userData } = useAuthStore();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const { data: tablesData, isLoading: isTablesLoading } = useQuery({
         queryKey: ['tablesWithColumns'],
@@ -58,7 +60,7 @@ const DataGridView = () => {
 
     const { data: historyData, isLoading: isHistoryLoading } = useGetDatabaseHistory(1, 10);
 
-    const { executeQuery, isLoading: isSmartQueryLoading, data: smartQueryData } = useDatabaseValidator();
+    const { executeQuery, isLoading: isSmartQueryLoading, data: smartQueryData, error: smartQueryError } = useDatabaseValidator();
 
     const startListening = () => {
         setListening(true);
@@ -147,10 +149,22 @@ const DataGridView = () => {
             return response.data;
         },
         onSuccess: (data) => {
+            if(data?.data?.error){
+                NotificationService.error(data?.data?.message || "Invalid query detected. Only SELECT operations are allowed.");
+                setTableData([]);
+                setTableColumns([]);
+                setShowTable(false);
+                setShowWelcomeScreen(true);
+                setIsLoading(false);
+                return;
+            }
+            console.log({ data })
             setQueryBuilderValue(data?.data || '');
             setShowQueryBuilder(true);
             setShowWelcomeScreen(false);
             setIsLoading(false);
+            // Invalidate database history query
+            queryClient.invalidateQueries(['database-history']);
         },
         onError: (error) => {
             console.error('SQL Query Error:', error);
@@ -167,14 +181,23 @@ const DataGridView = () => {
             return response.data;
         },
         onSuccess: (data) => {
-            console.log('Raw API Response:', data);
+            if(data?.data?.error){
+                NotificationService.error(data?.data?.message || "Invalid query detected. Only SELECT operations are allowed.");
+                setTableData([]);
+                setTableColumns([]);
+                setShowTable(false);
+                setShowQueryBuilder(false);
+                setShowWelcomeScreen(true);
+                setIsLoading(false);
+                setLocalMessage("");
+                return;
+            }
             if (data?.data) {
                 // Transform the data into the correct format
                 const transformedData = data.data.map((item: any, index: number) => ({
                     id: index + 1, // Add a unique id for each row
                     ...item
                 }));
-                console.log('Transformed Data:', transformedData);
                 setTableData(transformedData);
                 
                 // Generate columns from the first row of data
@@ -191,7 +214,6 @@ const DataGridView = () => {
                             return String(text);
                         }
                     }));
-                    console.log('Generated Columns:', columns);
                     setTableColumns(columns);
                 }
             }
@@ -199,10 +221,12 @@ const DataGridView = () => {
             setShowWelcomeScreen(false);
             setIsLoading(false);
             setCurrentPage(1); // Reset to first page when new data is loaded
+            // Invalidate database history query
+            queryClient.invalidateQueries(['database-history']);
         },
         onError: (error) => {
-            console.error('Data Error:', error);
-            message.error('Failed to fetch data. Please try again.');
+            console.log('Data Error:', error);
+            // message.error('Failed to fetch data. Please try again.');
             setIsLoading(false);
         }
     });
@@ -275,7 +299,23 @@ const DataGridView = () => {
 
     // Add effect to handle smart query response
     useEffect(() => {
+        if(smartQueryData === undefined){
+            return;
+        }
         if (smartQueryData) {
+            if (smartQueryData?.data?.error === "Bad Request") {
+                // Handle invalid query error
+                NotificationService.error(smartQueryData.data.message || "Invalid query detected. Only SELECT operations are allowed.");
+                setTableData([]);
+                setTableColumns([]);
+                setShowTable(false);
+                setShowWelcomeScreen(true);
+                setIsLoading(false);
+                setShowQueryBuilder(false);
+                setQueryBuilderValue("");
+                return;
+            }
+            
             if (smartQueryData?.data) {
                 // Transform the data into the correct format
                 const transformedData = smartQueryData.data.map((item: any, index: number) => ({
@@ -300,11 +340,16 @@ const DataGridView = () => {
                     }));
                     setTableColumns(columns);
                 }
+            } else {
+                setTableData([]);
+                setTableColumns([]);
             }
             setShowTable(true);
             setShowWelcomeScreen(false);
             setIsLoading(false);
             setCurrentPage(1); // Reset to first page when new data is loaded
+            // Invalidate database history query
+            queryClient.invalidateQueries(['database-history']);
         }
     }, [smartQueryData]);
 
@@ -313,7 +358,14 @@ const DataGridView = () => {
         setIsLoading(isSmartQueryLoading);
     }, [isSmartQueryLoading]);
 
-    console.log({ tableData })
+    // Add error logging effect
+    useEffect(() => {
+        if (smartQueryError) {
+            console.error('Smart Query API Error:', smartQueryError);
+            message.error('Failed to execute query. Please try again.');
+        }
+    }, [smartQueryError]);
+
     return (
         <Layout className="h-screen flex flex-row">
             <CustomSidebar
@@ -438,7 +490,21 @@ const DataGridView = () => {
                     </div>
                     {queryType === "builder" && showQueryBuilder && (
                         <div className="w-full bg-transparent dark:bg-[#303030] rounded-lg shadow-lg p-4 mb-4">
-                            <h3 className="text-lg font-semibold mb-2 dark:text-white">Generated Query</h3>
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-lg font-semibold dark:text-white">Generated Query</h3>
+                                <Button 
+                                    type="primary" 
+                                    className="h-8 w-[150px]"
+                                    danger
+                                    // size="small"
+                                    onClick={() => {
+                                        setIsLoading(true);
+                                        dataMutation.mutate(queryBuilderValue);
+                                    }}
+                                >
+                                    Run Query
+                                </Button>
+                            </div>
                             <TextArea
                                 value={queryBuilderValue}
                                 onChange={(e) => setQueryBuilderValue(e.target.value)}

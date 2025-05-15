@@ -9,8 +9,11 @@ import Aun from "../../../assets/images/Aun.jpg";
 import Sarah from "../../../assets/images/sarah.jpg";
 import Khushbkaht from "../../../assets/images/khushbakht.jpg";
 import ChatBot from '../../../components/ChatBot';
+import { NavigationRoutes } from '@Navigation/NavigationRoutes';
+import { useNavigate } from 'react-router-dom';
 
 const AboutUs = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative bg-gray-50 text-gray-800 font-sans">
       <Header />
@@ -391,10 +394,10 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Data Strategy?</h2>
           <div className="flex justify-center gap-4">
-            <a href="/contact.html" className="px-8 py-4 rounded-full text-white bg-[#0F172A]  border-2 border-[#6C63FF] shadow-[0_0_10px_2px_rgba(108,99,255,0.8)] hover:shadow-[0_0_15px_4px_rgba(108,99,255,1)] transition-all duration-300">
+            <a onClick={() => navigate(NavigationRoutes.AUTH_ROUTES.REGISTER)} className="px-8 py-4 rounded-full text-white bg-[#0F172A]  border-2 border-[#6C63FF] shadow-[0_0_10px_2px_rgba(108,99,255,0.8)] hover:shadow-[0_0_15px_4px_rgba(108,99,255,1)] transition-all duration-300">
               Start Free Trial
             </a>
-            <a href="/demo.html" className="border border-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition">
+            <a onClick={() => navigate(NavigationRoutes.AUTH_ROUTES.REGISTER)} className="border border-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition">
               Watch Demo
             </a>
           </div>

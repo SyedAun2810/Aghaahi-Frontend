@@ -61,7 +61,7 @@ const PromptChat = () => {
                 ...listingData[listingData.length - 1], // Get the last item
                 response: data.data.response.response,
                 format: data.data.response.format,
-                base64_image: data.data.response.base64_image,
+                base64_image: data.data.response.base64,
                 // conversation_id : data?.data?.response?.conversation_id, // Replace loader with actual response
                 isLoading: false, // Remove the loader
                 isTyping: true
@@ -238,7 +238,7 @@ function ChatContent({
                         clearInterval(typingInterval);
                         setTypingComplete(true);
                     }
-                }, 20); // Typing speed (ms per character)
+                }, 5); // Typing speed (ms per character)
 
                 return () => clearInterval(typingInterval);
             } else {
@@ -271,16 +271,71 @@ function ChatContent({
                 </div>
             ) : chatData.format === "graph" ? (
                 <div className="flex">
-                    <div className="mt-2">
+                    <div className="mt-8">
                         <img src={Logo} alt="logo here" width={50} />
                     </div>
-                    <div className="bg-gray-100 dark:bg-[#303030] p-8 rounded-xl shadow-md">
+                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl shadow-md">
                         <div className="text-lg dark:text-white" dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
-                        <img
-                            className="h-[400px] w-auto"
+                        {typingComplete && <img
+                            className="h-[400px] w-auto animate-fade-in"
                             src={`data:image/jpeg;base64,${chatData.base64_image}`}
                             alt="Graph"
-                        />
+                        />}
+                    </div>
+                </div>
+            ) : chatData.format === "csv" ? (
+                <div className="flex">
+                    <div className="mt-8">
+                        <img src={Logo} alt="logo here" width={50} />
+                    </div>
+                    <div className="bg-white dark:bg-[#212121] p-8 rounded-xl shadow-md">
+                        <div className="text-lg dark:text-white" dangerouslySetInnerHTML={{ __html: sanitizeHTML(typedResponse) }} />
+                        
+                        {/* {typingComplete && (
+                            <div className="mt-4 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                    <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-900 dark:text-white">CSV File</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Click to download</p>
+                                    </div>
+                                </div>
+                                {!chatData.downloaded && (
+                                    <button
+                                        onClick={() => {
+                                            // Create a blob from the base64 data
+                                            const byteCharacters = atob(chatData.base64_image);
+                                            const byteNumbers = new Array(byteCharacters.length);
+                                            for (let i = 0; i < byteCharacters.length; i++) {
+                                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                            }
+                                            const byteArray = new Uint8Array(byteNumbers);
+                                            const blob = new Blob([byteArray], { type: 'text/csv' });
+                                            
+                                            // Create download link
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = 'data.csv';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            window.URL.revokeObjectURL(url);
+                                            document.body.removeChild(a);
+                                            
+                                            // Update the chatData to mark as downloaded
+                                            chatData.downloaded = true;
+                                        }}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                                    >
+                                        Download
+                                    </button>
+                                )}
+                            </div>
+                        )} */}
                     </div>
                 </div>
             ) : (
@@ -308,7 +363,7 @@ function ChatContent({
                 <div className="pl-16 flex mt-2 space-x-4">
                     <LikeOutlined
                         className="text-green-500 text-xl cursor-pointer hover:text-green-600"
-                        onClick={() => {}}
+                        onClick={() => { }}
                     />
                     <DislikeOutlined
                         className="text-red-500 text-xl cursor-pointer hover:text-red-600"

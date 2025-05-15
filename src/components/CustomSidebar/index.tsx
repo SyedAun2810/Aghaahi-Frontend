@@ -34,10 +34,8 @@ const CustomSidebar: React.FC<CustomSidebarProps> = ({
     }, [tableDefinitions]);
 
     const handleCollapseChange = (key: string | string[]) => {
-        setActiveKey(Array.isArray(key) ? key[0] : key);
+        setActiveKey(Array.isArray(key) ? key[0] : key);    
     };
-
-    console.log({ tableDefinitions })
 
     return (
         <div

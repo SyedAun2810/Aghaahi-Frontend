@@ -29,7 +29,7 @@ export const API_CONFIG_URLS = {
     VALIDATE_DATABASE: `database-validator/verify`,
   },
   PROFILE: {
-    CHANGE_PASSWORD: `${personalController}/change-password`,
+    CHANGE_PASSWORD: `${employee}/reset-password`,
     EDIT_PROFILE: `${sellerAuthController}/profile`,
   },
   DOCUMENTS: {
@@ -126,6 +126,9 @@ export const API_CONFIG_URLS = {
     SQL_QUERY: `${databaseValidator}/editor/sql-query`,
     DATA: `${databaseValidator}/editor/data`,
     DATA_AND_SQL_QUERY: `${databaseValidator}/editor/data-and-sql-query`,
+  },
+  CONTACT: {
+    CONTACT_US: `/contact-us`,
   },
 };
 

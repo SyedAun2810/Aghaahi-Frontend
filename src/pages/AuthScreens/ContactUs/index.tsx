@@ -3,23 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
 import axios from 'axios';
 import robot_contact_us from '@Assets/images/robot_contact_us.jpg'; 
+import { apiService } from '@Services/ApiService';
+import { API_CONFIG_URLS } from '@Constants/config';
+import NotificationService from '@Services/NotificationService';
 
 interface FormData {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
   message: string;
+  company_id?: string;
 }
 
 const ContactUs = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    company_id: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
@@ -38,17 +43,19 @@ const ContactUs = () => {
     setSubmitStatus(null);
 
     try {
-      // Replace with your actual API endpoint
-      const response = await axios.post('YOUR_API_ENDPOINT/contact', formData);
-      
+
+      const response = await apiService.post(API_CONFIG_URLS.CONTACT.CONTACT_US, formData);
+      NotificationService.success("Message sent successfully");
+
       if (response.status === 200) {
         setSubmitStatus('success');
         setFormData({
-          firstName: '',
-          lastName: '',
+          first_name: '',
+          last_name: '',
           email: '',
           phone: '',
-          message: ''
+          message: '',
+          company_id: ''
         });
       }
     } catch (error) {
@@ -90,19 +97,19 @@ const ContactUs = () => {
                 <div className="flex gap-4">
                   <input
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
+                    name="first_name"
+                    value={formData.first_name}
                     onChange={handleChange}
-                    placeholder="Last Name"
+                    placeholder="First Name"
                     className="w-1/2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                     required
                   />
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="last_name"
+                    value={formData.last_name}
                     onChange={handleChange}
-                    placeholder="First Name"
+                    placeholder="Last Name"
                     className="w-1/2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                     required
                   />
@@ -124,6 +131,14 @@ const ContactUs = () => {
                   placeholder="Phone Number"
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                   required
+                />
+                <input
+                  type="text"
+                  name="company_id"
+                  value={formData.company_id}
+                  onChange={handleChange}
+                  placeholder="Company ID (Optional)"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 />
                 <textarea
                   name="message"

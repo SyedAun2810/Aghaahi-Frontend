@@ -30,7 +30,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                         navigate(NavigationRoutes.DASHBOARD_ROUTES.EDIT_PROFILE);
                     }}
                 >
-                    Edit Profile
+                    My Profile
                 </h5>
             )
         },
@@ -70,7 +70,7 @@ const ProfileDropdown: React.FC<propParams> = ({ logout }) => {
                         navigate(NavigationRoutes.AUTH_ROUTES.ABOUT_US);
                     }}
                 >
-                    About Us
+                    Home
                 </h5>
             )
         },
