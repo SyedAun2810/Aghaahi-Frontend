@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import Logo from "@Assets/images/logo.png";
 import { ChatApiService } from '../../Api/chat-services';
 import NotificationService from '@Services/NotificationService';
+import robot_contact_us from '@Assets/images/robot_contact_us.jpg'; 
 
 interface Message {
   type: 'user' | 'bot';
@@ -109,11 +110,11 @@ const ChatBot: React.FC = () => {
 
       {/* Chat Container */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-16 w-96 h-[450px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden bg-white">
+        <div className="fixed bottom-24 right-16 w-96 h-[500px] rounded-lg shadow-xl z-50 flex flex-col overflow-hidden bg-white">
           {/* Background Image Container */}
           <div className="absolute inset-0">
             <img 
-              src={Logo} 
+              src={robot_contact_us} 
               alt="Agaahi Logo Background" 
               className="w-full h-full object-contain opacity-40"
             />
